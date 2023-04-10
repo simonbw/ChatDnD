@@ -1,0 +1,13 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+@import "./button.css";
+
+@import "tailwindcss/utilities";
+
+@layer base {
+  body {
+    min-height: 100vh;
+    @apply bg-gray-800;
+  }
+}

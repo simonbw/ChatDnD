@@ -1,0 +1,166 @@
+/* Generic button classes */
+@layer components {
+  .button {
+    @apply rounded justify-center items-center relative overflow-hidden ring-offset-0 select-none;
+    @apply focus:outline-none;
+    @apply transition duration-75 motion-reduce:transition-none;
+  }
+
+  .button-focusable {
+    @apply focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-opacity-50 ring-offset-transparent;
+    @apply focus:hover:ring-opacity-10 focus:hover:ring-offset-0;
+  }
+
+  /* Button Kinds */
+  .button-full {
+    @apply border border-transparent shadow hover:shadow-md hover:scale-[103%] active:scale-[97%] active:shadow-inner;
+  }
+
+  .button-flat {
+    @apply border border-transparent;
+  }
+
+  .button-outline {
+    @apply border;
+  }
+
+  .button-text {
+    /* @apply; */
+  }
+
+  /* Button Colors */
+  .button-primary {
+    @apply focus:ring-indigo-500;
+  }
+
+  .button-secondary {
+    @apply focus:ring-indigo-500;
+  }
+
+  .button-danger {
+    @apply focus:ring-indigo-500;
+  }
+
+  .button-white {
+    @apply focus:ring-indigo-500;
+  }
+
+  /* Button kind - color */
+  .button-primary-full {
+    @apply text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800;
+  }
+  .button-primary-flat {
+    @apply text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800;
+  }
+  .button-primary-outline {
+    @apply border-indigo-300 text-indigo-600 hover:text-indigo-700 active:text-indigo-800 active:bg-indigo-600/10 hover:border-indigo-700 active:border-indigo-800;
+  }
+  .button-primary-text {
+    @apply text-indigo-600 hover:text-indigo-700 active:text-indigo-800 hover:bg-indigo-600/5 active:bg-indigo-600/10;
+  }
+
+  .button-secondary-full {
+    @apply border-gray-300 text-gray-700 bg-white hover:bg-gray-100 active:bg-gray-200;
+  }
+  .button-secondary-flat {
+    @apply border-gray-300 text-gray-700 bg-white hover:bg-gray-100 active:bg-gray-200;
+  }
+  .button-secondary-outline {
+    @apply border-gray-300 text-gray-600 hover:text-gray-700 active:text-gray-800 active:bg-gray-600/10 hover:border-gray-700 active:border-gray-800;
+  }
+  .button-secondary-text {
+    @apply text-gray-600 hover:text-gray-700 active:text-gray-800 hover:bg-gray-600/5 active:bg-gray-600/10;
+  }
+
+  .button-danger-full {
+    @apply text-white bg-red-600 hover:bg-red-700 active:bg-red-800;
+  }
+  .button-danger-flat {
+    @apply text-white bg-red-600 hover:bg-red-700 active:bg-red-800;
+  }
+  .button-danger-outline {
+    @apply border-red-300 text-red-600 hover:text-red-700 active:text-red-800 active:bg-red-600/10 hover:border-red-700 active:border-red-800;
+  }
+  .button-danger-text {
+    @apply text-red-600 hover:text-red-700 active:text-red-800 hover:bg-red-600/5 active:bg-red-600/10;
+  }
+
+  .button-white-full {
+    @apply border-transparent text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100;
+  }
+  .button-white-flat {
+    @apply border-transparent text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100;
+  }
+  .button-white-outline {
+    @apply border-white text-white hover:bg-white/5 active:bg-white/10;
+  }
+  .button-white-text {
+    @apply text-white hover:bg-white/5 active:bg-white/10;
+  }
+
+  .button-full-disabled {
+    @apply disabled:pointer-events-none disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-700;
+  }
+  .button-flat-disabled {
+    @apply disabled:pointer-events-none disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-700;
+  }
+  .button-outline-disabled {
+    @apply disabled:pointer-events-none disabled:bg-gray-300/25 disabled:border-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-500;
+  }
+  .button-text-disabled {
+    @apply disabled:pointer-events-none disabled:text-gray-500;
+  }
+
+  .button-loading {
+    @apply !text-transparent pointer-events-none;
+  }
+
+  .button-primary-full-loading {
+    @apply shadow-inner-md bg-indigo-800;
+  }
+  .button-primary-flat-loading {
+    @apply shadow-inner bg-indigo-800;
+  }
+  .button-primary-outline-loading {
+    @apply bg-indigo-600/20 !border-indigo-500;
+  }
+  .button-primary-text-loading {
+    @apply bg-indigo-600/20;
+  }
+  .button-secondary-full-loading {
+    @apply shadow-inner bg-gray-200;
+  }
+  .button-secondary-flat-loading {
+    @apply shadow-inner bg-gray-200;
+  }
+  .button-secondary-outline-loading {
+    @apply bg-gray-600/20 !border-gray-400;
+  }
+  .button-secondary-text-loading {
+    @apply bg-gray-600/20;
+  }
+  .button-danger-full-loading {
+    @apply shadow-inner-md bg-red-800;
+  }
+  .button-danger-flat-loading {
+    @apply shadow-inner bg-red-800;
+  }
+  .button-danger-outline-loading {
+    @apply bg-red-600/20 !border-red-500;
+  }
+  .button-danger-text-loading {
+    @apply bg-red-600/20;
+  }
+  .button-white-full-loading {
+    @apply shadow-inner bg-gray-200;
+  }
+  .button-white-flat-loading {
+    @apply shadow-inner bg-gray-200;
+  }
+  .button-white-outline-loading {
+    @apply bg-white/20;
+  }
+  .button-white-text-loading {
+    @apply bg-white/20;
+  }
+}
