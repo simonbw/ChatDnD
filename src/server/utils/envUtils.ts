@@ -1,5 +1,17 @@
 import path from "path";
 
+export function getNodeEnv(): string {
+  return process.env.NODE_ENV ?? "";
+}
+
+export function isDev(): boolean {
+  return getNodeEnv() === "development";
+}
+
+export function getPort(): number {
+  return Number(process.env.PORT ?? "3000");
+}
+
 export function getOpenAiKey(): string {
   return process.env.OPENAI_API_KEY ?? "";
 }

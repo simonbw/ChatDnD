@@ -2,9 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { app } from "./app";
+import { getPort } from "./utils/envUtils";
 
 // Serve in dev mode
-const port = 3000;
+const port = getPort();
 app.listen(port, () => {
   console.log(
     `ChatDnD Server listening on port ${port}`,
