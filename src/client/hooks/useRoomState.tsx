@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { RoomState, roomStateSchema } from "../../common/roomModel";
+import { RoomState, roomStateSchema } from "../../common/models/roomModel";
 import { relativeUrl } from "../utils/relativeUrl";
 
 export function useRoomState() {
@@ -25,8 +25,7 @@ export function useRoomState() {
       const eventSource = new EventSource(relativeUrl("state-stream"));
 
       eventSource.onmessage = (event) => {
-        console.log(event);
-        setState(JSON.parse(event.data));
+        setState(roomStateSchema.parse(JSON.parse(event.data)));
       };
     })();
   }, []);

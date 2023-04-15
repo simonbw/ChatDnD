@@ -9,8 +9,8 @@ const isDev = process.argv.some((arg) => arg == "--dev");
 const context = await esbuild
   .context({
     entryPoints: [
-      "src/client/pages/home.tsx",
-      "src/client/pages/room.tsx",
+      "src/client/pages/homePage.tsx",
+      "src/client/pages/roomPage.tsx",
       "src/client/styles/index.css",
     ],
     bundle: true,

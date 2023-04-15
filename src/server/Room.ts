@@ -1,36 +1,55 @@
+import { AxiosResponse } from "axios";
 import { ChatCompletionRequestMessage } from "openai";
-import { RoomMessage, RoomState } from "../common/roomModel";
-import { FIRST_MESSAGE } from "./first-message";
-import { openAi } from "./openAiConfig";
+import { Readable } from "stream";
+import { RoomMessage, RoomState } from "../common/models/roomModel";
+import {
+  RoomMessageBuilder,
+  StreamMessageDelta,
+  streamMessageSchema,
+} from "./RoomMessageBuilder";
+import { makeStarterMessages } from "./first-message";
 import { Channel } from "./utils/Channel";
-// import { Readable } from "stream";
+import { openAi } from "./utils/openAiUtils";
 
 export class Room {
   public channel: Channel<RoomState> = new Channel();
-  public state: RoomState = { messages: [] };
 
-  constructor() {}
+  private messages: RoomMessage[] = [];
+
+  constructor(public readonly id: string) {
+    this.messages.push(...makeStarterMessages());
+    this.getDmMessage();
+  }
 
   addMessage(message: RoomMessage) {
-    this.state.messages.push(message);
+    const messageIndex = this.messages.length;
+    this.messages.push(message);
     this.publish();
-    return this.state.messages.length - 1;
+    return messageIndex;
   }
 
   updateMessage(messageIndex: number, message: RoomMessage) {
-    this.state.messages[messageIndex] = message;
+    this.messages[messageIndex] = message;
     this.publish();
   }
 
   publish() {
-    this.channel.publish(this.state);
+    // TODO: Don't publish whole state every time?
+    this.channel.publish(this.getPublicState());
+  }
+
+  getPublicState(): RoomState {
+    const publicMessages: RoomMessage[] = this.messages.filter(
+      (message) => message.role != "system"
+    );
+    return {
+      messages: publicMessages,
+    };
   }
 
   getChatMessages(): ChatCompletionRequestMessage[] {
     return [
-      FIRST_MESSAGE,
-
-      ...this.state.messages
+      ...this.messages
         .filter((m) => !m.secret)
         .map((m) => ({
           content: m.content,
@@ -48,19 +67,57 @@ export class Room {
       secret: true,
     });
 
-    const chat = await openAi().createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [...this.getChatMessages()],
+    const messageBuilder = new RoomMessageBuilder(() => {
+      const message = messageBuilder.getMessage();
+      this.updateMessage(messageIndex, message);
     });
 
-    const choice = chat.data.choices[0];
-    if (choice.message) {
-      this.updateMessage(messageIndex, {
-        content: choice.message.content,
-        role: choice.message.role,
-        name: "ChatDnD",
-        secret: false,
-      });
-    }
+    const chat = (await openAi().createChatCompletion(
+      {
+        stream: true,
+        model: "gpt-3.5-turbo",
+        // model: "gpt-4",
+        messages: this.getChatMessages(),
+      },
+      { responseType: "stream" }
+    )) as any as AxiosResponse<Readable>;
+
+    chat.data.on("data", (data: Uint8Array) => {
+      const deltas = parseDeltaStream(data);
+
+      for (const delta of deltas) {
+        messageBuilder.addDelta(delta);
+      }
+    });
+
+    chat.data.on("end", () => {
+      messageBuilder.end();
+    });
   }
+}
+
+export function parseDeltaStream(raw: Uint8Array): StreamMessageDelta[] {
+  const lines = raw
+    .toString()
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "");
+
+  return lines
+    .map((rawLine) => {
+      if (rawLine.includes("[DONE]")) {
+        return null;
+      }
+
+      const line = rawLine.replace(/^data: /, "");
+
+      try {
+        const data = streamMessageSchema.parse(JSON.parse(line));
+        return data.choices[0].delta;
+      } catch (e) {
+        console.log("failed to parse:\n", line, "\n\n");
+        return null;
+      }
+    })
+    .filter((delta): delta is StreamMessageDelta => delta != null);
 }

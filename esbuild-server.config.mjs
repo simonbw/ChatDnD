@@ -8,6 +8,7 @@ const context = await esbuild
     bundle: true,
     minify: !isDev,
     platform: "node",
+    external: ["sharp"],
     sourcemap: true,
     outdir: "dist/server",
     plugins: [],

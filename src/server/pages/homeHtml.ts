@@ -9,7 +9,7 @@ export const homeHtml = /*html*/ `
 
 <body>
   <div id="react-container"></div>
-  <script src="/static/pages/home.js"></script>
+  <script src="/static/pages/homePage.js"></script>
 </body>
 
 </html>`;

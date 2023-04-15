@@ -3,6 +3,7 @@ import expressHttpProxy from "express-http-proxy";
 import esbuildRouter from "./routers/esbuildRouter";
 import homeRouter from "./routers/homeRouter";
 import roomRouter from "./routers/roomRouter";
+import voiceRouter from "./routers/voiceRouter";
 
 export const app = express();
 
@@ -38,4 +39,5 @@ if (process.env.NODE_ENV == "production") {
 // Routes
 app.use("/", homeRouter);
 app.use("/", esbuildRouter);
+app.use("/", voiceRouter);
 app.use("/room", roomRouter);

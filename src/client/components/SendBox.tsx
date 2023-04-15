@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button } from "./Button";
 import { relativeUrl } from "../utils/relativeUrl";
+import { classNames } from "./classNames";
+import Textarea from "react-expanding-textarea";
 
 export const SendBox: React.FC = () => {
   const [content, setContent] = useState("");
@@ -17,16 +19,22 @@ export const SendBox: React.FC = () => {
   };
 
   return (
-    <div className="flex bg-gray-100">
+    <div className="flex gap-2 p-4 font-serif border-4 border-sepia-300 border-double items-center rounded-sm">
       <input
         type="text"
-        className="px-2 py-1"
+        className={classNames(
+          "flex-shrink px-0 py-1 bg-transparent w-24 text-right",
+          "underline underline-offset-4 small-caps text-sepia-500 text-sm rounded",
+          "focus:outline-none focus:border-none focus:bg-sepia-500/20 hover:bg-sepia-500/20"
+        )}
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
-      <input
-        type="text"
-        className="flex-grow px-2 py-1"
+      <Textarea
+        className={classNames(
+          "flex-grow px-2 py-1 bg-sepia-500/[15%] rounded resize-none transition-colors",
+          "focus:outline-none focus:bg-sepia-500/20 hover:bg-sepia-500/20"
+        )}
         onChange={(e) => setContent(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -36,13 +44,19 @@ export const SendBox: React.FC = () => {
         }}
         value={content}
       />
-      <Button kind="flat" color="primary" onClick={submit}>
+      <Button
+        kind="outline"
+        color="primary"
+        onClick={submit}
+        className="uppercase"
+      >
         Send
       </Button>
       <Button
         kind={secret ? "flat" : "outline"}
         color={"danger"}
         onClick={() => setSecret((s) => !s)}
+        className="uppercase"
       >
         {secret ? "🤫" : "😮"}
       </Button>

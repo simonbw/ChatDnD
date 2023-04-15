@@ -2,6 +2,7 @@ import axios from "axios";
 import { Router } from "express";
 import https from "https";
 import http from "http";
+import { Readable } from "stream";
 
 const router = Router();
 export default router;
@@ -24,7 +25,7 @@ router.get("/esbuild", async (req, res) => {
     res.flushHeaders();
 
     // Request the event stream from the provided URL
-    const axiosRes = await axios.get("http://0.0.0.0:8000/esbuild", {
+    const axiosRes = await axios.get<Readable>("http://0.0.0.0:8000/esbuild", {
       headers: { Accept: "text/event-stream" },
       responseType: "stream",
       httpsAgent,

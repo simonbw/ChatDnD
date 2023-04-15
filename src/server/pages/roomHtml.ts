@@ -1,4 +1,4 @@
-import { RoomState } from "../../common/roomModel";
+import { RoomState } from "../../common/models/roomModel";
 
 export function roomHtml(roomId: string, state: RoomState) {
   return /*html*/ `
@@ -12,8 +12,7 @@ export function roomHtml(roomId: string, state: RoomState) {
 
 <body>
   <div id="react-container"></div>
-  <script>const roomState = '${JSON.stringify(state)}';</script>
-  <script src="/static/pages/room.js"></script>
+  <script src="/static/pages/roomPage.js"></script>
 </body>
 
 </html>`;

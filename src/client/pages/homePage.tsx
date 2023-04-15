@@ -1,5 +1,5 @@
 import React from "react";
-import { renderPage } from "./renderPage";
+import { renderPage } from "../utils/renderPage";
 
 renderPage(
   <main>
