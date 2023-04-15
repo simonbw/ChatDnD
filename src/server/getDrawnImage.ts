@@ -2,16 +2,13 @@ import axios from "axios";
 import path from "path";
 import sharp, { Sharp } from "sharp";
 import { last } from "../common/utils/arrayUtils";
-import { getDrawnImageFolder } from "./utils/envUtils";
+import { getDrawnImageFolder, isDrawingEnabled } from "./utils/envUtils";
 import { openAi } from "./utils/openAiUtils";
-
-const DRAWING_ENABLED = false;
-// const DRAWING_ENABLED = true;
 
 const PLACEHOLDER = "/static/images/drawing-disabled.png";
 
 export async function getDrawnImage(description: string): Promise<string> {
-  if (DRAWING_ENABLED) {
+  if (isDrawingEnabled()) {
     const remoteImageUrl = await getRemoteUrl(description);
     const imageName = last(new URL(remoteImageUrl).pathname.split("/"));
     const rawBuffer = await fetchImageBuffer(remoteImageUrl);

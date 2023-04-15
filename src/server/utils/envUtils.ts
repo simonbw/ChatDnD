@@ -23,3 +23,7 @@ export function getElevenLabsKey(): string {
 export function getDrawnImageFolder(): string {
   return path.join(__dirname, "../../dist/client/images/drawn");
 }
+
+export function isDrawingEnabled(): boolean {
+  return process.env.DRAWING_ENABLED == "true";
+}
