@@ -1,12 +1,13 @@
 import express, { RequestHandler } from "express";
 import expressHttpProxy from "express-http-proxy";
-import { getNodeEnv } from "./utils/envUtils";
+import { getNodeEnv, getStaticsFolder } from "./utils/envUtils";
 
 // Determine the right strategy for static files depending on if we're in dev mode or not
 export function getStaticsMiddleware() {
   if (getNodeEnv() == "production") {
-    console.log("serving static files from dist/client at /static");
-    return express.static("dist/client");
+    const staticFolder = getStaticsFolder();
+    console.log(`serving static files from ${staticFolder} at /static`);
+    return express.static(staticFolder);
   } else {
     console.log("proxying static files to 127.0.0.1:800");
     let proxyMiddleware: RequestHandler;

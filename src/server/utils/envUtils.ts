@@ -21,7 +21,11 @@ export function getElevenLabsKey(): string {
 }
 
 export function getDrawnImageFolder(): string {
-  return path.join(__dirname, "../../dist/client/images/drawn");
+  return path.join(getStaticsFolder(), "images/drawn");
+}
+
+export function getStaticsFolder(): string {
+  return path.join(__dirname, "../../dist/client");
 }
 
 export function isDrawingEnabled(): boolean {
