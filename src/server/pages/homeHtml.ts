@@ -4,7 +4,7 @@ export const homeHtml = /*html*/ `
 <head>
   <meta name="viewport" content="width=device-width">
   <title>ChatDnD</title>
-  <link rel="stylesheet" href="/static/index.css" />
+  <link rel="stylesheet" href="/static/styles/index.css" />
 </head>
 
 <body>
