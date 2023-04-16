@@ -18,8 +18,10 @@ const context = await esbuild
     minify: !isDev,
     sourcemap: true,
     outdir: "dist/client",
+    external: ["/static/fonts/*"],
     plugins: [
       postcssPlugin({
+        extract: true,
         postcss: {
           plugins: [postcssImport, tailwind, autoprefixer],
         },

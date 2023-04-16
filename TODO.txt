@@ -2,7 +2,7 @@ TODO
 
 
 FRONTEND:
-
+- Main page
 - Nicer looking buttons
 - Dice roller
 - Room picker

@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { roomListItemSchema, roomListSchema } from "./roomListModel";
+import { string, z } from "zod";
 
 export const roomMessageRoleSchema = z.union([
   z.literal("system"),
@@ -21,6 +22,9 @@ export const roomMessageSchema = z.object({
 
 export const roomStateSchema = z.object({
   messages: z.array(roomMessageSchema),
+  id: z.string(),
+  name: z.string(),
+  players: z.array(z.string()),
 });
 
 export type RoomMessageImage = z.infer<typeof roomMessageImageSchema>;

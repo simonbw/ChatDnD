@@ -7,18 +7,28 @@ import {
   StreamMessageDelta,
   streamMessageSchema,
 } from "./RoomMessageBuilder";
-import { makeStarterMessages } from "./first-message";
+import {
+  makeStarterMessages,
+  playerJoinMessage,
+  playerLeaveMessage,
+} from "./system-messages";
 import { Channel } from "./utils/Channel";
 import { openAi } from "./utils/openAiUtils";
 
+interface Player {
+  id: string;
+  name: string;
+}
+
 export class Room {
   public channel: Channel<RoomState> = new Channel();
-
+  public name: string;
   private messages: RoomMessage[] = [];
+  private players: Player[] = [];
 
   constructor(public readonly id: string) {
+    this.name = id;
     this.messages.push(...makeStarterMessages());
-    this.getDmMessage();
   }
 
   addMessage(message: RoomMessage) {
@@ -26,6 +36,18 @@ export class Room {
     this.messages.push(message);
     this.publish();
     return messageIndex;
+  }
+
+  addPlayer(player: Player) {
+    this.players.push(player);
+    this.addMessage(playerJoinMessage(player));
+    this.getDmMessage();
+  }
+
+  removePlayer(player: Player) {
+    this.players.filter((p) => p.id != player.id);
+    this.addMessage(playerLeaveMessage(player));
+    this.getDmMessage();
   }
 
   updateMessage(messageIndex: number, message: RoomMessage) {
@@ -44,6 +66,9 @@ export class Room {
     );
     return {
       messages: publicMessages,
+      id: this.id,
+      name: this.name,
+      players: this.players.map((p) => p.name),
     };
   }
 

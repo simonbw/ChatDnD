@@ -1,0 +1,9 @@
+@layer base {
+  html {
+    @apply bg-zinc-800;
+  }
+  body {
+    min-height: 100vh;
+    @apply bg-gradient-to-b from-zinc-700 to-zinc-800;
+  }
+}

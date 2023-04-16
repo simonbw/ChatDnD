@@ -1,9 +1,8 @@
 import axios from "axios";
 import { Router } from "express";
 import { z } from "zod";
-import { RoomMessage } from "../../common/models/roomModel";
-import { roomHtml } from "../pages/roomHtml";
-import { getRoom } from "../rooms";
+import { roomHtml } from "../../pages/roomHtml";
+import { getRoom } from "../../rooms";
 
 const router = Router();
 export default router;
@@ -93,38 +92,4 @@ router.get("/:roomId/state-stream", (req, res) => {
   req.on("close", () => {
     getRoom(roomId).channel.unsubscribe(listenerId);
   });
-});
-
-router.post("/:roomId/message", async (req, res) => {
-  const roomId = z.string().parse(req.params.roomId);
-  const room = getRoom(roomId);
-
-  const requestBody = z
-    .object({
-      name: z.string(),
-      content: z.string(),
-      secret: z.boolean().optional(),
-    })
-    .safeParse(req.body);
-
-  if (!requestBody.success) {
-    res.status(400);
-    res.send({ error: "Bad message: " + String(req.body) });
-    return;
-  }
-
-  const message: RoomMessage = {
-    role: "user",
-    name: requestBody.data.name,
-    content: requestBody.data.content,
-    secret: requestBody.data.secret ?? false,
-  };
-
-  room.addMessage(message);
-
-  if (!requestBody.data.secret) {
-    room.getDmMessage();
-  }
-
-  res.status(200).send({ success: true });
 });
