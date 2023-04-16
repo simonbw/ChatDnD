@@ -1,3 +1,5 @@
+import "../styles/index.css";
+
 import React from "react";
 import { Button } from "../components/Button";
 import { MessagePane } from "../components/MessagePane";

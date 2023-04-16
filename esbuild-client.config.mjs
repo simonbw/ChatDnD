@@ -1,9 +1,7 @@
 import autoprefixer from "autoprefixer";
 import esbuild from "esbuild";
-import postcssPlugin from "esbuild-postcss";
+import postcssPlugin from "esbuild-style-plugin";
 import fs from "fs/promises";
-import { glob } from "glob";
-import path from "path";
 import postcssImport from "postcss-import";
 import tailwind from "tailwindcss";
 
