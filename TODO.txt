@@ -1,4 +1,21 @@
 TODO
 
- - Use a database
-   - I think we could improve a lot of stuff 
+
+FRONTEND:
+
+- Nicer looking buttons
+- Dice roller
+- Room picker
+
+FRONT & BACK
+- Markdown support
+- A button that (asks to) draw the scene
+
+PROMPT:
+ - Send a system message when a player joins the game, and have chatdnd welcome them.
+ - Consider having a separate agent analyze responses to see if they contain new characters or scenes
+ - Mention markdown
+
+BACKEND:
+ - Use a database to store prompts and rooms and such (could probably do Hasura)
+ - Store images in S3 or something

@@ -1,9 +1,11 @@
 import autoprefixer from "autoprefixer";
 import esbuild from "esbuild";
 import postcssPlugin from "esbuild-postcss";
-import tailwind from "tailwindcss";
-import postcssImport from "postcss-import";
 import fs from "fs/promises";
+import { glob } from "glob";
+import path from "path";
+import postcssImport from "postcss-import";
+import tailwind from "tailwindcss";
 
 const isDev = process.argv.some((arg) => arg == "--dev");
 
@@ -31,6 +33,8 @@ const context = await esbuild
     process.exit(1);
   });
 
+await copyStatics();
+
 if (isDev) {
   await context.watch();
   const { host, port } = await context
@@ -46,6 +50,13 @@ if (isDev) {
 }
 
 async function copyStatics() {
-  // fs.
-  await fs.copyFile();
+  const startTime = performance.now();
+  const destinationDir = "dist/client";
+  await fs.mkdir(destinationDir, { recursive: true });
+
+  console.log(`copying statics to ${destinationDir}`);
+
+  fs.cp("static", destinationDir, { recursive: true });
+
+  console.log(`done [${Math.round(performance.now() - startTime)}ms]`);
 }
