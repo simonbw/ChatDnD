@@ -14,6 +14,7 @@ renderPage(
           Home
         </Button>
       </a>
+      <span>Simon was here3</span>
     </nav>
 
     <div className="px-4 animate-grow-in duration">

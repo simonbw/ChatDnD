@@ -7,6 +7,7 @@ export function roomHtml(roomId: string, state: RoomState) {
 <head>
   <meta name="viewport" content="width=device-width">
   <title>ChatDnD — ${roomId}</title>
+  <link rel="icon" type="image/png" href="/static/images/favicon.png">
   <link rel="stylesheet" href="/static/styles/index.css" />
 </head>
 

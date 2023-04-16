@@ -11,14 +11,17 @@ export function renderPage(content: ReactNode) {
 
   // Live reload (only in dev)
   if (process?.env?.NODE_ENV == "development") {
-    window.addEventListener("load", () => {
-      try {
-        const source = new EventSource("/esbuild");
-        source.addEventListener("change", () => location.reload());
-        source.addEventListener("connection-error", (event) =>
-          console.error("esbuild event stream error:", event.data)
-        );
-      } catch (error) {}
-    });
+    try {
+      const source = new EventSource("/esbuild");
+      source.addEventListener("change", () => {
+        console.log("out of date");
+        location.reload();
+      });
+      source.addEventListener("connection-error", (event) =>
+        console.error("esbuild event stream error:", event.data)
+      );
+    } catch (error) {
+      console.warn("failed to start esbuild listener", error);
+    }
   }
 }

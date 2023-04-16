@@ -9,7 +9,7 @@
     "build:server": "node esbuild-server.config.mjs",
     "start": "NODE_ENV=production node dist/server/index.js",
     "dev": "npm-run-all --parallel dev:*",
-    "dev:client": "concurrently \"node esbuild-client.config.mjs --dev\" \"npx tailwindcss -i ./src/client/styles/index.css -o ./dist/client/index.css --watch\"",
+    "dev:client": "node esbuild-client.config.mjs --dev",
     "dev:server": "concurrently \"node esbuild-server.config.mjs --dev\" \"NODE_ENV=dev nodemon --enable-source-maps dist/server/index.js\"",
     "tsc": "tsc --noEmit"
   },
