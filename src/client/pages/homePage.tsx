@@ -9,8 +9,8 @@ import {
 import { renderPage } from "../utils/renderPage";
 
 renderPage(
-  <main>
-    <h1>ChatDnD</h1>
+  <main className="container mx-auto p-2">
+    <h1 className="text-6xl font-cambridge">ChatDnD</h1>
     <p>This is the home page.</p>
 
     <RoomList />
@@ -24,7 +24,7 @@ function RoomList() {
     <ul>
       {rooms.map((room) => (
         <li key={room.id}>
-          <a href={`/room/${room}`}>{room.name}</a>
+          <a href={`/room/${room.id}`}>{room.name}</a>
         </li>
       ))}
     </ul>

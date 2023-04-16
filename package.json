@@ -8,7 +8,7 @@
     "build:client": "node esbuild-client.config.mjs",
     "build:server": "node esbuild-server.config.mjs",
     "start": "NODE_ENV=production node dist/server/index.js",
-    "dev": "NODE_ENV=development npm-run-all --parallel dev:*",
+    "dev": "npm-run-all --parallel dev:*",
     "dev:client": "node esbuild-client.config.mjs --dev",
     "dev:server": "concurrently \"node esbuild-server.config.mjs --dev\" \"NODE_ENV=dev nodemon dist/server/index.js\"",
     "tsc": "tsc --noEmit"
@@ -48,6 +48,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-expanding-textarea": "^2.3.6",
+    "react-markdown": "^8.0.7",
     "sharp": "^0.32.0",
     "tailwindcss": "^3.3.1",
     "tailwindcss-opentype": "^1.1.0",

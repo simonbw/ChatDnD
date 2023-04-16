@@ -1,0 +1,26 @@
+@layer utilities {
+  .markdown {
+    white-space: normal;
+  }
+
+  .markdown p:not(:first-child) {
+    margin-top: 1em;
+  }
+
+  .markdown ul {
+    white-space: normal;
+    padding-left: 2em;
+    list-style: disc;
+  }
+
+  .markdown ol {
+    white-space: normal;
+    padding-left: 2em;
+    list-style: decimal;
+  }
+
+  .markdown ol > li {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+}

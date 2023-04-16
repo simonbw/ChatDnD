@@ -1,0 +1,63 @@
+@font-face {
+  font-family: "Kingthings Caligraphica";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingthings_Calligraphica_Light.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Kingthings Caligraphica";
+  font-style: normal;
+  font-weight: bold;
+
+  src: url("/static/fonts/Kingthings_Calligraphica_2.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Kingthings Caligraphica";
+  font-style: italic;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingthings_Calligraphica_Italic.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Kingthings Exeter";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingthings_Exeter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Kingthings Foundation";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingthings_Foundation.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Kingthings Petrock";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingthings_Petrock.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Kingthings Petrock";
+  font-style: normal;
+  font-weight: light;
+
+  src: url("/static/fonts/Kingthings_Petrock_light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Kingthings Italique";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingthings Italique.woff2") format("woff2");
+}

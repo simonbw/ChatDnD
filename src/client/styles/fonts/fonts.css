@@ -1,57 +1,217 @@
-@import "./alkatra.css";
+@import "./kingthings.css";
 
 @font-face {
-  font-family: "Kingthings Caligraphica";
+  font-family: "Aluvemskrew";
   font-style: normal;
   font-weight: normal;
 
-  src: url("/static/fonts/Kingthings_Calligraphica_Light.ttf") format("ttf");
+  src: url("/static/fonts/Aluvemskrew.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Kingthings Caligraphica";
+  font-family: "Archking";
   font-style: normal;
-  font-weight: bold;
+  font-weight: normal;
 
-  src: url("/static/fonts/Kingthings_Calligraphica_2.ttf") format("ttf");
+  src: url("/static/fonts/Archking.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Kingthings Caligraphica";
+  font-family: "Bajern";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Bajern.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Beautiful Dream";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Beautiful Dream.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Berkahi Blackletter";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Berkahi Blackletter.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Bettackerl";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Bettackerllregular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Black Chancery";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Black Chancery.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Blackpride";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Blackpride Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Browking";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/BrowkingPersonalUse-3z7l6.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cambridge";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Cambridge.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Carglos";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Carglos.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Carglos";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Carglos.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Denibas sunset";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Denibas sunset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Dungeon";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Dungeon.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Enchant";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Enchant.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Gomawo";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Gomawo.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Gordon";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Gordon.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inkfree";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Inkfree.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Killuminati";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/KilluminatiDEMO.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Kingslayer";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Kingslayer.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Lordish";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Lordish.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Manstein";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Manstein.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Matgard";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Matgard.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Silverback";
+  font-style: normal;
+  font-weight: normal;
+
+  src: url("/static/fonts/Silverback.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Silverback";
   font-style: italic;
   font-weight: normal;
 
-  src: url("/static/fonts/Kingthings_Calligraphica_Italic.ttf") format("ttf");
+  src: url("/static/fonts/Silverback Oblique.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Kingthings Exeter";
+  font-family: "The Magician";
   font-style: normal;
   font-weight: normal;
 
-  src: url("/static/fonts/Kingthings_Exeter.ttf") format("ttf");
+  src: url("/static/fonts/The Magician.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Kingthings Foundation";
+  font-family: "Van Blessing";
   font-style: normal;
   font-weight: normal;
 
-  src: url("/static/fonts/Kingthings_Foundation.ttf") format("ttf");
-}
-
-@font-face {
-  font-family: "Kingthings Petrock";
-  font-style: normal;
-  font-weight: normal;
-
-  src: url("/static/fonts/Kingthings_Petrock.ttf") format("ttf");
-}
-
-@font-face {
-  font-family: "Kingthings Petrock";
-  font-style: normal;
-  font-weight: light;
-
-  src: url("/static/fonts/Kingthings_Petrock_light.ttf") format("ttf");
+  src: url("/static/fonts/Van Blessing.woff2") format("woff2");
 }

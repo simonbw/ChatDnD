@@ -8,7 +8,7 @@ export function MessagePane() {
 
   return (
     <div className="flex flex-col font-serif gap-8">
-      <div className="flex-grow flex flex-col gap-8">
+      <div className="flex-grow flex flex-col gap-0">
         {state?.messages.length == 0 && (
           <div className="italic p-2 text-sepia-700 text-center">
             No messages yet

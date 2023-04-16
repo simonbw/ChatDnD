@@ -8,7 +8,7 @@ import { renderPage } from "../utils/renderPage";
 
 renderPage(
   <div>
-    <nav className="text-zinc-100">
+    <nav className="text-zinc-100 container mx-auto max-w-2xl font-serif">
       <a href="/">
         <Button color="white" kind="text">
           Home
@@ -19,8 +19,8 @@ renderPage(
     <div className="px-4 animate-grow-in duration">
       <div
         className={classNames(
-          "container max-w-5xl mx-auto overflow-hidden mt-4 p-8 xl:p-12",
-          "ragged-edges shadow-xl bg-sepia-200"
+          "container max-w-2xl mx-auto overflow-hidden mt-4 py-8 xl:py-12",
+          "shadow-black shadow-2xl bg-sepia-200 drop-shadow-xl"
         )}
         style={{
           backgroundImage: "url(/static/images/parchment-3.jpg)",
@@ -31,5 +31,6 @@ renderPage(
         <MessagePane />
       </div>
     </div>
+    <footer className="h-8"></footer>
   </div>
 );

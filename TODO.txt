@@ -8,8 +8,8 @@ FRONTEND:
 - Room picker
 
 FRONT & BACK
-- Markdown support
 - A button that (asks to) draw the scene
+- Allow deleting or regenerating messages.
 
 PROMPT:
  - Send a system message when a player joins the game, and have chatdnd welcome them.

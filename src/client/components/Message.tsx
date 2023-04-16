@@ -3,6 +3,8 @@ import { RoomMessage, RoomMessageImage } from "../../common/models/roomModel";
 import { WrittenText } from "./WrittenText";
 import { classNames } from "./classNames";
 import { DissolveInImage } from "./DissolveTransition";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { NameTag } from "./NameTag";
 
 export function Message({ message }: { message: RoomMessage }) {
   const [isFast, setFast] = useState(false);
@@ -12,24 +14,27 @@ export function Message({ message }: { message: RoomMessage }) {
   const isDm = message.role === "assistant";
   return (
     <div
-      className={classNames("p-2 flex gap-2", isDm ? "" : "")}
+      className={classNames("py-4 flex gap-2", isDm ? "bg-sepia-600/10" : "")}
       onClick={() => setFast(true)}
     >
-      <div className="w-28 flex-shrink-0 text-right">
-        <span className="text-sepia-500 text-sm small-caps w-40 underline underline-offset-8 animate-fade-in">
-          {message.name}
-        </span>
+      <div
+        className={classNames(
+          "w-28 flex-shrink-0 text-right pr-2",
+          "border-r border-sepia-300"
+        )}
+      >
+        <NameTag name={message.name} />
       </div>
       <div className="flex-grow">
         {contentItems.map((item, i) => {
           switch (item.type) {
             case "text":
               // TODO: don't start each WrittenText until the previous has finished
-              return <TextContent key={i} text={item.text} isFast={isFast} />;
+              return <MessageText key={i} text={item.text} isFast={isFast} />;
 
             case "image": {
               const image = message.images?.[item.index];
-              return <ImageContent key={i} image={image} />;
+              return <MessageImage key={i} image={image} />;
             }
           }
         })}
@@ -41,7 +46,26 @@ export function Message({ message }: { message: RoomMessage }) {
   );
 }
 
-function ImageContent({ image }: { image?: RoomMessageImage }) {
+function MessageText({ isFast, text }: { isFast: boolean; text: string }) {
+  return (
+    <div
+      className={classNames(
+        "text-sepia-800",
+        "whitespace-pre-wrap",
+        "text-justify hyphens-auto",
+        "font-body text-md tracking-normal",
+        "leading-snug"
+      )}
+      style={{}}
+    >
+      {/* <WrittenText interval={isFast ? 0 : 20} initialText={text}> */}
+      <ReactMarkdown className="markdown">{text}</ReactMarkdown>
+      {/* </WrittenText> */}
+    </div>
+  );
+}
+
+function MessageImage({ image }: { image?: RoomMessageImage }) {
   return (
     <div>
       <figure
@@ -57,23 +81,13 @@ function ImageContent({ image }: { image?: RoomMessageImage }) {
           />
         </div>
         {image?.description && (
-          <figcaption className="mt-1 text-xs font-italic text-sepia-500 text-center max-w-80">
+          <figcaption className="mt-1 text-xs font-italic text-sepia-500 text-center max-w-80 font-caption">
             <WrittenText interval={0} initialText={image.description}>
               {image.description}
             </WrittenText>
           </figcaption>
         )}
       </figure>
-    </div>
-  );
-}
-
-function TextContent({ isFast, text }: { isFast: boolean; text: string }) {
-  return (
-    <div className="text-sepia-800 whitespace-pre-wrap text-justify hyphens-auto">
-      <WrittenText interval={isFast ? 0 : 20} initialText={text}>
-        {text}
-      </WrittenText>
     </div>
   );
 }

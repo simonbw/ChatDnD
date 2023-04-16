@@ -19,7 +19,7 @@ export const SendBox: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-2 p-4 font-serif border-4 border-sepia-300 border-double items-center rounded-sm">
+    <div className="flex gap-2 p-4 font-serif border-t-4 border-sepia-300 border-double items-center rounded-sm">
       <input
         type="text"
         className={classNames(
