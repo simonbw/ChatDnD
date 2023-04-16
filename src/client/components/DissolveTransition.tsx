@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { clamp } from "../../common/utils/mathUtils";
+import { clamp, smoothStep } from "../../common/utils/mathUtils";
 import { useLoadImage } from "../hooks/useLoadImage";
 import { classNames } from "./classNames";
 import { makeNoise2D } from "open-simplex-noise";
@@ -9,7 +9,7 @@ export function DissolveInImage({
   className,
   width,
   height,
-  duration = 2000,
+  duration = 1500,
   ref: _ref,
   ...rest
 }: React.HTMLProps<HTMLCanvasElement> & { duration?: number }) {
@@ -21,7 +21,6 @@ export function DissolveInImage({
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const image = useLoadImage(src, () => {
-    console.log("image loaded, starting transition");
     setT(() => 0);
   });
 
@@ -55,7 +54,8 @@ export function DissolveInImage({
                 const n = 0.5 + noise(x * noiseOctave, y * noiseOctave) * 0.5; // from 0 to 1
                 const o = 1 - Math.sqrt(cx * cx + cy * cy) / Math.sqrt(2);
 
-                imageData.data[i + 3] *= clamp(n * o + 2 * t - 1);
+                const t2 = smoothStep(t);
+                imageData.data[i + 3] *= clamp(n * o + 2 * t2 - 1);
               }
             }
             ctx.putImageData(imageData, 0, 0);

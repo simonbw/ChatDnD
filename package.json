@@ -8,9 +8,9 @@
     "build:client": "node esbuild-client.config.mjs",
     "build:server": "node esbuild-server.config.mjs",
     "start": "NODE_ENV=production node dist/server/index.js",
-    "dev": "npm-run-all --parallel dev:*",
+    "dev": "NODE_ENV=development npm-run-all --parallel dev:*",
     "dev:client": "node esbuild-client.config.mjs --dev",
-    "dev:server": "concurrently \"node esbuild-server.config.mjs --dev\" \"NODE_ENV=dev nodemon --enable-source-maps dist/server/index.js\"",
+    "dev:server": "concurrently \"node esbuild-server.config.mjs --dev\" \"NODE_ENV=dev nodemon dist/server/index.js\"",
     "tsc": "tsc --noEmit"
   },
   "repository": {
@@ -23,6 +23,12 @@
     "url": "https://github.com/simonbw/ChatDnD/issues"
   },
   "homepage": "https://github.com/simonbw/ChatDnD#readme",
+  "nodemonConfig": {
+    "enable-source-maps": true,
+    "watch": [
+      "dist/server"
+    ]
+  },
   "dependencies": {
     "autoprefixer": "^10.4.14",
     "axios": "^1.3.5",

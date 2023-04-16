@@ -13,42 +13,37 @@ const httpsAgent = new https.Agent({
 });
 
 router.get("/esbuild", async (req, res) => {
-  if (isDev()) {
-    try {
-      // Set up Server-Sent Events headers
-      res.header({
-        "Content-Type": "text/event-stream",
-        Connection: "keep-alive",
-        "Cache-Control": "no-cache",
-      });
-      res.flushHeaders();
+  console.log("Forwarding http://0.0.0.0:8000/esbuild to /esbuild");
+  try {
+    // Set up Server-Sent Events headers
+    res.header({
+      "Content-Type": "text/event-stream",
+      Connection: "keep-alive",
+      "Cache-Control": "no-cache",
+    });
+    res.flushHeaders();
 
-      // Request the event stream from the provided URL
-      const axiosRes = await axios.get<Readable>(
-        "http://0.0.0.0:8000/esbuild",
-        {
-          headers: { Accept: "text/event-stream" },
-          responseType: "stream",
-          httpsAgent,
-        }
-      );
+    // Request the event stream from the provided URL
+    const axiosRes = await axios.get<Readable>("http://0.0.0.0:8000/esbuild", {
+      headers: { Accept: "text/event-stream" },
+      responseType: "stream",
+      httpsAgent,
+    });
 
-      // Forward events from the response stream to the client
-      axiosRes.data.on("data", (chunk: any) => {
-        res.write(chunk);
-      });
+    // Forward events from the response stream to the client
+    axiosRes.data.on("data", (chunk: unknown) => {
+      console.log("esbuild server sent data");
+      res.write(chunk);
+    });
 
-      // Close the connection when the client disconnects
-      req.on("close", () => {
-        axiosRes.data.destroy();
-        res.end();
-      });
-    } catch (error) {
-      console.error("Error while forwarding events:", error);
-      res.write("event: connection-error\n" + "data: " + error + "\n\n");
+    // Close the connection when the client disconnects
+    req.on("close", () => {
+      axiosRes.data.destroy();
       res.end();
-    }
-  } else {
-    res.status(404);
+    });
+  } catch (error) {
+    console.error("Error while forwarding events:", error);
+    res.write("event: connection-error\n" + "data: " + error + "\n\n");
+    res.end();
   }
 });

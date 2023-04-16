@@ -18,7 +18,6 @@ export function useLoadImage(
     image.addEventListener("load", wrappedOnLoad);
 
     if (src) {
-      console.log("setting image src", src);
       image.src = src;
     }
 
