@@ -1,9 +1,9 @@
 import express from "express";
-import esbuildRouter from "./routers/esbuildRouter";
-import homeRouter from "./routers/homeRouter";
-import roomRouter from "./routers/roomRouter";
-import voiceRouter from "./routers/voiceRouter";
-import { getStaticsMiddleware } from "./getStaticsMiddleware";
+import esbuildRouter from "./middleware/esbuildRouter";
+import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
+import homeRouter from "./middleware/homeRouter";
+import roomRouter from "./middleware/roomRouter";
+import voiceRouter from "./middleware/voiceRouter";
 
 export const app = express();
 
@@ -20,3 +20,6 @@ app.use("/", homeRouter);
 app.use("/", esbuildRouter);
 app.use("/", voiceRouter);
 app.use("/room", roomRouter);
+
+// Error Handling
+app.use;

@@ -3,6 +3,7 @@ import esbuild from "esbuild";
 import postcssPlugin from "esbuild-postcss";
 import tailwind from "tailwindcss";
 import postcssImport from "postcss-import";
+import fs from "fs/promises";
 
 const isDev = process.argv.some((arg) => arg == "--dev");
 
@@ -42,4 +43,9 @@ if (isDev) {
 } else {
   await context.rebuild();
   await context.dispose();
+}
+
+async function copyStatics() {
+  // fs.
+  await fs.copyFile();
 }
