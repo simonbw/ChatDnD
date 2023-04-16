@@ -1,5 +1,4 @@
-import { roomListItemSchema, roomListSchema } from "./roomListModel";
-import { string, z } from "zod";
+import { z } from "zod";
 
 export const roomMessageRoleSchema = z.union([
   z.literal("system"),
@@ -13,10 +12,15 @@ export const roomMessageImageSchema = z.object({
 });
 
 export const roomMessageSchema = z.object({
+  /* Who is saying this, i.e. a user, the dm, or the system */
   role: roomMessageRoleSchema,
+  /* Content of the message */
   content: z.string(),
-  name: z.string().optional(),
+  /* Name of the person who said this */
+  name: z.string().nonempty().optional(),
+  /* Not said to the DM */
   secret: z.boolean().optional(),
+  /* References to images included in this message */
   images: z.array(roomMessageImageSchema).optional(),
 });
 

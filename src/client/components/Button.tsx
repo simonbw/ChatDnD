@@ -30,8 +30,8 @@ const disabledKindClasses: Record<ButtonKind, string> = {
 
 const sizeClasses: Record<ButtonSize, string> = {
   xs: "px-2.5 py-1 text-xs font-medium",
-  sm: "px-3 py-1.5 text-xs font-medium",
-  md: "px-4 py-1.5 text-sm font-medium",
+  sm: "px-3 py-1 text-md font-medium",
+  md: "px-4 py-1.5 text-md font-medium",
   lg: "px-6 py-2 text-base font-medium",
   xl: "px-6 py-2 text-lg font-medium",
 };

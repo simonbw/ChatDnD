@@ -1,35 +1,47 @@
-import axios from "axios";
 import { Router } from "express";
 import { z } from "zod";
-import { RoomMessage } from "../../../common/models/roomModel";
-import { roomHtml } from "../../pages/roomHtml";
+import {
+  RoomMessage,
+  roomMessageSchema,
+} from "../../../common/models/roomModel";
 import { getRoom } from "../../rooms";
 
 const router = Router();
 export default router;
 
-router.post("/:roomId/join", (req, res) => {
+router.post("/:roomId/join", (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   console.log("player joining room ", roomId, req.url);
-  res.send(roomHtml(roomId, getRoom(roomId).getPublicState()));
+
+  const room = getRoom(roomId);
+
+  const maybePlayer = z
+    .object({ name: z.string(), id: z.string() })
+    .safeParse(req.body);
+
+  if (!maybePlayer.success) {
+    console.log("Bad Player:", maybePlayer.error);
+    return res.status(400).send({ error: "Invalid Player" });
+  }
+
+  try {
+    const player = maybePlayer.data;
+    room.addPlayer(player);
+  } catch (error) {
+    return next(error);
+  }
+
+  res.send({ success: true });
 });
 
-router.post("/:roomId/message", async (req, res) => {
+router.post("/:roomId/message", async (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   const room = getRoom(roomId);
 
-  const requestBody = z
-    .object({
-      name: z.string(),
-      content: z.string(),
-      secret: z.boolean().optional(),
-    })
-    .safeParse(req.body);
+  const requestBody = roomMessageSchema.safeParse(req.body);
 
   if (!requestBody.success) {
-    res.status(400);
-    res.send({ error: "Bad message: " + String(req.body) });
-    return;
+    return res.status(400).send({ error: "Bad message: " + String(req.body) });
   }
 
   const message: RoomMessage = {
@@ -39,10 +51,20 @@ router.post("/:roomId/message", async (req, res) => {
     secret: requestBody.data.secret ?? false,
   };
 
-  room.addMessage(message);
+  try {
+    room.addMessage(message);
+  } catch (error) {
+    return next(error);
+  }
 
   if (!requestBody.data.secret) {
-    room.getDmMessage();
+    try {
+      room
+        .getDmMessage()
+        .catch((error) => console.error("Error getting DM message:", error));
+    } catch (error) {
+      return next(error);
+    }
   }
 
   res.status(200).send({ success: true });

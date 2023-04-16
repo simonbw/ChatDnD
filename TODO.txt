@@ -1,5 +1,3 @@
-TODO
-
 
 FRONTEND:
 - Main page
@@ -7,15 +5,16 @@ FRONTEND:
 - Dice roller
 - Room picker
 
-FRONT & BACK
+FRONTEND & BACKEND
 - A button that (asks to) draw the scene
 - Allow deleting or regenerating messages.
+- Ambient music?
 
 PROMPT:
- - Send a system message when a player joins the game, and have chatdnd welcome them.
  - Consider having a separate agent analyze responses to see if they contain new characters or scenes
- - Mention markdown
+ - 
 
-BACKEND:
+PERFORMANCE/TECH DEBT
+ - Don't send whole state on every update. Only send deltas
  - Use a database to store prompts and rooms and such (could probably do Hasura)
  - Store images in S3 or something

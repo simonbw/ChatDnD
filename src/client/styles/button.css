@@ -4,10 +4,11 @@
     @apply rounded justify-center items-center relative overflow-hidden ring-offset-0 select-none;
     @apply focus:outline-none;
     @apply transition duration-75 motion-reduce:transition-none;
+    @apply tracking-wide font-serif small-caps;
   }
 
   .button-focusable {
-    @apply focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-opacity-50 ring-offset-transparent;
+    @apply focus:ring-2 focus:ring-offset-2 focus:ring-sepia-500 focus:ring-opacity-50 ring-offset-transparent;
     @apply focus:hover:ring-opacity-10 focus:hover:ring-offset-0;
   }
 
@@ -30,46 +31,46 @@
 
   /* Button Colors */
   .button-primary {
-    @apply focus:ring-indigo-500;
+    @apply focus:ring-sepia-500;
   }
 
   .button-secondary {
-    @apply focus:ring-indigo-500;
+    @apply focus:ring-sepia-500;
   }
 
   .button-danger {
-    @apply focus:ring-indigo-500;
+    @apply focus:ring-sepia-500;
   }
 
   .button-white {
-    @apply focus:ring-indigo-500;
+    @apply focus:ring-sepia-500;
   }
 
   /* Button kind - color */
   .button-primary-full {
-    @apply text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800;
+    @apply text-white bg-sepia-600 hover:bg-sepia-700 active:bg-sepia-800;
   }
   .button-primary-flat {
-    @apply text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800;
+    @apply text-white bg-sepia-600 hover:bg-sepia-700 active:bg-sepia-800;
   }
   .button-primary-outline {
-    @apply border-indigo-300 text-indigo-600 hover:text-indigo-700 active:text-indigo-800 active:bg-indigo-600/10 hover:border-indigo-700 active:border-indigo-800;
+    @apply border-sepia-300 text-sepia-600 hover:text-sepia-700 active:text-sepia-800 active:bg-sepia-600/10 hover:border-sepia-700 active:border-sepia-800;
   }
   .button-primary-text {
-    @apply text-indigo-600 hover:text-indigo-700 active:text-indigo-800 hover:bg-indigo-600/5 active:bg-indigo-600/10;
+    @apply text-sepia-600 hover:text-sepia-700 active:text-sepia-800 hover:bg-sepia-600/5 active:bg-sepia-600/10;
   }
 
   .button-secondary-full {
-    @apply border-gray-300 text-gray-700 bg-white hover:bg-gray-100 active:bg-gray-200;
+    @apply border-zinc-300 text-zinc-700 bg-white hover:bg-zinc-100 active:bg-zinc-200;
   }
   .button-secondary-flat {
-    @apply border-gray-300 text-gray-700 bg-white hover:bg-gray-100 active:bg-gray-200;
+    @apply border-zinc-300 text-zinc-700 bg-white hover:bg-zinc-100 active:bg-zinc-200;
   }
   .button-secondary-outline {
-    @apply border-gray-300 text-gray-600 hover:text-gray-700 active:text-gray-800 active:bg-gray-600/10 hover:border-gray-700 active:border-gray-800;
+    @apply border-zinc-300 text-zinc-600 hover:text-zinc-700 active:text-zinc-800 active:bg-zinc-600/10 hover:border-zinc-700 active:border-zinc-800;
   }
   .button-secondary-text {
-    @apply text-gray-600 hover:text-gray-700 active:text-gray-800 hover:bg-gray-600/5 active:bg-gray-600/10;
+    @apply text-zinc-600 hover:text-zinc-700 active:text-zinc-800 hover:bg-zinc-600/5 active:bg-zinc-600/10;
   }
 
   .button-danger-full {
@@ -86,10 +87,10 @@
   }
 
   .button-white-full {
-    @apply border-transparent text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100;
+    @apply border-transparent text-zinc-700 bg-white hover:bg-zinc-50 active:bg-zinc-100;
   }
   .button-white-flat {
-    @apply border-transparent text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100;
+    @apply border-transparent text-zinc-700 bg-white hover:bg-zinc-50 active:bg-zinc-100;
   }
   .button-white-outline {
     @apply border-white text-white hover:bg-white/5 active:bg-white/10;
@@ -99,16 +100,16 @@
   }
 
   .button-full-disabled {
-    @apply disabled:pointer-events-none disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-700;
+    @apply disabled:pointer-events-none disabled:bg-zinc-300 disabled:hover:bg-zinc-300 disabled:text-zinc-700;
   }
   .button-flat-disabled {
-    @apply disabled:pointer-events-none disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-700;
+    @apply disabled:pointer-events-none disabled:bg-zinc-300 disabled:hover:bg-zinc-300 disabled:text-zinc-700;
   }
   .button-outline-disabled {
-    @apply disabled:pointer-events-none disabled:bg-gray-300/25 disabled:border-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-500;
+    @apply disabled:pointer-events-none disabled:bg-zinc-300/25 disabled:border-zinc-300 disabled:hover:bg-zinc-300 disabled:text-zinc-500;
   }
   .button-text-disabled {
-    @apply disabled:pointer-events-none disabled:text-gray-500;
+    @apply disabled:pointer-events-none disabled:text-zinc-500;
   }
 
   .button-loading {
@@ -116,28 +117,28 @@
   }
 
   .button-primary-full-loading {
-    @apply shadow-inner-md bg-indigo-800;
+    @apply shadow-inner-md bg-sepia-800;
   }
   .button-primary-flat-loading {
-    @apply shadow-inner bg-indigo-800;
+    @apply shadow-inner bg-sepia-800;
   }
   .button-primary-outline-loading {
-    @apply bg-indigo-600/20 !border-indigo-500;
+    @apply bg-sepia-600/20 !border-sepia-500;
   }
   .button-primary-text-loading {
-    @apply bg-indigo-600/20;
+    @apply bg-sepia-600/20;
   }
   .button-secondary-full-loading {
-    @apply shadow-inner bg-gray-200;
+    @apply shadow-inner bg-zinc-200;
   }
   .button-secondary-flat-loading {
-    @apply shadow-inner bg-gray-200;
+    @apply shadow-inner bg-zinc-200;
   }
   .button-secondary-outline-loading {
-    @apply bg-gray-600/20 !border-gray-400;
+    @apply bg-zinc-600/20 !border-zinc-400;
   }
   .button-secondary-text-loading {
-    @apply bg-gray-600/20;
+    @apply bg-zinc-600/20;
   }
   .button-danger-full-loading {
     @apply shadow-inner-md bg-red-800;
@@ -152,10 +153,10 @@
     @apply bg-red-600/20;
   }
   .button-white-full-loading {
-    @apply shadow-inner bg-gray-200;
+    @apply shadow-inner bg-zinc-200;
   }
   .button-white-flat-loading {
-    @apply shadow-inner bg-gray-200;
+    @apply shadow-inner bg-zinc-200;
   }
   .button-white-outline-loading {
     @apply bg-white/20;

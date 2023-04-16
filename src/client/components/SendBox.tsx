@@ -3,15 +3,17 @@ import { Button } from "./Button";
 import { relativeUrl } from "../utils/relativeUrl";
 import { classNames } from "./classNames";
 import Textarea from "react-expanding-textarea";
+import { usePlayerContext } from "../contexts/playerContext";
+import { NameTag } from "./NameTag";
 
-export const SendBox: React.FC = () => {
+export function SendBox() {
   const [content, setContent] = useState("");
-  const [name, setName] = useState("Simon");
+  const { player } = usePlayerContext();
   const [secret, setSecret] = useState(false);
 
   const submit = async () => {
     fetch(relativeUrl("message"), {
-      body: JSON.stringify({ name, content, secret }),
+      body: JSON.stringify({ name: player?.name, content, secret }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
@@ -20,19 +22,10 @@ export const SendBox: React.FC = () => {
 
   return (
     <div className="flex gap-2 p-4 font-serif border-t-4 border-sepia-300 border-double items-center rounded-sm">
-      <input
-        type="text"
-        className={classNames(
-          "flex-shrink px-0 py-1 bg-transparent w-24 text-right",
-          "underline underline-offset-4 small-caps text-sepia-500 text-sm rounded",
-          "focus:outline-none focus:border-none focus:bg-sepia-500/20 hover:bg-sepia-500/20"
-        )}
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-      />
+      <NameTag name={`${player?.name ?? "[unknown]"}`} />
       <Textarea
         className={classNames(
-          "flex-grow px-2 py-1 bg-sepia-500/[15%] rounded resize-none transition-colors",
+          "flex-grow px-2 py-1.5 bg-sepia-500/[15%] rounded resize-none transition-colors",
           "focus:outline-none focus:bg-sepia-500/20 hover:bg-sepia-500/20"
         )}
         onChange={(e) => setContent(e.target.value)}
@@ -44,22 +37,16 @@ export const SendBox: React.FC = () => {
         }}
         value={content}
       />
-      <Button
-        kind="outline"
-        color="primary"
-        onClick={submit}
-        className="uppercase"
-      >
+      <Button kind="flat" color="primary" onClick={submit}>
         Send
       </Button>
-      <Button
+      {/* <Button
         kind={secret ? "flat" : "outline"}
         color={"danger"}
         onClick={() => setSecret((s) => !s)}
-        className="uppercase"
       >
         {secret ? "🤫" : "😮"}
-      </Button>
+      </Button> */}
     </div>
   );
-};
+}

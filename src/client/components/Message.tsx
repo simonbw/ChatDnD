@@ -11,19 +11,25 @@ export function Message({ message }: { message: RoomMessage }) {
 
   const contentItems = parseContent(message.content);
 
-  const isDm = message.role === "assistant";
+  const isChatDnD = message.role === "assistant";
   return (
     <div
-      className={classNames("py-4 flex gap-2", isDm ? "bg-sepia-600/10" : "")}
+      className={classNames(
+        "p-4 flex gap-2",
+        "flex-col",
+        "sm:flex-row sm:p-r-16",
+        isChatDnD ? "bg-sepia-600/10" : ""
+      )}
       onClick={() => setFast(true)}
     >
       <div
         className={classNames(
-          "w-28 flex-shrink-0 text-right pr-2",
-          "border-r border-sepia-300"
+          "border-sepia-300",
+          "sm:w-28 sm:flex-shrink-0 sm:text-right sm:pr-2",
+          "sm:border-r "
         )}
       >
-        <NameTag name={message.name} />
+        <NameTag name={message.name} size="sm" />
       </div>
       <div className="flex-grow">
         {contentItems.map((item, i) => {
@@ -38,9 +44,6 @@ export function Message({ message }: { message: RoomMessage }) {
             }
           }
         })}
-      </div>
-      <div className="w-28 flex-shrink-0">
-        <span className="text-sepia-500 text-sm small-caps w-40 underline underline-offset-8 animate-fade-in"></span>
       </div>
     </div>
   );
@@ -59,7 +62,7 @@ function MessageText({ isFast, text }: { isFast: boolean; text: string }) {
       style={{}}
     >
       {/* <WrittenText interval={isFast ? 0 : 20} initialText={text}> */}
-      <ReactMarkdown className="markdown">{text}</ReactMarkdown>
+      <ReactMarkdown className="message">{text}</ReactMarkdown>
       {/* </WrittenText> */}
     </div>
   );
@@ -81,7 +84,7 @@ function MessageImage({ image }: { image?: RoomMessageImage }) {
           />
         </div>
         {image?.description && (
-          <figcaption className="mt-1 text-xs font-italic text-sepia-500 text-center max-w-80 font-caption">
+          <figcaption className="my-1 text-sm italic text-sepia-500 text-center max-w-80 font-caption">
             <WrittenText interval={0} initialText={image.description}>
               {image.description}
             </WrittenText>

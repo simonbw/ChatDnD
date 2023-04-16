@@ -23,7 +23,7 @@ export async function getDrawnImage(description: string): Promise<string> {
 }
 
 async function getRemoteUrl(description: string): Promise<string> {
-  const prompt = `A black ink drawing on a white backround. Crosshatching. The drawing is of "${description}"`;
+  const prompt = `A medieval painting on a white backround. The drawing is of "${description}"`;
   console.log(`drawing image with prompt: ${prompt}`);
   const apiResponse = await openAi().createImage({
     prompt: prompt,

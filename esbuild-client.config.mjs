@@ -12,6 +12,7 @@ const context = await esbuild
     entryPoints: [
       "src/client/pages/homePage.tsx",
       "src/client/pages/roomPage.tsx",
+      "src/client/pages/testPage.tsx",
       "src/client/styles/index.css",
     ],
     bundle: true,

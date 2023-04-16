@@ -1,10 +1,24 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { RoomState, roomStateSchema } from "../../common/models/roomModel";
 import { relativeUrl } from "../utils/relativeUrl";
 
-export function useRoomState() {
-  const [state, setState] = useState<RoomState | undefined>(undefined);
+export function useRoom() {
+  return useContext(RoomContext);
+}
+
+const RoomContext = createContext<{ state: RoomState | undefined }>({
+  state: undefined,
+});
+
+export function RoomProvider({ children }: PropsWithChildren) {
+  const [state, setRoomState] = useState<RoomState | undefined>(undefined);
 
   useEffect(() => {
     (async () => {
@@ -19,16 +33,18 @@ export function useRoomState() {
       }
 
       if (maybeResponseState) {
-        setState(maybeResponseState.data);
+        setRoomState(maybeResponseState.data);
       }
 
       const eventSource = new EventSource(relativeUrl("state-stream"));
 
       eventSource.onmessage = (event) => {
-        setState(roomStateSchema.parse(JSON.parse(event.data)));
+        setRoomState(roomStateSchema.parse(JSON.parse(event.data)));
       };
     })();
   }, []);
 
-  return state;
+  return (
+    <RoomContext.Provider value={{ state }}>{children}</RoomContext.Provider>
+  );
 }
