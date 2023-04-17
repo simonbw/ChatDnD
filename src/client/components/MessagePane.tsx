@@ -13,7 +13,9 @@ export function MessagePane() {
   if (!state) {
     return (
       <Wrapper>
-        <LoadingDots size="xl" color="text-sepia-500" />
+        <div className="p-4 text-center">
+          <LoadingDots size="xl" color="bg-sepia-500" />
+        </div>
       </Wrapper>
     );
   }

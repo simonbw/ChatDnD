@@ -24,6 +24,8 @@ export function RoomProvider({ children }: PropsWithChildren) {
     (async () => {
       const response = await axios.get(relativeUrl("state"));
 
+      await wait(5000);
+
       const maybeResponseState = roomStateSchema.safeParse(response.data);
 
       if (!maybeResponseState.success) {
@@ -47,4 +49,10 @@ export function RoomProvider({ children }: PropsWithChildren) {
   return (
     <RoomContext.Provider value={{ state }}>{children}</RoomContext.Provider>
   );
+}
+
+async function wait(delay: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
 }
