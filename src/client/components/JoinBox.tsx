@@ -42,7 +42,7 @@ export function JoinBox() {
             "px-2 py-1 bg-transparent rounded text-center",
             "transition-colors duration-150",
             "underline underline-offset-1",
-            "text-sepia-500 text-xl font-nametag",
+            "text-sepia-500 text-2xl font-nametag",
             "focus:outline-none focus:border-none focus:bg-sepia-500/[15%] hover:bg-sepia-500/20 focus:hover:bg-sepia-500/20"
           )}
           onChange={(e) => setName(e.target.value)}
@@ -50,12 +50,7 @@ export function JoinBox() {
           id="player-name"
         />
       </label>
-      <Button
-        kind="flat"
-        color="primary"
-        onClick={submit}
-        className="uppercase"
-      >
+      <Button kind="flat" color="primary" onClick={submit}>
         Join
       </Button>
     </div>

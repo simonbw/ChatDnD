@@ -10,9 +10,13 @@ export function DissolveInImage({
   width,
   height,
   duration = 1500,
+  fadeEdges = true,
   ref: _ref,
   ...rest
-}: React.HTMLProps<HTMLCanvasElement> & { duration?: number }) {
+}: React.HTMLProps<HTMLCanvasElement> & {
+  duration?: number;
+  fadeEdges?: boolean;
+}) {
   const [t, setT] = useState<number>(() => -1);
   const tRef = useRef(t);
   tRef.current = t;
@@ -53,9 +57,10 @@ export function DissolveInImage({
                 const noiseOctave = 0.02;
                 const n = 0.5 + noise(x * noiseOctave, y * noiseOctave) * 0.5; // from 0 to 1
                 const o = 1 - Math.sqrt(cx * cx + cy * cy) / Math.sqrt(2);
+                const e = !fadeEdges ? 0 : -4 * Math.max(cx * cx, cy * cy) ** 6;
 
                 const t2 = smoothStep(t);
-                imageData.data[i + 3] *= clamp(n * o + 2 * t2 - 1);
+                imageData.data[i + 3] *= clamp(n * o + e + 2 * t2 - 1);
               }
             }
             ctx.putImageData(imageData, 0, 0);

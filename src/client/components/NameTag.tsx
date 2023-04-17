@@ -4,27 +4,26 @@ import { classNames } from "./classNames";
 export function NameTag({
   name,
   size = "sm",
+  className,
 }: {
   name?: string;
   size?: "sm" | "md" | "lg";
+  className?: string;
 }) {
   const words = name?.split(/\s/) ?? [];
 
   return (
-    <span className="space-x-1">
-      {words.map((word) => {
+    <span className={classNames(className, "text-sepia-500 space-x-1")}>
+      {words.map((word, i) => {
         const parts = word.split(/(?=[A-Z])/) ?? [];
 
         return (
-          <span
-            className={classNames("text-sepia-500 whitespace-pre-wrap")}
-            // style={{ wordSpacing: "4px" }}
-          >
-            {parts.map((part) => {
+          <span key={i} className={classNames("")}>
+            {parts.map((part, j) => {
               const firstLetter = part[0];
               const rest = part.substring(1);
               return (
-                <Fragment>
+                <Fragment key={j}>
                   {firstLetter && (
                     <span
                       className={classNames(

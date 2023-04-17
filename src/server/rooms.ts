@@ -16,7 +16,7 @@ export function listRooms(): RoomListItem[] {
     (room): RoomListItem => ({
       id: room.id,
       name: room.name,
-      players: 1, // TODO: Actual player count
+      players: room.getPlayers(),
     })
   );
 }

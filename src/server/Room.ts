@@ -50,6 +50,10 @@ export class Room {
     this.getDmMessage();
   }
 
+  getPlayers() {
+    return this.players;
+  }
+
   updateMessage(messageIndex: number, message: RoomMessage) {
     this.messages[messageIndex] = message;
     this.publish();

@@ -3,7 +3,7 @@ import { z } from "zod";
 export const roomListItemSchema = z.object({
   id: z.string(),
   name: z.string(),
-  players: z.number(),
+  players: z.array(z.object({ id: z.string(), name: z.string() })),
 });
 
 export const roomListSchema = z.array(roomListItemSchema);

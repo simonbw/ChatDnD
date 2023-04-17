@@ -41,7 +41,9 @@ router.post("/:roomId/message", async (req, res, next) => {
   const requestBody = roomMessageSchema.safeParse(req.body);
 
   if (!requestBody.success) {
-    return res.status(400).send({ error: "Bad message: " + String(req.body) });
+    return res
+      .status(400)
+      .send({ message: "Bad message", error: requestBody.error });
   }
 
   const message: RoomMessage = {
