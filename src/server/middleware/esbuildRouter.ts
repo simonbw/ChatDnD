@@ -3,6 +3,7 @@ import { Router } from "express";
 import https from "https";
 import { Readable } from "stream";
 import { isDev } from "../utils/envUtils";
+import { routes } from "../../common/routes";
 
 const router = Router();
 export default router;
@@ -12,7 +13,7 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
-router.get("/esbuild", async (req, res) => {
+router.get(routes.esbuild(), async (req, res) => {
   console.log("Forwarding http://0.0.0.0:8000/esbuild to /esbuild");
   try {
     // Set up Server-Sent Events headers

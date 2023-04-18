@@ -1,5 +1,5 @@
 export const homeHtml = /*html*/ `
-<html>
+<html lang="en">
 
 <head>
   <meta name="viewport" content="width=device-width">

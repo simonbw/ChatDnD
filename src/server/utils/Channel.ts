@@ -1,12 +1,6 @@
-function idMaker() {
-  let id = 1;
+import { idMaker } from "./idMaker";
 
-  return () => {
-    return id++;
-  };
-}
-
-export const makeId = idMaker();
+const makeId = idMaker();
 
 export class Channel<T> {
   listeners = new Map();

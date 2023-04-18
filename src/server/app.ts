@@ -16,10 +16,10 @@ app.use(express.text());
 app.use("/static", getStaticsMiddleware());
 
 // Routes
-app.use("/", homeRouter);
-app.use("/", esbuildRouter);
-app.use("/", voiceRouter);
-app.use("/room", roomRouter);
+app.use(homeRouter);
+app.use(esbuildRouter);
+app.use(voiceRouter);
+app.use(roomRouter);
 
 // Error Handling
 // app.use;

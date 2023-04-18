@@ -24,7 +24,7 @@ export function Message({ message }: { message: RoomMessage }) {
     >
       <div
         className={classNames(
-          "border-sepia-300",
+          "border-sepia/50",
           "sm:w-28 sm:flex-shrink-0 sm:text-right sm:pr-2",
           "sm:border-r "
         )}

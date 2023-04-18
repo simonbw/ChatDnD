@@ -13,8 +13,8 @@ export function useRoom() {
   return useContext(RoomContext);
 }
 
-const RoomContext = createContext<{ state: RoomState | undefined }>({
-  state: undefined,
+const RoomContext = createContext<{ room: RoomState | undefined }>({
+  room: undefined,
 });
 
 export function RoomProvider({ children }: PropsWithChildren) {
@@ -31,7 +31,9 @@ export function RoomProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <RoomContext.Provider value={{ state }}>{children}</RoomContext.Provider>
+    <RoomContext.Provider value={{ room: state }}>
+      {children}
+    </RoomContext.Provider>
   );
 }
 
@@ -39,4 +41,9 @@ async function wait(delay: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay);
   });
+}
+
+export function useRoomId(): string | undefined {
+  // TODO: Just get from url
+  return useRoom().room?.id;
 }

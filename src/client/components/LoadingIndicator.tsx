@@ -4,12 +4,14 @@ import { number } from "zod";
 
 export function LoadingIndicator({
   duration = 2000,
-  thickness = 5,
+  segments = 5,
+  thickness: maxThickness = 15 * window.devicePixelRatio,
   size = 128,
   color = "#6B5B47",
-  fadePercent = 0.02,
+  fadePercent = 0.0,
 }: {
   duration?: number;
+  segments?: number;
   fadePercent?: number;
   thickness?: number;
   color?: string;
@@ -23,7 +25,9 @@ export function LoadingIndicator({
   useEffect(() => {
     requestAnimationFrame(() => {
       const dt = 16; // TODO: Actual elapsed time
-      setT((old) => mod(old + dt / duration, 1));
+      setT((old) => old + dt / duration);
+      const iterations = 3;
+      const isErasePass = Math.floor(mod(t, iterations * 2)) >= iterations;
 
       if (canvasRef.current) {
         const { width, height } = canvasRef.current;
@@ -39,21 +43,31 @@ export function LoadingIndicator({
           ctx.fillRect(0, 0, width, height);
 
           ctx.lineCap = "round";
-          ctx.globalCompositeOperation = "source-over";
-          ctx.lineWidth = thickness * window.devicePixelRatio;
+          ctx.globalAlpha = 1;
           ctx.strokeStyle = color;
 
           const cx = width / 2;
           const cy = height / 2;
-          const r = Math.min(width, height * 2) * 0.5 - thickness * 2;
-          const theta = t * Math.PI * 2;
-          const [x1, y1] = lemniscateOfBernoulli(theta, r);
-          const [x2, y2] = lemniscateOfBernoulli(theta + 0.1, r);
+          const r = Math.min(width, height * 2) * 0.5 - maxThickness;
+          const theta = -Math.PI / 2 + t * Math.PI * 2;
 
-          ctx.beginPath();
-          ctx.moveTo(x1 + cx, y1 + cy);
-          ctx.lineTo(x2 + cx, y2 + cy);
-          ctx.stroke();
+          const thickness =
+            (maxThickness * mod(t, iterations)) / iterations +
+            (isErasePass ? 0.6 : 0.1);
+          ctx.globalCompositeOperation = isErasePass
+            ? "destination-out" // erase
+            : "source-over"; // draw
+
+          const dTheta = 0.05;
+          for (let i = 0; i < segments; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = thickness;
+            const [x1, y1] = lemniscateOfBernoulli(theta - dTheta * i, r);
+            const [x2, y2] = lemniscateOfBernoulli(theta - dTheta * (i + 1), r);
+            ctx.moveTo(x1 + cx, y1 + cy);
+            ctx.lineTo(x2 + cx, y2 + cy);
+            ctx.stroke();
+          }
         }
       }
     });

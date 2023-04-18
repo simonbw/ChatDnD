@@ -9,7 +9,7 @@ import fs from "fs/promises";
 
 // Determine the right strategy for static files depending on if we're in dev mode or not
 export function getStaticsMiddleware() {
-  if (getNodeEnv() == "production" || true) {
+  if (getNodeEnv() == "production") {
     const staticFolder = getStaticsFolder();
     console.log(`serving static files from ${staticFolder} at /static`);
 

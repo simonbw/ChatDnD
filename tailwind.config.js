@@ -1,4 +1,5 @@
 import * as opentypePlugin from "tailwindcss-opentype";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -7,6 +8,11 @@ const config = {
   plugins: [opentypePlugin],
 
   theme: {
+    screens: {
+      xs: "520px",
+      ...defaultTheme.screens,
+    },
+
     extend: {
       colors: {
         sepia: {

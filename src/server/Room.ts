@@ -12,6 +12,7 @@ import {
 import { Channel } from "./utils/Channel";
 import { getGPTModel } from "./utils/envUtils";
 import { apiSafeName, openAi, parseDeltaStream } from "./utils/openAiUtils";
+import { last } from "../common/utils/arrayUtils";
 
 interface Player {
   id: string;
@@ -23,6 +24,7 @@ export class Room {
   public name: string;
   private messages: RoomMessage[] = [];
   private players: Player[] = [];
+  public createdAt = new Date().toISOString();
 
   constructor(public readonly id: string) {
     this.name = id;
@@ -35,13 +37,14 @@ export class Room {
       messages: makeChooseNameMessage(),
     });
 
-    const message = response.data.choices[0].message;
+    const content = response.data.choices[0].message?.content;
 
-    if (!message) {
+    if (!content) {
       throw new Error("API returned no message");
     }
 
-    this.name = message.content;
+    this.name = cleanupName(content);
+
     this.publish();
   }
 
@@ -87,6 +90,7 @@ export class Room {
       id: this.id,
       name: this.name,
       players: this.players.map((p) => p.name),
+      createdAt: this.createdAt,
     };
   }
 
@@ -166,4 +170,14 @@ export class Room {
       messageBuilder.end();
     });
   }
+}
+
+function cleanupName(name: string): string {
+  let result = name;
+  result.replace(/"/g, "");
+  if (last(result)) {
+    result = result.substring(0, result.length - 1);
+  }
+
+  return result;
 }

@@ -10,13 +10,13 @@ import { last } from "../../common/utils/arrayUtils";
 import { HR } from "../pages/horizontalRule";
 
 export function RoomPageContent() {
-  const { state } = useRoom();
+  const { room: state } = useRoom();
   const { player } = usePlayerContext();
 
   if (!state) {
     return (
       <Wrapper>
-        <div className="p-4 flex justify-center animate-fade-in-slow">
+        <div className="p-4 flex justify-center">
           <LoadingIndicator />
         </div>
       </Wrapper>
@@ -27,7 +27,7 @@ export function RoomPageContent() {
 
   return (
     <Wrapper>
-      <header className="flex flex-col justify-center">
+      <header className="flex flex-col justify-center hyphens-auto w-full">
         <h1 className="text-center text-6xl text-sepia-700 font-heading-1">
           {state.name}
         </h1>
@@ -50,7 +50,11 @@ export function RoomPageContent() {
       <HR />
 
       <div className="animate-fade-in">
-        {isInGame ? <SendBox /> : <JoinBox />}
+        {isInGame ? (
+          <SendBox roomId={state.id} />
+        ) : (
+          <JoinBox roomId={state.id} />
+        )}
       </div>
     </Wrapper>
   );

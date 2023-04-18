@@ -1,15 +1,16 @@
 import axios from "axios";
 import { Router } from "express";
-import { z } from "zod";
-import { getElevenLabsKey } from "../utils/envUtils";
 import { Readable } from "stream";
+import { z } from "zod";
+import { routes } from "../../common/routes";
+import { getElevenLabsKey } from "../utils/envUtils";
 
 const router = Router();
 export default router;
 
 // TODO: Cache this stuff.
 
-router.post("/read", async (req, res) => {
+router.post(routes.read(), async (req, res) => {
   try {
     const text = z.string().parse(req.body);
 

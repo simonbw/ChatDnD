@@ -29,6 +29,7 @@ export const roomStateSchema = z.object({
   id: z.string(),
   name: z.string(),
   players: z.array(z.string()),
+  createdAt: z.string(),
 });
 
 export type RoomMessageImage = z.infer<typeof roomMessageImageSchema>;

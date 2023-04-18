@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button } from "./Button";
-import { relativeUrl } from "../utils/relativeUrl";
-import { classNames } from "./classNames";
 import Textarea from "react-expanding-textarea";
 import { usePlayerContext } from "../contexts/playerContext";
+import { relativeUrl } from "../utils/relativeUrl";
+import { Button } from "./Button";
 import { NameTag } from "./NameTag";
+import { classNames } from "./classNames";
 
-export function SendBox() {
+export function SendBox({ roomId }: { roomId: string }) {
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
   const { player } = usePlayerContext();
@@ -31,7 +31,13 @@ export function SendBox() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 font-serif border-4 border-sepia-500/0 border-double rounded-sm">
+    <div
+      className={classNames(
+        "flex flex-col items-stretch gap-2 font-serif py-4",
+        "sm:flex-row sm:items-center",
+        "border-t-4 border-sepia/50 border-double"
+      )}
+    >
       <NameTag>{player?.name ?? "[unknown]"}</NameTag>
       <Textarea
         className={classNames(
@@ -46,8 +52,9 @@ export function SendBox() {
           }
         }}
         value={content}
+        disabled={sending}
       />
-      <Button kind="flat" color="primary" onClick={submit}>
+      <Button kind="flat" color="primary" onClick={submit} loading={sending}>
         Send
       </Button>
       {/* <Button

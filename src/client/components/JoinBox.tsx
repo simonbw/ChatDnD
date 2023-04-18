@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { z } from "zod";
+import { routes } from "../../common/routes";
 import { usePlayerContext } from "../contexts/playerContext";
-import { relativeUrl } from "../utils/relativeUrl";
 import { Button } from "./Button";
 import { classNames } from "./classNames";
-import { NameTag } from "./NameTag";
 
-export function JoinBox() {
+export function JoinBox({ roomId }: { roomId: string }) {
   const { player, setPlayer } = usePlayerContext();
   const [name, setName] = useState(player?.name ?? "");
 
   const submit = async () => {
     try {
       const player = { name, id: name };
-      const response = await fetch(relativeUrl("join"), {
+      const response = await fetch(routes.room.join(roomId), {
         method: "post",
         body: JSON.stringify(player),
         headers: {
@@ -32,13 +31,18 @@ export function JoinBox() {
   };
 
   return (
-    <div className="flex flex-col justify-center gap-2 p-4 font-serif border-t-4 border-sepia-300 border-double items-center rounded-sm text-sepia-500">
+    <div
+      className={classNames(
+        "flex flex-col items-stretch xs:items-center text-center gap-2 font-serif py-4",
+        "border-t-4 border-sepia/50 border-double"
+      )}
+    >
       <p className="text-sm">Enter your name to join the game</p>
       <label>
         <input
           type="text"
           className={classNames(
-            "block",
+            "block w-full",
             "px-2 py-1 bg-transparent rounded text-center",
             "transition-colors duration-150",
             "underline underline-offset-1",

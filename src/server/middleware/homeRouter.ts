@@ -1,24 +1,26 @@
 import { Router } from "express";
+import { routes } from "../../common/routes";
 import { homeHtml } from "../pages/homeHtml";
 import { testHtml } from "../pages/testHtml";
-import { listRooms } from "../rooms";
+import { getNextRoom, listRooms } from "../roomStore";
 
 const router = Router();
 export default router;
 
-router.get("/", (req, res) => {
+router.get(routes.home(), (req, res) => {
   res.send(homeHtml);
 });
 
-router.get("/test", (req, res) => {
+router.get(routes.test(), (req, res) => {
   res.send(testHtml);
 });
 
-router.get("/rooms", (req, res) => {
-  res.send({ rooms: listRooms() });
+router.post(routes.room.new(), (req, res, next) => {
+  const room = getNextRoom();
+  res.redirect(routes.room.view(room.id));
 });
 
-router.get("/config", (req, res) => {
+router.get(routes.healthcheck(), (req, res) => {
   res.send({
     status: "ok",
   });

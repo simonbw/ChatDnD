@@ -1,16 +1,17 @@
+import { AxiosError } from "axios";
 import { Router } from "express";
 import { z } from "zod";
 import {
   RoomMessage,
   roomMessageSchema,
 } from "../../../common/models/roomModel";
-import { getRoom } from "../../rooms";
-import { AxiosError } from "axios";
+import { routes } from "../../../common/routes";
+import { getRoom } from "../../roomStore";
 
 const router = Router();
 export default router;
 
-router.post("/:roomId/join", (req, res, next) => {
+router.post(routes.room.join(":roomId"), (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   console.log("player joining room ", roomId, req.url);
 
@@ -35,7 +36,7 @@ router.post("/:roomId/join", (req, res, next) => {
   res.send({ success: true });
 });
 
-router.post("/:roomId/message", async (req, res, next) => {
+router.post(routes.room.message(":roomId"), async (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   const room = getRoom(roomId);
 
