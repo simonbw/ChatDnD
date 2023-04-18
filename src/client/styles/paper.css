@@ -16,12 +16,13 @@
     border-image-repeat: round round;
     border-color: transparent;
     border-image-width: 48px;
-    border-width: 1em;
+    border-width: 24px;
   }
 
   @media screen and (min-width: 520px) {
     .paper {
       border-image-width: 72px;
+      border-width: 48px;
     }
   }
 }

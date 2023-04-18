@@ -31,7 +31,7 @@ export function SendBox() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-4 font-serif border-4 border-sepia-500/20 border-double rounded-sm">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 font-serif border-4 border-sepia-500/0 border-double rounded-sm">
       <NameTag>{player?.name ?? "[unknown]"}</NameTag>
       <Textarea
         className={classNames(

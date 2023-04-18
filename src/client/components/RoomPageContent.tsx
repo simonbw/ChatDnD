@@ -34,7 +34,7 @@ export function RoomPageContent() {
         <PlayerList players={state.players} />
       </header>
 
-      <HR />
+      {/* <HR /> */}
 
       <div className="flex-grow flex flex-col gap-0 animate-fade-in-slow">
         {state.messages.length == 0 && (
