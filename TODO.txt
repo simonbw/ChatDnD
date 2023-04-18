@@ -1,7 +1,6 @@
 
 FRONTEND:
 - Dice roller
-- Room picker
 
 FRONTEND & BACKEND
 - A button that (asks to) draw the scene

@@ -7,9 +7,15 @@ import { openAi } from "./utils/openAiUtils";
 
 const PLACEHOLDER = "/static/images/drawing-disabled.png";
 
-export async function getDrawnImage(description: string): Promise<string> {
+export async function getDrawnImage(
+  description: string,
+  processPrompt = true
+): Promise<string> {
   if (isDrawingEnabled()) {
-    const remoteImageUrl = await getRemoteUrl(description);
+    const prompt = processPrompt
+      ? `A medieval painting on a white backround. The drawing is of "${description}"`
+      : description;
+    const remoteImageUrl = await getRemoteUrl(prompt);
     const imageName = last(new URL(remoteImageUrl).pathname.split("/"));
     const rawBuffer = await fetchImageBuffer(remoteImageUrl);
     const processedBuffer = await processImage(rawBuffer);
@@ -22,8 +28,7 @@ export async function getDrawnImage(description: string): Promise<string> {
   }
 }
 
-async function getRemoteUrl(description: string): Promise<string> {
-  const prompt = `A medieval painting on a white backround. The drawing is of "${description}"`;
+async function getRemoteUrl(prompt: string): Promise<string> {
   console.log(`drawing image with prompt: ${prompt}`);
   const apiResponse = await openAi().createImage({
     prompt: prompt,

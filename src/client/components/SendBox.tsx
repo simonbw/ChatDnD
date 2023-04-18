@@ -48,11 +48,12 @@ export function SendBox({ roomId }: { roomId: string }) {
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            submit();
+            if (!sending) {
+              submit();
+            }
           }
         }}
         value={content}
-        disabled={sending}
       />
       <Button kind="flat" color="primary" onClick={submit} loading={sending}>
         Send

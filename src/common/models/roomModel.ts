@@ -16,6 +16,10 @@ export const roomMessageSchema = z.object({
   role: roomMessageRoleSchema,
   /* Content of the message */
   content: z.string().nonempty(),
+  /* Alternate content to display to users */
+  publicContent: z.string().optional(),
+  /** ISO string of the time this message was created */
+  createdAt: z.string().nonempty(),
   /* Name of the person who said this */
   name: z.string().nonempty().optional(),
   /* Not said to the DM */

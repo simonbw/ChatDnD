@@ -10,6 +10,7 @@ export class RoomMessageBuilder {
       name: "ChatDnD",
       secret: false,
       images: [],
+      createdAt: new Date().toISOString(),
     };
 
   currentImageDescription: string | undefined = undefined;
@@ -80,6 +81,7 @@ export class RoomMessageBuilder {
       secret: this.message.secret,
       name: this.message.name,
       images: this.message.images,
+      createdAt: this.message.createdAt,
       content:
         this.message.content +
         (this.currentImageDescription != undefined ? "[drawing]" : ""),

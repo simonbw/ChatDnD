@@ -3,6 +3,8 @@ import { routes } from "../../common/routes";
 import { homeHtml } from "../pages/homeHtml";
 import { testHtml } from "../pages/testHtml";
 import { getNextRoom, listRooms } from "../roomStore";
+import { getDrawnImage } from "../getDrawnImage";
+import { z } from "zod";
 
 const router = Router();
 export default router;
@@ -24,4 +26,10 @@ router.get(routes.healthcheck(), (req, res) => {
   res.send({
     status: "ok",
   });
+});
+
+router.get("/dalle", async (req, res) => {
+  const prompt = z.string().parse(req.query.prompt);
+  const url = await getDrawnImage(prompt, false);
+  res.redirect(url);
 });

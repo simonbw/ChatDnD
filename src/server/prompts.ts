@@ -20,12 +20,13 @@ This description will be fed to DALL-E to generate an image of the scene.
 When the first player joins, you should welcome them and start the game.
 `;
 
-export function makeStarterMessages(): ChatCompletionRequestMessage[] {
+export function makeStarterMessages(): RoomMessage[] {
   return [
     {
       role: "system",
       name: "system",
       content,
+      createdAt: new Date().toISOString(),
     },
   ];
 }
@@ -49,6 +50,7 @@ export function playerJoinMessage(player: Player): RoomMessage {
   return {
     role: "system",
     content: `${player.name} has just joined the game. Please welcome them to the game.`,
+    createdAt: new Date().toISOString(),
   };
 }
 
@@ -56,5 +58,6 @@ export function playerLeaveMessage(player: Player): RoomMessage {
   return {
     role: "system",
     content: `${player.name} has left the game. Please notify the other players.`,
+    createdAt: new Date().toISOString(),
   };
 }

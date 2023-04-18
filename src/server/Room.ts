@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { ChatCompletionRequestMessage } from "openai";
 import { Readable } from "stream";
 import { RoomMessage, RoomState } from "../common/models/roomModel";
+import { last } from "../common/utils/arrayUtils";
 import { RoomMessageBuilder } from "./RoomMessageBuilder";
 import {
   makeChooseNameMessage,
@@ -9,10 +10,10 @@ import {
   playerJoinMessage,
   playerLeaveMessage,
 } from "./prompts";
+import { ActionQueue } from "./utils/ActionQueue";
 import { Channel } from "./utils/Channel";
 import { getGPTModel } from "./utils/envUtils";
 import { apiSafeName, openAi, parseDeltaStream } from "./utils/openAiUtils";
-import { last } from "../common/utils/arrayUtils";
 
 interface Player {
   id: string;
@@ -25,6 +26,8 @@ export class Room {
   private messages: RoomMessage[] = [];
   private players: Player[] = [];
   public createdAt = new Date().toISOString();
+
+  private mainChatQueue = new ActionQueue();
 
   constructor(public readonly id: string) {
     this.name = id;
@@ -71,8 +74,15 @@ export class Room {
     return this.players;
   }
 
-  updateMessage(messageIndex: number, message: RoomMessage) {
-    this.messages[messageIndex] = message;
+  updateMessage(
+    messageIndex: number,
+    message: RoomMessage | ((old: RoomMessage) => RoomMessage)
+  ) {
+    if (typeof message == "function") {
+      this.messages[messageIndex] = message(this.messages[messageIndex]);
+    } else {
+      this.messages[messageIndex] = message;
+    }
     this.publish();
   }
 
@@ -121,6 +131,7 @@ export class Room {
       role: "assistant",
       name: "ChatDnD",
       content: "...",
+      createdAt: new Date().toISOString(),
       secret: true,
     });
 
@@ -129,45 +140,49 @@ export class Room {
       messages: this.getApiMessages(),
     });
     const content = chat.data.choices[0].message?.content ?? "";
-    this.updateMessage(messageIndex, {
-      role: "assistant",
-      name: "ChatDnD",
+    this.updateMessage(messageIndex, (old) => ({
+      ...old,
       content,
-      secret: true,
-    });
+    }));
   }
 
   private async getDmMessageAsync() {
-    // TODO: Locking on this
-    const messageIndex = this.addMessage({
-      role: "assistant",
-      name: "ChatDnD",
-      content: "...",
-      secret: true,
-    });
+    await this.mainChatQueue.addToQueue(() => {
+      return new Promise(async (resolve) => {
+        // TODO: Locking on this
+        const messageIndex = this.addMessage({
+          role: "assistant",
+          name: "ChatDnD",
+          content: "...",
+          createdAt: new Date().toISOString(),
+          secret: true,
+        });
 
-    const messageBuilder = new RoomMessageBuilder(() => {
-      const message = messageBuilder.getMessage();
-      this.updateMessage(messageIndex, message);
-    });
+        const messageBuilder = new RoomMessageBuilder(() => {
+          const message = messageBuilder.getMessage();
+          this.updateMessage(messageIndex, message);
+        });
 
-    const chat = (await openAi().createChatCompletion(
-      {
-        stream: true,
-        model: getGPTModel(),
-        messages: this.getApiMessages(),
-      },
-      { responseType: "stream" }
-    )) as any as AxiosResponse<Readable>;
+        const chat = (await openAi().createChatCompletion(
+          {
+            stream: true,
+            model: getGPTModel(),
+            messages: this.getApiMessages(),
+          },
+          { responseType: "stream" }
+        )) as any as AxiosResponse<Readable>;
 
-    chat.data.on("data", (data: Uint8Array) => {
-      for (const delta of parseDeltaStream(data)) {
-        messageBuilder.addDelta(delta);
-      }
-    });
+        chat.data.on("data", (data: Uint8Array) => {
+          for (const delta of parseDeltaStream(data)) {
+            messageBuilder.addDelta(delta);
+          }
+        });
 
-    chat.data.on("end", () => {
-      messageBuilder.end();
+        chat.data.on("end", () => {
+          messageBuilder.end();
+          resolve();
+        });
+      });
     });
   }
 }

@@ -25,7 +25,13 @@ export function RoomProvider({ children }: PropsWithChildren) {
       const eventSource = new EventSource(relativeUrl("state-stream"));
 
       eventSource.onmessage = (event) => {
-        setRoomState(roomStateSchema.parse(JSON.parse(event.data)));
+        const rawData = JSON.parse(event.data);
+        const maybeRoomState = roomStateSchema.safeParse(rawData);
+        if (maybeRoomState.success) {
+          setRoomState(maybeRoomState.data);
+        } else {
+          console.warn("invalid room recieved", maybeRoomState.error, rawData);
+        }
       };
     })();
   }, []);

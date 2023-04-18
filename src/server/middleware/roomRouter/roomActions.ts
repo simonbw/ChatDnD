@@ -40,22 +40,23 @@ router.post(routes.room.message(":roomId"), async (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   const room = getRoom(roomId);
 
-  const requestBody = roomMessageSchema.safeParse({
-    ...req.body,
-    role: "user",
-  });
+  const requestMessage = roomMessageSchema
+    .omit({ role: true, createdAt: true, images: true })
+    .safeParse({
+      ...req.body,
+      role: "user",
+    });
 
-  if (!requestBody.success) {
+  if (!requestMessage.success) {
     return res
       .status(400)
-      .send({ message: "Bad message", error: requestBody.error });
+      .send({ message: "Bad message", error: requestMessage.error });
   }
 
   const message: RoomMessage = {
+    ...requestMessage.data,
     role: "user",
-    name: requestBody.data.name,
-    content: requestBody.data.content,
-    secret: requestBody.data.secret ?? false,
+    createdAt: new Date().toISOString(),
   };
 
   console.log("adding message", message);
@@ -66,7 +67,7 @@ router.post(routes.room.message(":roomId"), async (req, res, next) => {
     return next(error);
   }
 
-  if (!requestBody.data.secret) {
+  if (!requestMessage.data.secret) {
     try {
       room.getDmMessage().catch((error: unknown) => {
         if (isAxiosError(error)) {
