@@ -1,0 +1,5 @@
+@layer components {
+  .link {
+    @apply text-sepia-500 hover:text-sepia-400 active:text-sepia-700 focus:text-sepia-400;
+  }
+}

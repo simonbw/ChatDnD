@@ -1,6 +1,6 @@
 import React from "react";
 import { Footer } from "../components/Footer";
-import { MessagePane } from "../components/MessagePane";
+import { RoomPageContent } from "../components/RoomPageContent";
 import { NavBar } from "../components/NavBar";
 import { Paper } from "../components/Paper";
 import { PlayerContextProvider } from "../contexts/playerContext";
@@ -12,7 +12,7 @@ renderPage(
     <RoomProvider>
       <NavBar />
       <Paper>
-        <MessagePane />
+        <RoomPageContent />
       </Paper>
       <Footer />
     </RoomProvider>

@@ -8,21 +8,31 @@ import { NameTag } from "./NameTag";
 
 export function SendBox() {
   const [content, setContent] = useState("");
+  const [sending, setSending] = useState(false);
   const { player } = usePlayerContext();
   const [secret, setSecret] = useState(false);
 
   const submit = async () => {
-    fetch(relativeUrl("message"), {
-      body: JSON.stringify({ name: player?.name, content, secret }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    });
-    setContent("");
+    if (content != "" && player) {
+      setSending(true);
+      try {
+        await fetch(relativeUrl("message"), {
+          body: JSON.stringify({ name: player?.name, content, secret }),
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+        });
+      } catch (error) {
+        console.warn("Failed to send message.");
+      } finally {
+        setSending(false);
+      }
+      setContent("");
+    }
   };
 
   return (
-    <div className="flex gap-2 p-4 font-serif border-t-4 border-sepia-300 border-double items-center rounded-sm">
-      <NameTag name={`${player?.name ?? "[unknown]"}`} />
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-4 font-serif border-4 border-sepia-500/20 border-double rounded-sm">
+      <NameTag>{player?.name ?? "[unknown]"}</NameTag>
       <Textarea
         className={classNames(
           "flex-grow px-2 py-1.5 bg-sepia-500/[15%] rounded resize-none transition-colors",

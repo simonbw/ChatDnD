@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Router } from "express";
 import { z } from "zod";
 import { roomHtml } from "../../pages/roomHtml";
@@ -9,9 +8,6 @@ export default router;
 
 router.get("/:roomId/", (req, res) => {
   const roomId = z.string().parse(req.params.roomId);
-
-  console.log("getting room ", roomId, req.url);
-
   res.send(roomHtml(roomId, getRoom(roomId).getPublicState()));
 });
 
@@ -55,23 +51,11 @@ router.get(
     const messageIdx = z.coerce.number().parse(req.params.messageIdx);
     const imageIdx = z.coerce.number().parse(req.params.imageIdx);
     const message = getRoom(roomId).getPublicState().messages[messageIdx];
+    const image = message?.images?.[imageIdx];
 
-    const imageUrl = message?.images?.[imageIdx]?.url;
-
-    if (!imageUrl) {
-      res.status(404).send();
-      return;
-    }
-
-    try {
-      const response = await axios.get(imageUrl, {
-        responseType: "arraybuffer",
-      });
-
-      res.set("Content-Type", response.headers["content-type"]);
-      res.set("Content-Length", response.headers["content-length"]);
-      res.send(response.data);
-    } catch (error) {
+    if (image) {
+      res.send(image);
+    } else {
       res.status(404).send();
     }
   }
@@ -83,8 +67,10 @@ router.get("/:roomId/state-stream", (req, res) => {
     Connection: "keep-alive",
     "Cache-Control": "no-cache",
   });
-
   const roomId = z.string().parse(req.params.roomId);
+
+  res.write(`data: ${JSON.stringify(getRoom(roomId).getPublicState())}\n\n`);
+
   const listenerId = getRoom(roomId).channel.subscribe((data) => {
     return res.write(`data: ${JSON.stringify(data)}\n\n`);
   });

@@ -22,22 +22,6 @@ export function RoomProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get(relativeUrl("state"));
-
-      await wait(5000);
-
-      const maybeResponseState = roomStateSchema.safeParse(response.data);
-
-      if (!maybeResponseState.success) {
-        console.error(maybeResponseState.error);
-        console.error(response.data);
-        return;
-      }
-
-      if (maybeResponseState) {
-        setRoomState(maybeResponseState.data);
-      }
-
       const eventSource = new EventSource(relativeUrl("state-stream"));
 
       eventSource.onmessage = (event) => {

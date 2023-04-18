@@ -1,0 +1,27 @@
+@layer components {
+  .paper {
+    @apply container max-w-2xl mx-auto overflow-hidden mt-4 py-2 xl:py-4;
+    @apply text-sepia-700;
+    /* @apply bg-transparent drop-shadow-xl; */
+
+    /* background-image: url("/static/images/parchment.png");
+    background-size: 100%;
+    background-repeat: repeat; */
+
+    filter: drop-shadow(0 5px 13px rgb(0 0 0 / 0.45))
+      drop-shadow(0 8px 5px rgb(0 0 0 / 0.25));
+
+    border-image: url("/static/images/parchment.png");
+    border-image-slice: 96 fill;
+    border-image-repeat: round round;
+    border-color: transparent;
+    border-image-width: 48px;
+    border-width: 1em;
+  }
+
+  @media screen and (min-width: 520px) {
+    .paper {
+      border-image-width: 72px;
+    }
+  }
+}

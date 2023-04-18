@@ -2,18 +2,16 @@ import { AxiosResponse } from "axios";
 import { ChatCompletionRequestMessage } from "openai";
 import { Readable } from "stream";
 import { RoomMessage, RoomState } from "../common/models/roomModel";
+import { RoomMessageBuilder } from "./RoomMessageBuilder";
 import {
-  RoomMessageBuilder,
-  StreamMessageDelta,
-  streamMessageSchema,
-} from "./RoomMessageBuilder";
-import {
+  makeChooseNameMessage,
   makeStarterMessages,
   playerJoinMessage,
   playerLeaveMessage,
-} from "./system-messages";
+} from "./prompts";
 import { Channel } from "./utils/Channel";
-import { openAi } from "./utils/openAiUtils";
+import { getGPTModel } from "./utils/envUtils";
+import { apiSafeName, openAi, parseDeltaStream } from "./utils/openAiUtils";
 
 interface Player {
   id: string;
@@ -29,6 +27,22 @@ export class Room {
   constructor(public readonly id: string) {
     this.name = id;
     this.messages.push(...makeStarterMessages());
+  }
+
+  async decideOnName() {
+    const response = await openAi().createChatCompletion({
+      model: getGPTModel(),
+      messages: makeChooseNameMessage(),
+    });
+
+    const message = response.data.choices[0].message;
+
+    if (!message) {
+      throw new Error("API returned no message");
+    }
+
+    this.name = message.content;
+    this.publish();
   }
 
   addMessage(message: RoomMessage) {
@@ -76,19 +90,51 @@ export class Room {
     };
   }
 
-  getChatMessages(): ChatCompletionRequestMessage[] {
+  getApiMessages(): ChatCompletionRequestMessage[] {
     return [
       ...this.messages
-        .filter((m) => !m.secret)
-        .map((m) => ({
-          content: m.content,
-          name: m.name,
-          role: m.role,
+        .filter((message) => !message.secret)
+        .map((message) => ({
+          role: message.role,
+          name: apiSafeName(message.name),
+          content: message.content,
         })),
     ];
   }
 
-  async getDmMessage() {
+  async getDmMessage(sync: boolean = false) {
+    if (sync) {
+      await this.getDmMessageSync();
+    } else {
+      await this.getDmMessageAsync();
+    }
+  }
+
+  // For debugging only. Doesn't draw images.
+  private async getDmMessageSync() {
+    // TODO: Locking on this
+    const messageIndex = this.addMessage({
+      role: "assistant",
+      name: "ChatDnD",
+      content: "...",
+      secret: true,
+    });
+
+    const chat = await openAi().createChatCompletion({
+      model: getGPTModel(),
+      messages: this.getApiMessages(),
+    });
+    const content = chat.data.choices[0].message?.content ?? "";
+    this.updateMessage(messageIndex, {
+      role: "assistant",
+      name: "ChatDnD",
+      content,
+      secret: true,
+    });
+  }
+
+  private async getDmMessageAsync() {
+    // TODO: Locking on this
     const messageIndex = this.addMessage({
       role: "assistant",
       name: "ChatDnD",
@@ -104,17 +150,14 @@ export class Room {
     const chat = (await openAi().createChatCompletion(
       {
         stream: true,
-        model: "gpt-3.5-turbo",
-        // model: "gpt-4",
-        messages: this.getChatMessages(),
+        model: getGPTModel(),
+        messages: this.getApiMessages(),
       },
       { responseType: "stream" }
     )) as any as AxiosResponse<Readable>;
 
     chat.data.on("data", (data: Uint8Array) => {
-      const deltas = parseDeltaStream(data);
-
-      for (const delta of deltas) {
+      for (const delta of parseDeltaStream(data)) {
         messageBuilder.addDelta(delta);
       }
     });
@@ -123,30 +166,4 @@ export class Room {
       messageBuilder.end();
     });
   }
-}
-
-export function parseDeltaStream(raw: Uint8Array): StreamMessageDelta[] {
-  const lines = raw
-    .toString()
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line !== "");
-
-  return lines
-    .map((rawLine) => {
-      if (rawLine.includes("[DONE]")) {
-        return null;
-      }
-
-      const line = rawLine.replace(/^data: /, "");
-
-      try {
-        const data = streamMessageSchema.parse(JSON.parse(line));
-        return data.choices[0].delta;
-      } catch (e) {
-        console.log("failed to parse:\n", line, "\n\n");
-        return null;
-      }
-    })
-    .filter((delta): delta is StreamMessageDelta => delta != null);
 }

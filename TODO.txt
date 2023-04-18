@@ -9,12 +9,13 @@ FRONTEND & BACKEND
 - A button that (asks to) draw the scene
 - Allow deleting or regenerating messages.
 - Ambient music?
+- Name the room
 
 PROMPT:
  - Consider having a separate agent analyze responses to see if they contain new characters or scenes
- - 
 
 PERFORMANCE/TECH DEBT
+ - Queue ChatGPT responses.
  - Don't send whole state on every update. Only send deltas
  - Use a database to store prompts and rooms and such (could probably do Hasura)
  - Store images in S3 or something

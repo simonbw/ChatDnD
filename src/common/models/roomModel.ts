@@ -15,7 +15,7 @@ export const roomMessageSchema = z.object({
   /* Who is saying this, i.e. a user, the dm, or the system */
   role: roomMessageRoleSchema,
   /* Content of the message */
-  content: z.string(),
+  content: z.string().nonempty(),
   /* Name of the person who said this */
   name: z.string().nonempty().optional(),
   /* Not said to the DM */

@@ -2,15 +2,16 @@ import React, { Fragment } from "react";
 import { classNames } from "./classNames";
 
 export function NameTag({
-  name,
+  children,
   size = "sm",
   className,
 }: {
-  name?: string;
+  children?: string | string[];
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
-  const words = name?.split(/\s/) ?? [];
+  const s = (Array.isArray(children) ? children.join("") : children) ?? "";
+  const words = s.split(/\s/) ?? [];
 
   return (
     <span className={classNames(className, "text-sepia-500 space-x-1")}>

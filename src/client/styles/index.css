@@ -4,6 +4,8 @@
 
 @import "tailwindcss/components";
 @import "./button.css";
+@import "./link.css";
+@import "./paper.css";
 
 @import "tailwindcss/utilities";
 @import "./utilities.css";

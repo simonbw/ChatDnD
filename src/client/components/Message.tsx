@@ -15,10 +15,10 @@ export function Message({ message }: { message: RoomMessage }) {
   return (
     <div
       className={classNames(
-        "p-4 flex gap-2",
+        "py-4 flex gap-2",
         "flex-col",
-        "sm:flex-row sm:p-r-16",
-        isChatDnD ? "bg-sepia-600/10" : ""
+        "sm:flex-row sm:p-r-16"
+        // isChatDnD ? "bg-sepia-600/10" : ""
       )}
       onClick={() => setFast(true)}
     >
@@ -29,7 +29,7 @@ export function Message({ message }: { message: RoomMessage }) {
           "sm:border-r "
         )}
       >
-        <NameTag name={message.name} size="sm" />
+        <NameTag size="sm">{message.name}</NameTag>
       </div>
       <div className="flex-grow">
         {contentItems.map((item, i) => {

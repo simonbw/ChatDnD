@@ -5,6 +5,7 @@ import {
   roomMessageSchema,
 } from "../../../common/models/roomModel";
 import { getRoom } from "../../rooms";
+import { AxiosError } from "axios";
 
 const router = Router();
 export default router;
@@ -38,7 +39,10 @@ router.post("/:roomId/message", async (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   const room = getRoom(roomId);
 
-  const requestBody = roomMessageSchema.safeParse(req.body);
+  const requestBody = roomMessageSchema.safeParse({
+    ...req.body,
+    role: "user",
+  });
 
   if (!requestBody.success) {
     return res
@@ -53,6 +57,8 @@ router.post("/:roomId/message", async (req, res, next) => {
     secret: requestBody.data.secret ?? false,
   };
 
+  console.log("adding message", message);
+
   try {
     room.addMessage(message);
   } catch (error) {
@@ -61,9 +67,19 @@ router.post("/:roomId/message", async (req, res, next) => {
 
   if (!requestBody.data.secret) {
     try {
-      room
-        .getDmMessage()
-        .catch((error) => console.error("Error getting DM message:", error));
+      room.getDmMessage().catch((error: unknown) => {
+        if (isAxiosError(error)) {
+          console.error("Error getting DM message", {
+            message: error.message,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            responseData: error.response?.data,
+            messages: room.getApiMessages(),
+          });
+          return;
+        }
+        return console.error("Error getting DM message:", error);
+      });
     } catch (error) {
       return next(error);
     }
@@ -71,3 +87,12 @@ router.post("/:roomId/message", async (req, res, next) => {
 
   res.status(200).send({ success: true });
 });
+
+function isAxiosError(error: unknown): error is AxiosError {
+  return (
+    typeof error == "object" &&
+    error != null &&
+    "isAxiosError" in error &&
+    error.isAxiosError == true
+  );
+}

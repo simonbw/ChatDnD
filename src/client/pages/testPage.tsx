@@ -1,13 +1,12 @@
 import React from "react";
-import { renderPage } from "../utils/renderPage";
-import { RoomList } from "./RoomList";
-import { Paper } from "../components/Paper";
-import { Button } from "../components/Button";
 import { LoadingDots } from "../components/LoadingDots";
+import { LoadingIndicator } from "../components/LoadingIndicator";
+import { Paper } from "../components/Paper";
+import { renderPage } from "../utils/renderPage";
 
 renderPage(
   <main className="container mx-auto p-2">
-    <Paper className="p-4 mb-4">
+    <Paper className="p-4 mb-4 space-y-4">
       <div className="p-4 bg-black/50">
         <LoadingDots size="xs" />
         <LoadingDots size="sm" />
@@ -16,6 +15,9 @@ renderPage(
         <LoadingDots size="xl" />
         <LoadingDots size="2xl" />
         <LoadingDots size="3xl" color="bg-sepia-500" />
+      </div>
+      <div className="text-center">
+        <LoadingIndicator />
       </div>
       <FontList />
     </Paper>
@@ -54,6 +56,7 @@ const fonts = [
   "The Magician",
   "Van Blessing",
 ];
+
 function FontList() {
   return (
     <div className="text-6xl space-y-2">

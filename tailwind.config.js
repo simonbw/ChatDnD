@@ -35,7 +35,7 @@ const config = {
         nametag: "Black Chancery",
         "drop-cap": "Black Chancery",
         "heading-1": "Berkahi Blackletter",
-        "heading-2": "Kingthings Exeter",
+        "heading-2": "Black Chancery",
 
         // Specific families
         aluvemskrew: "Aluvemskrew",

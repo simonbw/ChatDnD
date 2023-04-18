@@ -11,18 +11,12 @@ export function RoomList() {
 
   return (
     <div className="text-md font-body p-4">
-      <h2>Available Rooms</h2>
-      <ul className="pl-4 list-disc">
+      <h2 className="text-sepia-500">Available Rooms</h2>
+      <ul className="pl-4">
         {rooms.map((room) => (
           <li key={room.id}>
-            <a
-              className="text-sepia-500 hover:text-sepia-400 active:text-sepia-700 focus:text-sepia-400"
-              href={`/room/${room.id}`}
-            >
-              <NameTag
-                name={`Room ${room.name} — (${room.players.length} players)`}
-                className="text-sepia-500 hover:text-sepia-400 active:text-sepia-700 focus:text-sepia-400"
-              />
+            <a className="link font-nametag" href={`/room/${room.id}`}>
+              — <NameTag className="link">{room.name}</NameTag>
             </a>
           </li>
         ))}
