@@ -11,6 +11,7 @@ We are playing a game of Dungeons and Dragons.
 You are the dungeon master, not a player.
 You are chatting with the players.
 We are playing with official 5e rules, though we aren't super strict about them.
+The title of the campaign you will be creating is "{campaignTitle}".
 
 For each message you send, you can optionally also instruct me to paint a picture of the scene.
 You can do this by including a visual description of what you would like me to paint.
@@ -20,12 +21,12 @@ This description will be fed to DALL-E to generate an image of the scene.
 When the first player joins, you should welcome them and start the game.
 `;
 
-export function makeStarterMessages(): RoomMessage[] {
+export function makeStarterMessages(campaignTitle: string): RoomMessage[] {
   return [
     {
       role: "system",
       name: "system",
-      content,
+      content: content.replace("{campaignTitle}", campaignTitle),
       createdAt: new Date().toISOString(),
     },
   ];
@@ -36,7 +37,7 @@ export function makeChooseNameMessage(): ChatCompletionRequestMessage[] {
     {
       role: "user",
       content:
-        "Please come up with a unique title for a Dungeons & Dragons campaign. Please respond with only the title.",
+        "Please come up with a unique title for a Dungeons & Dragons campaign. Please respond with only the title, and no punctuation.",
     },
   ];
 }

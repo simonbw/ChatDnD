@@ -28,7 +28,7 @@ export function RoomPageContent() {
   return (
     <Wrapper>
       <header className="flex flex-col justify-center hyphens-auto w-full">
-        <h1 className="text-center text-6xl text-sepia-700 font-heading-1">
+        <h1 className="text-center text-6xl text-sepia-700 font-heading-1 animate-fade-in">
           {state.name}
         </h1>
         <PlayerList players={state.players} />

@@ -30,8 +30,11 @@ export class Room {
   private mainChatQueue = new ActionQueue();
 
   constructor(public readonly id: string) {
-    this.name = id;
-    this.messages.push(...makeStarterMessages());
+    this.name = "";
+    this.mainChatQueue.addToQueue(() => this.decideOnName());
+    this.mainChatQueue.addToQueue(async () => {
+      this.messages.push(...makeStarterMessages(this.name));
+    });
   }
 
   async decideOnName() {
@@ -189,8 +192,9 @@ export class Room {
 
 function cleanupName(name: string): string {
   let result = name;
-  result.replace(/"/g, "");
-  if (last(result)) {
+  // Get rid of quotes
+  result = result.replace(/"/g, "");
+  if (last(result) == ".") {
     result = result.substring(0, result.length - 1);
   }
 

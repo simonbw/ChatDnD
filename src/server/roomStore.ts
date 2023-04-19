@@ -7,14 +7,7 @@ const rooms = new Map<string, Room>();
 export function getRoom(roomId: string): Room {
   if (!rooms.has(roomId)) {
     console.log("creating new room: ", roomId);
-    const room = new Room(roomId);
-    rooms.set(roomId, room);
-
-    try {
-      room.decideOnName();
-    } catch (error) {
-      console.error(error);
-    }
+    rooms.set(roomId, new Room(roomId));
   }
   return rooms.get(roomId)!;
 }

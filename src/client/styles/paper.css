@@ -1,6 +1,6 @@
 @layer components {
   .paper {
-    @apply container max-w-2xl mx-auto overflow-hidden mt-4 py-2 xl:py-4;
+    @apply container max-w-2xl mx-auto overflow-hidden my-4 py-2 xl:py-4;
     @apply text-sepia-700;
     /* @apply bg-transparent drop-shadow-xl; */
 
