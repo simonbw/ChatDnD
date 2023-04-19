@@ -116,39 +116,17 @@ export class Room {
     ];
   }
 
-  async getDmMessage(sync: boolean = false) {
-    if (sync) {
-      await this.getDmMessageSync();
-    } else {
-      await this.getDmMessageAsync();
-    }
-  }
-
-  // For debugging only. Doesn't draw images.
-  private async getDmMessageSync() {
-    // TODO: Locking on this
-    const messageIndex = this.addMessage({
-      role: "assistant",
-      name: "ChatDnD",
-      content: "...",
-      createdAt: new Date().toISOString(),
-      secret: true,
-    });
-
-    const chat = await openAi().createChatCompletion({
-      model: getGPTModel(),
-      messages: this.getApiMessages(),
-    });
-    const content = chat.data.choices[0].message?.content ?? "";
-    this.updateMessage(messageIndex, (old) => ({
-      ...old,
-      content,
-    }));
-  }
-
-  private async getDmMessageAsync() {
+  async getDmMessage(skipIfDuplicate: boolean = true) {
     await this.mainChatQueue.addToQueue(() => {
       return new Promise(async (resolve) => {
+        if (
+          skipIfDuplicate &&
+          last(this.getApiMessages())?.role === "assistant"
+        ) {
+          // Don't have ChatDnD send two messages in a row. It should be able to respond to both just fine.
+          return resolve();
+        }
+
         // TODO: Locking on this
         const messageIndex = this.addMessage({
           role: "assistant",
@@ -184,6 +162,28 @@ export class Room {
         });
       });
     });
+  }
+
+  // For debugging only. Doesn't draw images.
+  async getDmMessageSync() {
+    // TODO: Locking on this
+    const messageIndex = this.addMessage({
+      role: "assistant",
+      name: "ChatDnD",
+      content: "...",
+      createdAt: new Date().toISOString(),
+      secret: true,
+    });
+
+    const chat = await openAi().createChatCompletion({
+      model: getGPTModel(),
+      messages: this.getApiMessages(),
+    });
+    const content = chat.data.choices[0].message?.content ?? "";
+    this.updateMessage(messageIndex, (old) => ({
+      ...old,
+      content,
+    }));
   }
 }
 
