@@ -7,7 +7,7 @@
     "build": "npm-run-all build:*",
     "build:client": "node esbuild-client.config.mjs",
     "build:server": "node esbuild-server.config.mjs",
-    "start": "NODE_ENV=production node dist/server/index.js",
+    "start": "NODE_ENV=production node --enable-source-maps dist/server/index.js",
     "dev": "npm-run-all --parallel dev:*",
     "dev:client": "node esbuild-client.config.mjs --dev",
     "dev:server": "concurrently \"node esbuild-server.config.mjs --dev\" \"NODE_ENV=dev nodemon --enable-source-maps dist/server/index.js\"",
