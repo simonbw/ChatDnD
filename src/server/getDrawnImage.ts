@@ -38,7 +38,7 @@ async function getRemoteUrl(prompt: string): Promise<string> {
   });
   const url = apiResponse.data.data[0].url!;
   if (!url) {
-    throw new Error("Failed to draw image");
+    throw new WebError("Failed to draw image", 500);
   }
   return url;
 }

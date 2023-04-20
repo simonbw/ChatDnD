@@ -2,6 +2,8 @@ import { idMaker } from "./idMaker";
 
 const makeId = idMaker();
 
+type ListenerId = string;
+
 export class Channel<T> {
   listeners = new Map();
 
@@ -11,13 +13,13 @@ export class Channel<T> {
     }
   }
 
-  subscribe(listener: (data: T) => void): number {
+  subscribe(listener: (data: T) => void): ListenerId {
     const listenerId = makeId();
     this.listeners.set(listenerId, listener);
     return listenerId;
   }
 
-  unsubscribe(listenerId: number) {
+  unsubscribe(listenerId: ListenerId) {
     this.listeners.delete(listenerId);
   }
 }

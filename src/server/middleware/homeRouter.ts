@@ -1,10 +1,9 @@
 import { Router } from "express";
+import { z } from "zod";
 import { routes } from "../../common/routes";
+import { getDrawnImage } from "../getDrawnImage";
 import { homeHtml } from "../pages/homeHtml";
 import { testHtml } from "../pages/testHtml";
-import { getNextRoom, listRooms } from "../roomStore";
-import { getDrawnImage } from "../getDrawnImage";
-import { z } from "zod";
 
 const router = Router();
 export default router;
@@ -15,11 +14,6 @@ router.get(routes.home(), (req, res) => {
 
 router.get(routes.test(), (req, res) => {
   res.send(testHtml);
-});
-
-router.post(routes.room.new(), (req, res, next) => {
-  const room = getNextRoom();
-  res.redirect(routes.room.view(room.id));
 });
 
 router.get(routes.healthcheck(), (req, res) => {

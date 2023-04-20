@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { Router } from "express";
 import { z } from "zod";
 import {
@@ -7,10 +6,12 @@ import {
 } from "../../../common/models/roomModel";
 import { routes } from "../../../common/routes";
 import { getRoom } from "../../roomStore";
+import { isAxiosError } from "../../utils/isAxiosError";
 
 const router = Router();
 export default router;
 
+// Join a room
 router.post(routes.room.join(":roomId"), (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   console.log("player joining room ", roomId, req.url);
@@ -36,6 +37,7 @@ router.post(routes.room.join(":roomId"), (req, res, next) => {
   res.send({ success: true });
 });
 
+// Send a message
 router.post(routes.room.message(":roomId"), async (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   const room = getRoom(roomId);
@@ -89,12 +91,3 @@ router.post(routes.room.message(":roomId"), async (req, res, next) => {
 
   res.status(200).send({ success: true });
 });
-
-function isAxiosError(error: unknown): error is AxiosError {
-  return (
-    typeof error == "object" &&
-    error != null &&
-    "isAxiosError" in error &&
-    error.isAxiosError == true
-  );
-}

@@ -1,9 +1,11 @@
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
+import { WebError } from "./WebError";
 import esbuildRouter from "./middleware/esbuildRouter";
 import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import homeRouter from "./middleware/homeRouter";
 import roomRouter from "./middleware/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
+import { errorHtml } from "./pages/errorHtml";
 
 export const app = express();
 
@@ -21,5 +23,22 @@ app.use(esbuildRouter);
 app.use(voiceRouter);
 app.use(roomRouter);
 
+app.use(((error, req, res, next) => {
+  if (error.status) {
+    res.status(error.status);
+  }
+  res.send(errorHtml(error));
+}) as ErrorRequestHandler);
+
 // Error Handling
 // app.use;
+
+process.on("unhandledRejection", (error: Error) => {
+  console.warn("unhandledRejection!", error.message);
+  // process.exit(1);
+});
+
+process.on("uncaughtException", (error: Error) => {
+  console.warn("uncaughtException!", error.message);
+  // process.exit(1);
+});

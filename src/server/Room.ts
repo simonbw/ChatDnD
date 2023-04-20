@@ -21,18 +21,22 @@ interface Player {
 }
 
 export class Room {
-  public channel: Channel<RoomState> = new Channel();
-  public name: string;
+  public readonly id: string;
+  public readonly channel: Channel<RoomState> = new Channel();
+  public name: string = "";
   private messages: RoomMessage[] = [];
   private players: Player[] = [];
-  public createdAt = new Date().toISOString();
+  public readonly createdAt = new Date().toISOString();
 
   private mainChatQueue = new ActionQueue();
 
-  constructor(public readonly id: string) {
-    this.name = "";
-    this.mainChatQueue.addToQueue(() => this.decideOnName());
-    this.mainChatQueue.addToQueue(async () => {
+  constructor(id: string) {
+    this.id = id;
+  }
+
+  async init() {
+    await this.mainChatQueue.addToQueue(() => this.decideOnName());
+    await this.mainChatQueue.addToQueue(async () => {
       this.messages.push(...makeStarterMessages(this.name));
     });
   }
@@ -46,7 +50,7 @@ export class Room {
     const content = response.data.choices[0].message?.content;
 
     if (!content) {
-      throw new Error("API returned no message");
+      throw new WebError("API returned no message", 500);
     }
 
     this.name = cleanupName(content);

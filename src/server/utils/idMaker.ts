@@ -2,6 +2,6 @@ export function idMaker() {
   let id = 1;
 
   return () => {
-    return id++;
+    return String(id++);
   };
 }
