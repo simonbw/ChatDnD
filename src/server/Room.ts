@@ -130,7 +130,6 @@ export class Room {
           return resolve();
         }
 
-        // TODO: Locking on this
         const messageIndex = this.addMessage({
           role: "assistant",
           name: "ChatDnD",
@@ -169,7 +168,6 @@ export class Room {
 
   // For debugging only. Doesn't draw images.
   async getDmMessageSync() {
-    // TODO: Locking on this
     const messageIndex = this.addMessage({
       role: "assistant",
       name: "ChatDnD",

@@ -6,6 +6,7 @@ FRONTEND & BACKEND
 - A button that (asks to) draw the scene
 - Allow deleting or regenerating messages.
 - Ambient music?
+- Character Sheet
 
 PROMPT:
  - Consider having a separate agent analyze responses to see if they contain new characters or scenes
