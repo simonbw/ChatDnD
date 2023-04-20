@@ -21,7 +21,7 @@ export function getElevenLabsKey(): string {
 }
 
 export function getGPTModel(): string {
-  return process.env.GPT_MODEL ?? "";
+  return process.env.GPT_MODEL ?? "gpt-3.5-turbo";
 }
 
 export function getDrawnImageFolder(): string {

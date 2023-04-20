@@ -10,9 +10,10 @@ export function errorHtml(error: Error) {
 </head>
 
 <body class="p-4">
-  <main class="p-4 bg-sepia-200 text-sm font-mono">
-    <pre class="text-md mb-2 font-bold">${error.message}</pre>
-    <pre>${error.stack}</pre>
+  <main class="paper max-w-6xl">
+    <a class="link m-2" href="/">◄ Home</a>
+    <h1 class="text-md mb-2 font-bold font-heading-1 text-center text-3xl">Error: ${error.message}</h1>
+    <pre class="bg-sepia-800 text-zinc-50 font-mono text-xs p-2 rounded overflow-x-auto">${error.stack}</pre>
   </main>
 </body>
 

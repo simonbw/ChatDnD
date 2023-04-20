@@ -69,7 +69,7 @@ router.post(routes.room.message(":roomId"), async (req, res, next) => {
     return next(error);
   }
 
-  if (!requestMessage.data.secret) {
+  if (!requestMessage.data.whispered) {
     try {
       room.getDmMessage().catch((error: unknown) => {
         if (isAxiosError(error)) {

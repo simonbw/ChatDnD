@@ -8,7 +8,7 @@ export class RoomMessageBuilder {
       content: "",
       role: "assistant",
       name: "ChatDnD",
-      secret: false,
+      whispered: false,
       images: [],
       createdAt: new Date().toISOString(),
     };
@@ -78,7 +78,7 @@ export class RoomMessageBuilder {
   getMessage(): RoomMessage {
     return {
       role: this.message.role,
-      secret: this.message.secret,
+      whispered: this.message.whispered,
       name: this.message.name,
       images: this.message.images,
       createdAt: this.message.createdAt,

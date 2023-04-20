@@ -11,6 +11,8 @@ export const roomMessageImageSchema = z.object({
   url: z.string().optional(),
 });
 
+export type RoomMessageImage = z.infer<typeof roomMessageImageSchema>;
+
 export const roomMessageSchema = z.object({
   /* Who is saying this, i.e. a user, the dm, or the system */
   role: roomMessageRoleSchema,
@@ -23,10 +25,12 @@ export const roomMessageSchema = z.object({
   /* Name of the person who said this */
   name: z.string().nonempty().optional(),
   /* Not said to the DM */
-  secret: z.boolean().optional(),
+  whispered: z.boolean().optional(),
   /* References to images included in this message */
   images: z.array(roomMessageImageSchema).optional(),
 });
+
+export type RoomMessage = z.infer<typeof roomMessageSchema>;
 
 export const roomStateSchema = z.object({
   messages: z.array(roomMessageSchema),
@@ -36,6 +40,4 @@ export const roomStateSchema = z.object({
   createdAt: z.string(),
 });
 
-export type RoomMessageImage = z.infer<typeof roomMessageImageSchema>;
-export type RoomMessage = z.infer<typeof roomMessageSchema>;
 export type RoomState = z.infer<typeof roomStateSchema>;

@@ -4,6 +4,7 @@ import { Readable } from "stream";
 import { RoomMessage, RoomState } from "../common/models/roomModel";
 import { last } from "../common/utils/arrayUtils";
 import { RoomMessageBuilder } from "./RoomMessageBuilder";
+import { WebError } from "./WebError";
 import {
   makeChooseNameMessage,
   makeStarterMessages,
@@ -42,15 +43,25 @@ export class Room {
   }
 
   async decideOnName() {
-    const response = await openAi().createChatCompletion({
-      model: getGPTModel(),
-      messages: makeChooseNameMessage(),
-    });
+    let content: string | undefined = undefined;
+    try {
+      const response = await openAi().createChatCompletion({
+        model: getGPTModel(),
+        messages: makeChooseNameMessage(),
+      });
 
-    const content = response.data.choices[0].message?.content;
+      content = response.data.choices[0].message?.content;
+    } catch (error: any) {
+      if (!content) {
+        throw new WebError("Error while generating name " + error.message, 500);
+      }
+    }
 
     if (!content) {
-      throw new WebError("API returned no message", 500);
+      throw new WebError(
+        "Error while generating name. API returned no content.",
+        500
+      );
     }
 
     this.name = cleanupName(content);
@@ -99,11 +110,8 @@ export class Room {
   }
 
   getPublicState(): RoomState {
-    const publicMessages: RoomMessage[] = this.messages.filter(
-      (message) => message.role != "system"
-    );
     return {
-      messages: publicMessages,
+      messages: this.getPublicMessages(),
       id: this.id,
       name: this.name,
       players: this.players.map((p) => p.name),
@@ -111,10 +119,28 @@ export class Room {
     };
   }
 
+  getPublicMessages(): RoomMessage[] {
+    return this.messages
+      .map((message) => {
+        if (message.role === "system") {
+          if (message.publicContent) {
+            return {
+              ...message,
+              content: message.publicContent,
+              publicContent: undefined,
+            };
+          }
+        } else {
+          return message;
+        }
+      })
+      .filter((message): message is RoomMessage => message != null);
+  }
+
   getApiMessages(): ChatCompletionRequestMessage[] {
     return [
       ...this.messages
-        .filter((message) => !message.secret)
+        .filter((message) => !message.whispered)
         .map((message) => ({
           role: message.role,
           name: apiSafeName(message.name),
@@ -124,44 +150,43 @@ export class Room {
   }
 
   async getDmMessage(skipIfDuplicate: boolean = true) {
-    await this.mainChatQueue.addToQueue(() => {
-      return new Promise(async (resolve) => {
-        if (
-          skipIfDuplicate &&
-          last(this.getApiMessages())?.role === "assistant"
-        ) {
-          // Don't have ChatDnD send two messages in a row. It should be able to respond to both just fine.
-          return resolve();
+    await this.mainChatQueue.addToQueue(async () => {
+      if (
+        skipIfDuplicate &&
+        last(this.getApiMessages())?.role === "assistant"
+      ) {
+        // Don't have ChatDnD send two messages in a row.
+        return;
+      }
+
+      const messageIndex = this.addMessage({
+        role: "assistant",
+        name: "ChatDnD",
+        content: "...",
+        createdAt: new Date().toISOString(),
+        whispered: true,
+      });
+
+      const messageBuilder = new RoomMessageBuilder(() => {
+        this.updateMessage(messageIndex, messageBuilder.getMessage());
+      });
+
+      const chat = (await openAi().createChatCompletion(
+        {
+          stream: true,
+          model: getGPTModel(),
+          messages: this.getApiMessages(),
+        },
+        { responseType: "stream" }
+      )) as any as AxiosResponse<Readable>;
+
+      chat.data.on("data", (data: Uint8Array) => {
+        for (const delta of parseDeltaStream(data)) {
+          messageBuilder.addDelta(delta);
         }
+      });
 
-        const messageIndex = this.addMessage({
-          role: "assistant",
-          name: "ChatDnD",
-          content: "...",
-          createdAt: new Date().toISOString(),
-          secret: true,
-        });
-
-        const messageBuilder = new RoomMessageBuilder(() => {
-          const message = messageBuilder.getMessage();
-          this.updateMessage(messageIndex, message);
-        });
-
-        const chat = (await openAi().createChatCompletion(
-          {
-            stream: true,
-            model: getGPTModel(),
-            messages: this.getApiMessages(),
-          },
-          { responseType: "stream" }
-        )) as any as AxiosResponse<Readable>;
-
-        chat.data.on("data", (data: Uint8Array) => {
-          for (const delta of parseDeltaStream(data)) {
-            messageBuilder.addDelta(delta);
-          }
-        });
-
+      await new Promise<void>((resolve) => {
         chat.data.on("end", () => {
           messageBuilder.end();
           resolve();
@@ -177,7 +202,7 @@ export class Room {
       name: "ChatDnD",
       content: "...",
       createdAt: new Date().toISOString(),
-      secret: true,
+      whispered: true,
     });
 
     const chat = await openAi().createChatCompletion({

@@ -9,16 +9,18 @@ import { NameTag } from "./NameTag";
 export function Message({ message }: { message: RoomMessage }) {
   const [isFast, setFast] = useState(false);
 
-  const contentItems = parseContent(message.content);
+  const contentItems = parseContent(message);
 
   const isChatDnD = message.role === "assistant";
+  const isSystem = message.role === "system";
   return (
     <div
       className={classNames(
         "py-4 flex gap-2",
         "flex-col",
-        "sm:flex-row sm:p-r-16"
-        // isChatDnD ? "bg-sepia-600/10" : ""
+        "sm:flex-row sm:p-r-16",
+        isChatDnD ? "" : "",
+        isSystem ? "bg-sepia text-zinc-50" : ""
       )}
       onClick={() => setFast(true)}
     >
@@ -95,18 +97,22 @@ function MessageImage({ image }: { image?: RoomMessageImage }) {
   );
 }
 
+function MessageEvent({ text }: { text: string }) {
+  return <div></div>;
+}
+
 type ContentItem =
   | { type: "text"; text: string }
   | { type: "image"; index: number };
 
-function parseContent(messageContent: string): ContentItem[] {
+function parseContent(message: RoomMessage): ContentItem[] {
   const result: ContentItem[] = [];
 
   let imageIndex = 0;
   let inImage = false;
   let text = "";
 
-  for (const char of messageContent) {
+  for (const char of message.content) {
     if (inImage) {
       // end image
       if (char == "}") {

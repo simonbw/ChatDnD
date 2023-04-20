@@ -51,6 +51,7 @@ export function playerJoinMessage(player: Player): RoomMessage {
   return {
     role: "system",
     content: `${player.name} has just joined the game. Please welcome them to the game.`,
+    publicContent: `${player.name} has just joined the game.`,
     createdAt: new Date().toISOString(),
   };
 }
@@ -59,6 +60,7 @@ export function playerLeaveMessage(player: Player): RoomMessage {
   return {
     role: "system",
     content: `${player.name} has left the game. Please notify the other players.`,
+    publicContent: `${player.name} has left the game.`,
     createdAt: new Date().toISOString(),
   };
 }
