@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { registerEsbuildHotReload } from "./hotReload";
+import { registerEsbuildHotReload } from "./esbuildHotReload";
 
 export function renderPage(content: ReactNode) {
   const containerElement = document.getElementById("react-container");

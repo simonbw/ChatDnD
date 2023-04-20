@@ -95,7 +95,7 @@ function PlayerList({ players }: { players: string[] }) {
 function Wrapper({ children }: PropsWithChildren) {
   return (
     <>
-      <div>
+      <div className="mb-2">
         <a className="link" href={routes.home()}>
           ◄ Home
         </a>
