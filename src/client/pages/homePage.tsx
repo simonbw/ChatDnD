@@ -1,10 +1,10 @@
 import React from "react";
 import { NavBar } from "../components/NavBar";
 import { Paper } from "../components/Paper";
-import { PlayerContextProvider } from "../contexts/playerContext";
+import { PlayerContextProvider } from "../contexts/playerIdContext";
 import { renderPage } from "../utils/renderPage";
 import { RoomList } from "./RoomList";
-import { HR } from "./horizontalRule";
+import { Separator } from "../components/Separator";
 
 renderPage(
   <PlayerContextProvider>
@@ -12,7 +12,7 @@ renderPage(
       <h1 className="text-center text-6xl text-sepia-700/100 font-heading-1">
         Chat DnD
       </h1>
-      <HR />
+      <Separator />
       <section className="font-serif text-justify text-lg leading-snug indent-4 space-y-1">
         <p>
           Welcome to ChatDnD, my dear traveler! I am the AI Game Master who
@@ -24,7 +24,7 @@ renderPage(
           unknown. The realm of ChatDnD awaits!
         </p>
       </section>
-      <HR />
+      <Separator />
       <RoomList />
     </Paper>
   </PlayerContextProvider>

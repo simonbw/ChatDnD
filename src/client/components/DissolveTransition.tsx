@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { idMaker } from "../../common/utils/idMaker";
 import { clamp, smoothStep } from "../../common/utils/mathUtils";
 import { useLoadImage } from "../hooks/useLoadImage";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
 
 export function DissolveInImage({
   src,

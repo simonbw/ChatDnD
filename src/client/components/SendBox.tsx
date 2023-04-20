@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import Textarea from "react-expanding-textarea";
-import { usePlayerContext } from "../contexts/playerContext";
+import { usePlayer, usePlayerId } from "../contexts/playerIdContext";
 import { relativeUrl } from "../utils/relativeUrl";
 import { Button } from "./Button";
 import { NameTag } from "./NameTag";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
+import { useRoom } from "../hooks/useRoomState";
 
 export function SendBox({ roomId }: { roomId: string }) {
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
-  const { player } = usePlayerContext();
   const [secret, setSecret] = useState(false);
+  const player = usePlayer();
 
   const submit = async () => {
     if (content != "" && player) {
       setSending(true);
       try {
         await fetch(relativeUrl("message"), {
-          body: JSON.stringify({ name: player?.name, content, secret }),
+          body: JSON.stringify({ content, secret, playerId: player.id }),
           headers: { "Content-Type": "application/json" },
           method: "POST",
         });
@@ -58,13 +59,6 @@ export function SendBox({ roomId }: { roomId: string }) {
       <Button kind="flat" color="primary" onClick={submit} loading={sending}>
         Send
       </Button>
-      {/* <Button
-        kind={secret ? "flat" : "outline"}
-        color={"danger"}
-        onClick={() => setSecret((s) => !s)}
-      >
-        {secret ? "🤫" : "😮"}
-      </Button> */}
     </div>
   );
 }

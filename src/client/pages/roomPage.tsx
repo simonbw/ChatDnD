@@ -1,8 +1,8 @@
 import React from "react";
 import { Footer } from "../components/Footer";
 import { Paper } from "../components/Paper";
-import { RoomPageContent } from "../components/RoomPageContent";
-import { PlayerContextProvider } from "../contexts/playerContext";
+import { RoomPageContent } from "../contexts/RoomPageContent";
+import { PlayerContextProvider } from "../contexts/playerIdContext";
 import { RoomProvider } from "../hooks/useRoomState";
 import { renderPage } from "../utils/renderPage";
 

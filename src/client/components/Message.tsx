@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useState } from "react";
 import { RoomMessage, RoomMessageImage } from "../../common/models/roomModel";
 import { WrittenText } from "./WrittenText";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
 import { DissolveInImage } from "./DissolveTransition";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NameTag } from "./NameTag";

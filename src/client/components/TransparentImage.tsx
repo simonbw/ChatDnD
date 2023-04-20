@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
 
 export const BLANK_IMAGE =
   "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";

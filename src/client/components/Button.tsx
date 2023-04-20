@@ -1,5 +1,5 @@
 import React, { ForwardedRef, forwardRef } from "react";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
 import { LoadingDots } from "./LoadingDots";
 
 export const ButtonKinds = ["full", "flat", "outline", "text"] as const;

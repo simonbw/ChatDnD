@@ -42,34 +42,42 @@ router.post(routes.room.message(":roomId"), async (req, res, next) => {
   const roomId = z.string().parse(req.params.roomId);
   const room = getRoom(roomId);
 
-  const requestMessage = roomMessageSchema
-    .omit({ role: true, createdAt: true, images: true })
-    .safeParse({
-      ...req.body,
-      role: "user",
-    });
+  const requestParseResult = z
+    .object({
+      playerId: z.string().nonempty(),
+      content: z.string().nonempty(),
+      whispered: z.boolean().optional(),
+    })
+    .safeParse(req.body);
 
-  if (!requestMessage.success) {
+  if (!requestParseResult.success) {
     return res
       .status(400)
-      .send({ message: "Bad message", error: requestMessage.error });
+      .send({ message: "Bad message", error: requestParseResult.error });
+  }
+
+  const requestBody = requestParseResult.data;
+  const player = room.getPlayer(requestBody.playerId);
+
+  if (!player) {
+    return res
+      .status(403)
+      .send({ message: "You need to join this room first" });
   }
 
   const message: RoomMessage = {
-    ...requestMessage.data,
+    content: requestBody.content,
+    whispered: requestBody.whispered,
+    name: player.name,
     role: "user",
     createdAt: new Date().toISOString(),
   };
 
   console.log("adding message", message);
 
-  try {
-    room.addMessage(message);
-  } catch (error) {
-    return next(error);
-  }
+  room.addMessage(message);
 
-  if (!requestMessage.data.whispered) {
+  if (!requestBody.whispered) {
     try {
       room.getDmMessage().catch((error: unknown) => {
         if (isAxiosError(error)) {

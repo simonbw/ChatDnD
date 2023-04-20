@@ -36,7 +36,7 @@ export const roomStateSchema = z.object({
   messages: z.array(roomMessageSchema),
   id: z.string(),
   name: z.string(),
-  players: z.array(z.string()),
+  players: z.array(z.object({ name: z.string(), id: z.string() })),
   createdAt: z.string(),
 });
 

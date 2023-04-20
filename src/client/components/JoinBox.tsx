@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { z } from "zod";
 import { routes } from "../../common/routes";
-import { usePlayerContext } from "../contexts/playerContext";
+import { usePlayerId } from "../contexts/playerIdContext";
+import { classNames } from "../utils/classNames";
 import { Button } from "./Button";
-import { classNames } from "./classNames";
 
 export function JoinBox({ roomId }: { roomId: string }) {
-  const { player, setPlayer } = usePlayerContext();
-  const [name, setName] = useState(player?.name ?? "");
+  const playerId = usePlayerId();
+  const [name, setName] = useState("");
 
   const submit = async () => {
     try {
-      const player = { name, id: name };
-      const response = await fetch(routes.room.join(roomId), {
+      const player = { name, id: playerId };
+      await fetch(routes.room.join(roomId), {
         method: "post",
         body: JSON.stringify(player),
         headers: {
@@ -21,10 +21,6 @@ export function JoinBox({ roomId }: { roomId: string }) {
       })
         .then((response) => response.json())
         .then((response) => z.record(z.any()).parse(response));
-      if (response.success) {
-        console.log("setting player", player);
-        setPlayer(player);
-      }
     } catch (error) {
       console.warn("Failed to join room");
     }

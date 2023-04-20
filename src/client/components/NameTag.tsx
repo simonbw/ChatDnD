@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
 
 export function NameTag({
   children,

@@ -1,5 +1,5 @@
 import React, { HTMLProps, PropsWithChildren } from "react";
-import { classNames } from "./classNames";
+import { classNames } from "../utils/classNames";
 
 export function Paper({
   children,

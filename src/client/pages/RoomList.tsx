@@ -7,7 +7,7 @@ import {
 import { NameTag } from "../components/NameTag";
 import { Button } from "../components/Button";
 import { routes } from "../../common/routes";
-import { usePlayerContext } from "../contexts/playerContext";
+import { usePlayerId } from "../contexts/playerIdContext";
 
 export function RoomList() {
   const playerRooms = usePlayerRooms();
@@ -68,18 +68,16 @@ export function RoomList() {
 
 function usePlayerRooms(): RoomListItem[] {
   const [rooms, setRooms] = useState<RoomListItem[]>([]);
-  const { player } = usePlayerContext();
+  const playerId = usePlayerId();
 
   useEffect(() => {
-    if (player) {
-      const url = new URL(routes.rooms(), window.location.origin);
-      url.searchParams.set("playerId", player.id);
-      fetch(url, {})
-        .then((response) => response.json())
-        .then((data) => z.object({ rooms: roomListSchema }).parse(data))
-        .then((roomList) => setRooms(roomList.rooms));
-    }
-  }, [player]);
+    const url = new URL(routes.rooms(), window.location.origin);
+    url.searchParams.set("playerId", playerId);
+    fetch(url, {})
+      .then((response) => response.json())
+      .then((data) => z.object({ rooms: roomListSchema }).parse(data))
+      .then((roomList) => setRooms(roomList.rooms));
+  }, [playerId]);
 
   return rooms;
 }

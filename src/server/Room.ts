@@ -92,6 +92,10 @@ export class Room {
     return this.players;
   }
 
+  getPlayer(playerId: string): Player | undefined {
+    return this.players.find((player) => player.id === playerId);
+  }
+
   updateMessage(
     messageIndex: number,
     message: RoomMessage | ((old: RoomMessage) => RoomMessage)
@@ -114,7 +118,7 @@ export class Room {
       messages: this.getPublicMessages(),
       id: this.id,
       name: this.name,
-      players: this.players.map((p) => p.name),
+      players: this.players,
       createdAt: this.createdAt,
     };
   }

@@ -1,7 +1,7 @@
 import React, { HTMLProps } from "react";
-import { classNames } from "../components/classNames";
+import { classNames } from "../utils/classNames";
 
-export function HR({ className }: HTMLProps<SVGElement>) {
+export function Separator({ className }: HTMLProps<SVGElement>) {
   return (
     <svg
       className={classNames("h-8 text-sepia", className)}
