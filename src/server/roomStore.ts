@@ -1,7 +1,7 @@
 import { RoomListItem } from "../common/models/roomListModel";
 import { Room } from "./Room";
 import { WebError } from "./WebError";
-import { idMaker } from "./utils/idMaker";
+import { idMaker } from "../common/utils/idMaker";
 
 const rooms = new Map<string, Room>();
 

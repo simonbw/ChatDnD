@@ -1,4 +1,4 @@
-import { idMaker } from "./idMaker";
+import { idMaker } from "../../common/utils/idMaker";
 
 const makeId = idMaker();
 

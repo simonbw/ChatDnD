@@ -4,6 +4,6 @@
   }
   body {
     min-height: 100vh;
-    @apply bg-gradient-to-b from-zinc-700 to-zinc-800;
+    @apply bg-gradient-to-b from-zinc-700 to-zinc-800 py-2 md:py-4 lg:py-8;
   }
 }

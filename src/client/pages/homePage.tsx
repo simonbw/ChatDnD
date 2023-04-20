@@ -8,7 +8,6 @@ import { HR } from "./horizontalRule";
 
 renderPage(
   <PlayerContextProvider>
-    <NavBar />
     <Paper className="px-8 lg:px-20 flex flex-col gap-8">
       <h1 className="text-center text-6xl text-sepia-700/100 font-heading-1">
         Chat DnD

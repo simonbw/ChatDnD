@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { RoomMessage, RoomMessageImage } from "../../common/models/roomModel";
 import { WrittenText } from "./WrittenText";
 import { classNames } from "./classNames";
@@ -9,18 +9,21 @@ import { NameTag } from "./NameTag";
 export function Message({ message }: { message: RoomMessage }) {
   const [isFast, setFast] = useState(false);
 
-  const contentItems = parseContent(message);
-
-  const isChatDnD = message.role === "assistant";
   const isSystem = message.role === "system";
+  if (isSystem) {
+    return <MessageEvent>{message.content}</MessageEvent>;
+  }
+
+  const contentItems = parseContent(message);
+  const isChatDnD = message.role === "assistant";
+
   return (
     <div
       className={classNames(
         "py-4 flex gap-2",
         "flex-col",
         "sm:flex-row sm:p-r-16",
-        isChatDnD ? "" : "",
-        isSystem ? "bg-sepia text-zinc-50" : ""
+        isChatDnD ? "" : ""
       )}
       onClick={() => setFast(true)}
     >
@@ -38,7 +41,14 @@ export function Message({ message }: { message: RoomMessage }) {
           switch (item.type) {
             case "text":
               // TODO: don't start each WrittenText until the previous has finished
-              return <MessageText key={i} text={item.text} isFast={isFast} />;
+              return (
+                <MessageText
+                  key={i}
+                  text={item.text}
+                  isFast={isFast}
+                  dark={isSystem}
+                />
+              );
 
             case "image": {
               const image = message.images?.[item.index];
@@ -51,11 +61,19 @@ export function Message({ message }: { message: RoomMessage }) {
   );
 }
 
-function MessageText({ isFast, text }: { isFast: boolean; text: string }) {
+function MessageText({
+  isFast,
+  text,
+  dark,
+}: {
+  isFast: boolean;
+  text: string;
+  dark?: boolean;
+}) {
   return (
     <div
       className={classNames(
-        "text-sepia-800",
+        dark ? "text-white" : "text-sepia-700",
         "whitespace-pre-wrap",
         "text-justify hyphens-auto",
         "font-body text-md tracking-normal",
@@ -97,8 +115,19 @@ function MessageImage({ image }: { image?: RoomMessageImage }) {
   );
 }
 
-function MessageEvent({ text }: { text: string }) {
-  return <div></div>;
+function MessageEvent({ children }: PropsWithChildren) {
+  return (
+    <div
+      className={classNames(
+        "bg-sepia-500  text-white mix-blend-multiply",
+        "small-caps font-serif text-center",
+        "px-2 py-1 rounded",
+        "animate-fade-in-slow"
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 type ContentItem =

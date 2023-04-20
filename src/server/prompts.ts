@@ -51,7 +51,7 @@ export function playerJoinMessage(player: Player): RoomMessage {
   return {
     role: "system",
     content: `${player.name} has just joined the game. Please welcome them to the game.`,
-    publicContent: `${player.name} has just joined the game.`,
+    publicContent: `${player.name} has joined the game.`,
     createdAt: new Date().toISOString(),
   };
 }

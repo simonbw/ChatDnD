@@ -1,8 +1,9 @@
+import { makeNoise2D } from "open-simplex-noise";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { idMaker } from "../../common/utils/idMaker";
 import { clamp, smoothStep } from "../../common/utils/mathUtils";
 import { useLoadImage } from "../hooks/useLoadImage";
 import { classNames } from "./classNames";
-import { makeNoise2D } from "open-simplex-noise";
 
 export function DissolveInImage({
   src,

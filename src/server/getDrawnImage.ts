@@ -4,6 +4,7 @@ import sharp, { Sharp } from "sharp";
 import { last } from "../common/utils/arrayUtils";
 import { getDrawnImageFolder, isDrawingEnabled } from "./utils/envUtils";
 import { openAi } from "./utils/openAiUtils";
+import { WebError } from "./WebError";
 
 const PLACEHOLDER = "/static/images/drawing-disabled.png";
 

@@ -1,13 +1,14 @@
 import React, { PropsWithChildren } from "react";
+import { routes } from "../../common/routes";
+import { last } from "../../common/utils/arrayUtils";
 import { usePlayerContext } from "../contexts/playerContext";
 import { useRoom } from "../hooks/useRoomState";
+import { HR } from "../pages/horizontalRule";
 import { JoinBox } from "./JoinBox";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { Message } from "./Message";
-import { SendBox } from "./SendBox";
 import { NameTag } from "./NameTag";
-import { last } from "../../common/utils/arrayUtils";
-import { HR } from "../pages/horizontalRule";
+import { SendBox } from "./SendBox";
 
 export function RoomPageContent() {
   const { room: state } = useRoom();
@@ -28,7 +29,7 @@ export function RoomPageContent() {
   return (
     <Wrapper>
       <header className="flex flex-col justify-center hyphens-auto w-full">
-        <h1 className="text-center text-6xl text-sepia-700 font-heading-1 animate-fade-in">
+        <h1 className="text-center text-6xl text-sepia-700 font-heading-1">
           {state.name}
         </h1>
         <PlayerList players={state.players} />
@@ -36,7 +37,7 @@ export function RoomPageContent() {
 
       {/* <HR /> */}
 
-      <div className="flex-grow flex flex-col gap-0 animate-fade-in-slow">
+      <div className="flex-grow flex flex-col gap-0">
         {state.messages.length == 0 && (
           <div className="italic p-2 text-sepia-500 text-center">
             No messages yet
@@ -92,5 +93,14 @@ function PlayerList({ players }: { players: string[] }) {
 }
 
 function Wrapper({ children }: PropsWithChildren) {
-  return <div className="flex flex-col font-serif gap-8">{children}</div>;
+  return (
+    <>
+      <div>
+        <a className="link" href={routes.home()}>
+          ◄ Home
+        </a>
+      </div>
+      <div className="flex flex-col font-serif gap-8">{children}</div>
+    </>
+  );
 }
