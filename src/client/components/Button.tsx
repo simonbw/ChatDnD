@@ -1,6 +1,7 @@
 import React, { ForwardedRef, forwardRef } from "react";
 import { classNames } from "../utils/classNames";
 import { LoadingDots } from "./LoadingDots";
+import { LoadingIndicator } from "./LoadingIndicator";
 
 export const ButtonKinds = ["full", "flat", "outline", "text"] as const;
 export const ButtonColors = [

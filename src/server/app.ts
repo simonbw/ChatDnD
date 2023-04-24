@@ -1,9 +1,9 @@
 import express, { ErrorRequestHandler } from "express";
-import { WebError } from "./WebError";
 import esbuildRouter from "./middleware/esbuildRouter";
 import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
+import helpersRouter from "./middleware/generationApiRouter";
 import homeRouter from "./middleware/homeRouter";
-import roomRouter from "./middleware/roomRouter";
+import roomRouter from "./middleware/room/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
 import { errorHtml } from "./pages/errorHtml";
 
@@ -22,6 +22,7 @@ app.use(homeRouter);
 app.use(esbuildRouter);
 app.use(voiceRouter);
 app.use(roomRouter);
+app.use(helpersRouter);
 
 app.use(((error, req, res, next) => {
   if (error.status) {

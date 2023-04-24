@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import Textarea from "react-expanding-textarea";
-import { usePlayer, usePlayerId } from "../contexts/playerIdContext";
+import { usePlayer } from "../contexts/playerIdContext";
+import { classNames } from "../utils/classNames";
 import { relativeUrl } from "../utils/relativeUrl";
 import { Button } from "./Button";
 import { NameTag } from "./NameTag";
-import { classNames } from "../utils/classNames";
-import { useRoom } from "../hooks/useRoomState";
 
 export function SendBox({ roomId }: { roomId: string }) {
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
-  const [secret, setSecret] = useState(false);
+  const [whispered, setWhisper] = useState(false);
   const player = usePlayer();
+
+  if (!player) {
+    return null;
+  }
 
   const submit = async () => {
     if (content != "" && player) {
       setSending(true);
       try {
         await fetch(relativeUrl("message"), {
-          body: JSON.stringify({ content, secret, playerId: player.id }),
+          body: JSON.stringify({ content, whispered, playerId: player.id }),
           headers: { "Content-Type": "application/json" },
           method: "POST",
         });
@@ -39,12 +42,9 @@ export function SendBox({ roomId }: { roomId: string }) {
         "border-t-4 border-sepia/50 border-double"
       )}
     >
-      <NameTag>{player?.name ?? "[unknown]"}</NameTag>
+      <NameTag>{player.character.name ?? "[unknown]"}</NameTag>
       <Textarea
-        className={classNames(
-          "flex-grow px-2 py-1.5 bg-sepia-500/[15%] rounded resize-none transition-colors",
-          "focus:outline-none focus:bg-sepia-500/20 hover:bg-sepia-500/20"
-        )}
+        className={classNames("text-input flex-grow")}
         onChange={(e) => setContent(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {

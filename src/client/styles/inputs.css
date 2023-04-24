@@ -1,0 +1,25 @@
+@layer components {
+  .text-input {
+    @apply px-2 py-1.5 bg-sepia/[15%] rounded resize-none transition-colors text-sepia;
+    @apply focus:outline-none focus:bg-sepia/20 hover:bg-sepia/20;
+    @apply disabled:text-opacity-50 disabled:bg-sepia/25;
+  }
+
+  .select-button {
+    @apply text-left font-nametag text-md text-sepia;
+    @apply px-2 py-1.5 bg-sepia/[15%] rounded resize-none transition-colors w-full;
+    @apply focus:outline-none focus:bg-sepia/20 hover:bg-sepia/20;
+    @apply active:outline-none active:bg-sepia/20 active:hover:bg-sepia/20;
+    @apply ui-active:bg-sepia/40 autofill:bg-sepia/20;
+  }
+
+  .select-options {
+    z-index: 10;
+    @apply absolute bg-sepia-700 text-sm text-sepia-100 rounded shadow-lg w-full overflow-hidden;
+    @apply mt-1;
+  }
+
+  .select-option {
+    @apply px-4 py-2 cursor-pointer ui-active:bg-sepia/60 ui-active:text-sepia-50;
+  }
+}

@@ -50,7 +50,9 @@ export function listRooms(playerId?: string): RoomListItem[] {
       (room): RoomListItem => ({
         id: room.id,
         name: room.name,
-        players: room.getPlayers(),
+        players: room
+          .getPlayers()
+          .map((p) => ({ id: p.id, name: p.character.name })),
       })
     );
 }

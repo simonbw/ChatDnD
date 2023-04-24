@@ -1,6 +1,5 @@
 
 FRONTEND:
-- Dice roller
 - Cool page transitions 
 
 FRONTEND & BACKEND
@@ -18,3 +17,8 @@ PERFORMANCE/TECH DEBT
  - Don't send whole state on every update. Only send deltas
  - Use a database to store prompts and rooms and such (could probably do Hasura)
  - Store images in S3 or something
+
+THE GAME:
+ - I don't think I want it to be exactly D&D
+ - No dice
+ - No 

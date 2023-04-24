@@ -1,5 +1,12 @@
-import { OpenAIApi, Configuration as OpenAiConfiguration } from "openai";
+import {
+  ChatCompletionRequestMessage,
+  CreateChatCompletionRequest,
+  OpenAIApi,
+  Configuration as OpenAiConfiguration,
+} from "openai";
+import { last } from "../../common/utils/arrayUtils";
 import { StreamMessageDelta, streamMessageSchema } from "../RoomMessageBuilder";
+import { WebError } from "../WebError";
 import { getOpenAiKey } from "./envUtils";
 import { makeSingleton } from "./makeSingleton";
 
@@ -40,4 +47,39 @@ export function parseDeltaStream(raw: Uint8Array): StreamMessageDelta[] {
 
 export function apiSafeName(name?: string): string | undefined {
   return name?.replace(/[^a-zA-Z0-9_-]/g, "_");
+}
+
+export async function simpleTextResponse(
+  messages: ChatCompletionRequestMessage[],
+  options: Partial<CreateChatCompletionRequest> = {}
+) {
+  const chatResponse = await openAi().createChatCompletion({
+    ...options,
+    model: "gpt-3.5-turbo",
+    messages,
+  });
+
+  const content = chatResponse.data.choices[0].message?.content;
+  if (!content) {
+    throw new WebError("Chat API did not return any content", 500);
+  }
+  return content;
+}
+
+export function cleanupChatResponse(
+  content: string,
+  options: { stripQuotes?: boolean; singlePhrase?: boolean } = {}
+): string {
+  const { stripQuotes = true, singlePhrase = false } = options;
+  let result = content;
+
+  if (stripQuotes) {
+    result = result.replace(/"/g, "");
+  }
+
+  if (singlePhrase && last(result) == ".") {
+    result = result.substring(0, result.length - 1);
+  }
+
+  return result;
 }

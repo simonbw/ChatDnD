@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { RoomMessage, roomMessageRoleSchema } from "../common/models/roomModel";
-import { getDrawnImage } from "./getDrawnImage";
+import { getDrawnImage } from "./image-generation/getDrawnImage";
+import { DrawingStyle } from "./image-generation/DrawingStyle";
 
 export class RoomMessageBuilder {
   message: RoomMessage & { images: Exclude<RoomMessage["images"], undefined> } =
@@ -67,7 +68,7 @@ export class RoomMessageBuilder {
 
     this.message.images[imageIndex] = {
       ...image,
-      url: await getDrawnImage(image.description),
+      url: await getDrawnImage(image.description, DrawingStyle.StoryImage),
     };
 
     this.onUpdate();

@@ -2,8 +2,8 @@ import axios from "axios";
 import { Router } from "express";
 import https from "https";
 import { Readable } from "stream";
-import { isDev } from "../utils/envUtils";
 import { routes } from "../../common/routes";
+import { startEventStream } from "../utils/eventStreamUtils";
 
 const router = Router();
 export default router;
@@ -16,13 +16,7 @@ const httpsAgent = new https.Agent({
 router.get(routes.esbuild(), async (req, res) => {
   console.log("Forwarding http://0.0.0.0:8000/esbuild to /esbuild");
   try {
-    // Set up Server-Sent Events headers
-    res.header({
-      "Content-Type": "text/event-stream",
-      Connection: "keep-alive",
-      "Cache-Control": "no-cache",
-    });
-    res.flushHeaders();
+    startEventStream(res);
 
     // Request the event stream from the provided URL
     const axiosRes = await axios.get<Readable>("http://0.0.0.0:8000/esbuild", {

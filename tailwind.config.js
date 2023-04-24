@@ -1,11 +1,12 @@
-import * as opentypePlugin from "tailwindcss-opentype";
+import opentypePlugin from "tailwindcss-opentype";
 import defaultTheme from "tailwindcss/defaultTheme";
+import headlessPlugin from "@headlessui/tailwindcss";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
   content: ["./src/**/*.{html,js,ts,tsx}"],
 
-  plugins: [opentypePlugin],
+  plugins: [opentypePlugin, headlessPlugin],
 
   theme: {
     screens: {
@@ -17,7 +18,7 @@ const config = {
       colors: {
         sepia: {
           DEFAULT: "#6B5B47",
-          50: "#D6CDC2",
+          50: "#F7F5F3",
           100: "#CCC1B3",
           200: "#B8A894",
           300: "#A38F75",
@@ -86,6 +87,7 @@ const config = {
       },
       fontSize: {
         xxs: [".625rem", { lineHeight: "0.875rem", letterSpacing: "-0.02rem" }],
+        md: defaultTheme.fontSize.base,
       },
       animation: {
         "placeholder-loading":
@@ -149,7 +151,6 @@ const config = {
       }),
     },
   },
-  plugins: [],
 };
 
 export default config;

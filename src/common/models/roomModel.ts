@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { characterSchema } from "./characterModel";
+import { playerSchema } from "./playerModel";
 
 export const roomMessageRoleSchema = z.union([
   z.literal("system"),
@@ -36,8 +38,9 @@ export const roomStateSchema = z.object({
   messages: z.array(roomMessageSchema),
   id: z.string(),
   name: z.string(),
-  players: z.array(z.object({ name: z.string(), id: z.string() })),
+  players: z.array(playerSchema),
   createdAt: z.string(),
+  openToJoin: z.boolean(),
 });
 
 export type RoomState = z.infer<typeof roomStateSchema>;

@@ -9,4 +9,3 @@ export const roomListItemSchema = z.object({
 export const roomListSchema = z.array(roomListItemSchema);
 
 export type RoomListItem = z.infer<typeof roomListItemSchema>;
-export type RoomList = z.infer<typeof roomListSchema>;

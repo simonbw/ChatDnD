@@ -33,10 +33,15 @@ export function usePlayer() {
 function getPlayerId(): PlayerId {
   const maybeId = localStorage.getItem("playerId");
   if (isValidId(maybeId)) {
+    console.log("Loaded playerId:", maybeId);
     return maybeId;
   } else {
     const playerId = makePlayerId();
     localStorage.setItem("playerId", playerId);
+    if (maybeId) {
+      console.warn("Invalid playerId found:", maybeId);
+    }
+    console.log("Created new playerId:", playerId);
     return playerId;
   }
 }
@@ -50,7 +55,7 @@ function makePlayerId(): PlayerId {
   return result;
 }
 
-const validIdRegex = /^[a-zA_Z_]$/;
+const validIdRegex = /^[a-zA-Z0-9_]+$/;
 function isValidId(maybeId: string | null): maybeId is string {
   return maybeId != null && maybeId != "" && validIdRegex.test(maybeId);
 }

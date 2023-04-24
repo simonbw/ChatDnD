@@ -119,8 +119,8 @@ function MessageEvent({ children }: PropsWithChildren) {
   return (
     <div
       className={classNames(
-        "bg-sepia-500  text-white mix-blend-multiply",
-        "small-caps font-serif text-center",
+        "bg-sepia/60  text-white mix-blend-multiply",
+        "small-caps font-serif text-center tracking-wider",
         "px-2 py-1 rounded",
         "animate-fade-in-slow"
       )}

@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { ChatCompletionRequestMessage } from "openai";
 import { Readable } from "stream";
+import { Player } from "../common/models/playerModel";
 import { RoomMessage, RoomState } from "../common/models/roomModel";
 import { last } from "../common/utils/arrayUtils";
 import { RoomMessageBuilder } from "./RoomMessageBuilder";
@@ -10,16 +11,18 @@ import {
   makeStarterMessages,
   playerJoinMessage,
   playerLeaveMessage,
-} from "./prompts";
+} from "./prompts/initialPrompts";
 import { ActionQueue } from "./utils/ActionQueue";
 import { Channel } from "./utils/Channel";
 import { getGPTModel } from "./utils/envUtils";
-import { apiSafeName, openAi, parseDeltaStream } from "./utils/openAiUtils";
+import {
+  apiSafeName,
+  cleanupChatResponse,
+  openAi,
+  parseDeltaStream,
+} from "./utils/openAiUtils";
 
-interface Player {
-  id: string;
-  name: string;
-}
+const ROOM_PLAYER_LIMIT = 6;
 
 export class Room {
   public readonly id: string;
@@ -64,7 +67,7 @@ export class Room {
       );
     }
 
-    this.name = cleanupName(content);
+    this.name = cleanupChatResponse(content, { singlePhrase: true });
 
     this.publish();
   }
@@ -96,6 +99,10 @@ export class Room {
     return this.players.find((player) => player.id === playerId);
   }
 
+  isOpenToJoin(): boolean {
+    return this.players.length < ROOM_PLAYER_LIMIT;
+  }
+
   updateMessage(
     messageIndex: number,
     message: RoomMessage | ((old: RoomMessage) => RoomMessage)
@@ -120,6 +127,7 @@ export class Room {
       name: this.name,
       players: this.players,
       createdAt: this.createdAt,
+      openToJoin: this.isOpenToJoin(),
     };
   }
 
@@ -219,15 +227,4 @@ export class Room {
       content,
     }));
   }
-}
-
-function cleanupName(name: string): string {
-  let result = name;
-  // Get rid of quotes
-  result = result.replace(/"/g, "");
-  if (last(result) == ".") {
-    result = result.substring(0, result.length - 1);
-  }
-
-  return result;
 }

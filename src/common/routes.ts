@@ -1,9 +1,19 @@
 const r = {
   home: () => "/",
   test: () => "/test",
-  read: () => "/read",
+  textToSpeech: () => "/text-to-speech",
   healthcheck: () => "/_healthcheck",
   esbuild: () => "/esbuild",
+
+  generate: {
+    character: {
+      character: () => `/generate/character`,
+      name: () => `/generate/character/name`,
+      background: () => `/generate/character/background`,
+      description: () => `/generate/character/description`,
+      portrait: () => `/generate/character/portrait`,
+    },
+  },
 
   rooms: () => "/rooms",
   room: {
