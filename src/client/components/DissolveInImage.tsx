@@ -1,6 +1,5 @@
 import { makeNoise2D } from "open-simplex-noise";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { idMaker } from "../../common/utils/idMaker";
 import { clamp, smoothStep } from "../../common/utils/mathUtils";
 import { useLoadImage } from "../hooks/useLoadImage";
 import { classNames } from "../utils/classNames";
@@ -31,9 +30,13 @@ export function DissolveInImage({
 
   useEffect(() => {
     if (t >= 0 && t <= 1) {
-      requestAnimationFrame(() => {
-        const dt = 16; // TODO: Actual elapsed time
+      // let lastFrame: number = performance.now();
+
+      requestAnimationFrame((now) => {
+        const dt = 16;
+        // const dt = clamp(now - lastFrame, 0, 1000 / 15);
         setT((old) => clamp(old + dt / duration));
+        // lastFrame = now;
 
         if (canvasRef.current) {
           const { width: canvasWidth, height: canvasHeight } =
@@ -58,7 +61,9 @@ export function DissolveInImage({
                 const noiseOctave = 0.02;
                 const n = 0.5 + noise(x * noiseOctave, y * noiseOctave) * 0.5; // from 0 to 1
                 const o = 1 - Math.sqrt(cx * cx + cy * cy) / Math.sqrt(2);
-                const e = !fadeEdges ? 0 : -4 * Math.max(cx * cx, cy * cy) ** 6;
+                const e = !fadeEdges
+                  ? 0
+                  : -4 * Math.max(cx * cx, cy * cy) ** 20;
 
                 const t2 = smoothStep(t);
                 imageData.data[i + 3] *= clamp(n * o + e + 2 * t2 - 1);

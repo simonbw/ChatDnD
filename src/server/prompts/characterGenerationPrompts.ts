@@ -67,7 +67,7 @@ export function generatePortraitMessage(
   return [
     {
       role: "user",
-      content: `${base}. Write a one sentence visual description of this character that you might give to a sketch artist.`,
+      content: `${base}. Write a two sentence visual description of this character that you might give to a sketch artist. Make sure to include age, race, body type, skin tone, hair color, eye color, distinguishing features, clothing, and any weapons or armor they may have.`,
     },
   ];
 }

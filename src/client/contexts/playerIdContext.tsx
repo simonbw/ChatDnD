@@ -4,7 +4,7 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { useRoom } from "../hooks/useRoomState";
+import { useRoom } from "./roomContext";
 
 type PlayerId = string;
 

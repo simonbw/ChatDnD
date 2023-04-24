@@ -2,16 +2,15 @@ import React, { PropsWithChildren } from "react";
 import { Player } from "../../common/models/playerModel";
 import { routes } from "../../common/routes";
 import { last } from "../../common/utils/arrayUtils";
-import { JoinBox } from "../components/JoinBox";
-import { LoadingIndicator } from "../components/LoadingIndicator";
-import { Message } from "../components/Message";
-import { NameTag } from "../components/NameTag";
-import { SendBox } from "../components/SendBox";
-import { Separator } from "../components/Separator";
-import { useRoom } from "../hooks/useRoomState";
-import { usePlayerId } from "./playerIdContext";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { Message } from "./Message";
+import { NameTag } from "./NameTag";
+import { SendBox } from "./SendBox";
+import { Separator } from "./Separator";
+import { useRoom } from "../contexts/roomContext";
+import { usePlayerId } from "../contexts/playerIdContext";
 
-export function RoomPageContent() {
+export function MessagesPane() {
   const { room } = useRoom();
   const playerId = usePlayerId();
 
@@ -50,11 +49,7 @@ export function RoomPageContent() {
       <Separator />
 
       <div className="animate-fade-in">
-        {isInGame ? (
-          <SendBox roomId={room.id} />
-        ) : (
-          <JoinBox roomId={room.id} openToJoin={room.openToJoin} />
-        )}
+        {isInGame && <SendBox roomId={room.id} />}
       </div>
     </Wrapper>
   );

@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useState } from "react";
 import { RoomMessage, RoomMessageImage } from "../../common/models/roomModel";
 import { WrittenText } from "./WrittenText";
 import { classNames } from "../utils/classNames";
-import { DissolveInImage } from "./DissolveTransition";
+import { DissolveInImage } from "./DissolveInImage";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NameTag } from "./NameTag";
 
@@ -93,7 +93,7 @@ function MessageImage({ image }: { image?: RoomMessageImage }) {
     <div>
       <figure
         title={image?.description}
-        className="flex flex-col items-center justify-center text-center"
+        className="flex flex-col items-center text-center"
       >
         <div className="w-80 h-w-80 sepia-[40%]">
           <DissolveInImage

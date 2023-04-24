@@ -1,6 +1,6 @@
 @layer components {
   .paper {
-    @apply container max-w-2xl mx-auto my-2 md:my-4 xl:my-8 py-2 xl:py-4;
+    @apply max-w-2xl my-2 md:my-4 xl:my-8 py-2 xl:py-4;
     @apply text-sepia-700;
 
     filter: drop-shadow(0 5px 13px rgb(0 0 0 / 0.45))

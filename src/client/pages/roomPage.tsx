@@ -1,17 +1,23 @@
 import React from "react";
 import { Footer } from "../components/Footer";
-import { Paper } from "../components/Paper";
-import { RoomPageContent } from "../contexts/RoomPageContent";
+import { Paper, PaperContainer } from "../components/Paper";
+import { MessagesPane } from "../components/MessagesPane";
 import { PlayerContextProvider } from "../contexts/playerIdContext";
-import { RoomProvider } from "../hooks/useRoomState";
+import { RoomProvider } from "../contexts/roomContext";
 import { renderPage } from "../utils/renderPage";
+import { CharacterPane } from "../components/CharacterPane";
 
 renderPage(
   <PlayerContextProvider>
     <RoomProvider>
-      <Paper>
-        <RoomPageContent />
-      </Paper>
+      <PaperContainer>
+        <Paper>
+          <MessagesPane />
+        </Paper>
+        <Paper>
+          <CharacterPane />
+        </Paper>
+      </PaperContainer>
       <Footer />
     </RoomProvider>
   </PlayerContextProvider>

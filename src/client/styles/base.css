@@ -4,10 +4,30 @@
   }
   body {
     min-height: 100vh;
-    @apply bg-gradient-to-b from-zinc-700 to-zinc-800 py-2 md:py-4 lg:py-8;
+    @apply bg-gradient-to-b from-zinc-700 to-zinc-800;
   }
 
   hr {
     @apply border-sepia/50;
+  }
+
+  dl {
+    @apply flex flex-col gap-2;
+  }
+
+  dl > li {
+    @apply list-none leading-tight;
+  }
+
+  dl > li > dt {
+    @apply font-light font-nametag underline;
+  }
+  dl > li > dt::first-letter {
+    @apply text-lg no-underline;
+    text-decoration-color: red;
+  }
+
+  dl > li > dd {
+    @apply inline-block indent-4;
   }
 }

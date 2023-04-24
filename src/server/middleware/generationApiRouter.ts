@@ -106,13 +106,21 @@ router.post(
   routes.generate.character.portrait(),
   validateRequestBody(generateCharacterRequestBody),
   async (req, res) => {
-    console.log("Getting portrait prompt...");
-    const rawCaption = await simpleTextResponse(
-      generatePortraitMessage(req.body),
-      { temperature: 1 }
-    );
-    const caption = cleanupChatResponse(rawCaption);
-    const url = await getDrawnImage(caption, DrawingStyle.CharacterPortrait);
-    res.send({ portrait: { caption, url } });
+    let caption = req.body.portrait?.caption;
+    if (!caption) {
+      console.log("Getting portrait prompt...");
+      caption = cleanupChatResponse(
+        await simpleTextResponse(generatePortraitMessage(req.body), {
+          temperature: 0.95,
+        })
+      );
+    }
+
+    res.send({
+      portrait: {
+        caption,
+        url: await getDrawnImage(caption, DrawingStyle.CharacterPortrait),
+      },
+    });
   }
 );

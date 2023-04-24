@@ -5,7 +5,7 @@ import { number } from "zod";
 export function LoadingIndicator({
   duration = 2000,
   segments = 5,
-  thickness: maxThickness = 15 * window.devicePixelRatio,
+  thickness: maxThickness = 10 * window.devicePixelRatio,
   size = 128,
   color = "#6B5B47",
   fadePercent = 0.0,
@@ -27,7 +27,8 @@ export function LoadingIndicator({
       const dt = 16; // TODO: Actual elapsed time
       setT((old) => old + dt / duration);
       const iterations = 3;
-      const isErasePass = Math.floor(mod(t, iterations * 2)) >= iterations;
+      const iteration = Math.floor(mod(t, iterations * 2));
+      const isErasePass = iteration >= iterations;
 
       if (canvasRef.current) {
         const { width, height } = canvasRef.current;
@@ -46,17 +47,20 @@ export function LoadingIndicator({
           ctx.globalAlpha = 1;
           ctx.strokeStyle = color;
 
+          const thickness =
+            (maxThickness * mod(t, iterations)) / iterations +
+            (isErasePass ? 1 : 0.1);
+          ctx.globalCompositeOperation = isErasePass
+            ? "destination-out" // erase
+            : "source-over"; // draw
+
+          const sx = 1.0;
+          const sy = 0.8;
+
           const cx = width / 2;
           const cy = height / 2;
           const r = Math.min(width, height * 2) * 0.5 - maxThickness;
           const theta = -Math.PI / 2 + t * Math.PI * 2;
-
-          const thickness =
-            (maxThickness * mod(t, iterations)) / iterations +
-            (isErasePass ? 0.6 : 0.1);
-          ctx.globalCompositeOperation = isErasePass
-            ? "destination-out" // erase
-            : "source-over"; // draw
 
           const dTheta = 0.05;
           for (let i = 0; i < segments; i++) {
@@ -64,8 +68,8 @@ export function LoadingIndicator({
             ctx.lineWidth = thickness;
             const [x1, y1] = lemniscateOfBernoulli(theta - dTheta * i, r);
             const [x2, y2] = lemniscateOfBernoulli(theta - dTheta * (i + 1), r);
-            ctx.moveTo(x1 + cx, y1 + cy);
-            ctx.lineTo(x2 + cx, y2 + cy);
+            ctx.moveTo(x1 * sx + cx, y1 * sy + cy);
+            ctx.lineTo(x2 * sx + cx, y2 * sy + cy);
             ctx.stroke();
           }
         }

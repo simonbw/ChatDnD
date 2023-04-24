@@ -11,14 +11,17 @@ const PLACEHOLDER = "/static/images/drawing-disabled.png";
 
 export async function getDrawnImage(
   description: string,
-  drawingStyle = DrawingStyle.Plain
+  drawingStyle = DrawingStyle.Plain,
+  shouldRemoveBackground = true
 ): Promise<string> {
   if (isDrawingEnabled()) {
     const prompt = createDrawingPrompt(description, drawingStyle);
     const remoteImageUrl = await getRemoteUrl(prompt);
     const imageName = last(new URL(remoteImageUrl).pathname.split("/"));
     const rawBuffer = await fetchImageBuffer(remoteImageUrl);
-    const processedBuffer = await removeBackground(rawBuffer);
+    const processedBuffer = shouldRemoveBackground
+      ? await removeBackground(rawBuffer)
+      : sharp(rawBuffer);
     await saveToFile(processedBuffer, imageName);
 
     const localUrl = `/static/images/drawn/${imageName}`;

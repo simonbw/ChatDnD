@@ -4,8 +4,8 @@ import {
   RoomListItem,
   roomListSchema,
 } from "../../common/models/roomListModel";
-import { NameTag } from "../components/NameTag";
-import { Button } from "../components/Button";
+import { NameTag } from "./NameTag";
+import { Button } from "./Button";
 import { routes } from "../../common/routes";
 import { usePlayerId } from "../contexts/playerIdContext";
 

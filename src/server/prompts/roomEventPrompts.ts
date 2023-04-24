@@ -28,10 +28,16 @@ export function playerJoinMessage(player: Player): RoomMessage {
 }
 
 export function playerLeaveMessage(player: Player): RoomMessage {
+  const images: RoomMessage["images"] = [];
+  const portrait = player.character.portrait;
+  if (portrait) {
+    images.push({ description: portrait.caption, url: portrait.url });
+  }
   return {
     role: "system",
     content: `${player.name} has left the game. Please notify the other players.`,
     publicContent: `${player.character.name} has left the game.`,
+    images,
     createdAt: new Date().toISOString(),
   };
 }

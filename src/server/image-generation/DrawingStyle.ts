@@ -14,6 +14,6 @@ export function createDrawingPrompt(
     case DrawingStyle.StoryImage:
       return `A medieval painting on a white backround. The drawing is of "${description}"`;
     case DrawingStyle.CharacterPortrait:
-      return `A photorealistic portrait of a character. Head and shoulders framing. The subject of the portrait: "${description}"`;
+      return `2d high quality drawing character portrait. Fantasy roleplaying game character art. Full face and shoulders in frame. The subject of the portrait: "${description}"`;
   }
 }

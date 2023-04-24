@@ -4,6 +4,11 @@
     word-spacing: 0.125em;
   }
 
+  .subpage-title {
+    @apply text-center text-4xl text-sepia-700 font-heading-1;
+    word-spacing: 0.1em;
+  }
+
   .page-subtitle {
     @apply text-md font-heading-2 text-sepia-500 mx-auto px-8 block text-center;
   }

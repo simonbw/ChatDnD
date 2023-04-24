@@ -1,11 +1,11 @@
 import React from "react";
 import { LoadingDots } from "../components/LoadingDots";
 import { LoadingIndicator } from "../components/LoadingIndicator";
-import { Paper } from "../components/Paper";
+import { Paper, PaperContainer } from "../components/Paper";
 import { renderPage } from "../utils/renderPage";
 
 renderPage(
-  <main className="container mx-auto p-2">
+  <PaperContainer>
     <Paper className="p-4 mb-4 space-y-4">
       <div className="p-4 bg-black/50">
         <LoadingDots size="xs" />
@@ -21,7 +21,7 @@ renderPage(
       </div>
       <FontList />
     </Paper>
-  </main>
+  </PaperContainer>
 );
 
 const fonts = [

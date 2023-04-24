@@ -18,7 +18,9 @@ import { usePlayerId } from "../contexts/playerIdContext";
 import { classNames } from "../utils/classNames";
 import { Button } from "./Button";
 import { DescriptionSelect } from "./DescriptionSelect";
+import { PortraitPicker } from "./PortraitPicker";
 import { Select } from "./Select";
+import { choose } from "../../common/utils/randUtils";
 
 type GeneratingMap = {
   [K in keyof Character]: boolean;
@@ -34,14 +36,14 @@ export function JoinBox({
   const playerId = usePlayerId();
   const [playerName, setPlayerName] = useState<string>("");
   const [playerPronouns, setPlayerPronouns] = useState<Pronouns>("He/Him");
-  const [character, setCharacter] = useState<Character>({
+  const [character, setCharacter] = useState<Character>(() => ({
     background: "",
-    characterClass: "Fighter",
+    characterClass: choose(...characterClassEnum.options),
     name: "",
     description: "",
-    pronouns: "He/Him",
-    race: "Human",
-  });
+    pronouns: choose(...pronounsEnum.options),
+    race: choose(...characterRaceEnum.options),
+  }));
   const updateCharacter = (p: Partial<Character>) =>
     setCharacter((c) => ({ ...c, ...p }));
 
@@ -94,13 +96,12 @@ export function JoinBox({
       className={classNames(
         "max-w-sm mx-auto",
         "flex flex-col items-stretch gap-2",
-        "font-serif py-4",
-        "border-t-4 border-sepia/50 border-double"
+        "font-serif py-4"
       )}
     >
-      <h2 className="font-heading-2 text-2xl text-center self-center">
+      <h1 className="font-heading-2 text-4xl text-center self-center">
         Create Your Character
-      </h2>
+      </h1>
       <div className="flex flex-row justify-stretch w-full gap-4 border border-sepia/50 rounded-sm p-2">
         <fieldset className="block w-full flex-basis-[200px]">
           <label className="block small-caps" htmlFor="player-name">
@@ -208,6 +209,7 @@ export function JoinBox({
             type="button"
             className="rounded-full w-8 h-8 mb-[-1em]"
             kind="text"
+            loading={generating.background}
           >
             🎲
           </Button>
@@ -243,6 +245,7 @@ export function JoinBox({
             type="button"
             className="rounded-full w-8 h-8 mb-[-1em]"
             kind="text"
+            loading={generating.description}
           >
             🎲
           </Button>
@@ -258,21 +261,28 @@ export function JoinBox({
       </fieldset>
 
       <div>
-        {character.portrait?.url && <img src={character.portrait.url} />}
-        {character.portrait?.caption && <p>{character.portrait.caption}</p>}
-        <Button
-          onClick={async (e) => {
-            e.preventDefault();
+        <label className="small-caps">Portrait</label>
+        <PortraitPicker
+          generating={Boolean(generating.portrait)}
+          portrait={character.portrait}
+          generate={async (newPrompt: boolean) => {
             startGeneratingField("portrait");
             try {
-              updateCharacter(await generateCharacterPortrait(character));
+              if (newPrompt) {
+                updateCharacter(
+                  await generateCharacterPortrait({
+                    ...character,
+                    portrait: undefined,
+                  })
+                );
+              } else {
+                updateCharacter(await generateCharacterPortrait(character));
+              }
             } finally {
               stopGeneratingField("portrait");
             }
           }}
-        >
-          Draw Portrait
-        </Button>
+        />
       </div>
 
       <Button
@@ -281,7 +291,7 @@ export function JoinBox({
         type="submit"
         className="self-end mt-4"
       >
-        Join
+        Join Campaign
       </Button>
     </form>
   );
