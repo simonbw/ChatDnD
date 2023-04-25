@@ -6,9 +6,8 @@ import {
 } from "../../../common/models/apiSchemas";
 import { RoomMessage } from "../../../common/models/roomModel";
 import { routes } from "../../../common/routes";
-import { getRoom } from "../../roomStore";
 import { isAxiosError } from "../../utils/isAxiosError";
-import { validateRequestBody, validateRequestParams } from "../zodMiddleware";
+import { validateRequest, validateRequestBody } from "../zodMiddleware";
 import { withRoom } from "./withRoom";
 
 const router = Router();
@@ -33,10 +32,13 @@ router.post(
 // Send a message
 router.post(
   routes.room.message(":roomId"),
-  validateRequestBody(messageRequestSchema),
-  validateRequestParams(withRoomIdSchema),
+  validateRequest({
+    body: messageRequestSchema,
+    params: withRoomIdSchema,
+  }),
+  withRoom(),
   async (req, res, next) => {
-    const room = getRoom(req.params.roomId);
+    const room = req.params.room;
 
     const { playerId, content, whispered } = req.body;
     const player = room.getPlayer(playerId);

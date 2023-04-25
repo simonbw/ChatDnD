@@ -5,7 +5,11 @@ const makeId = idMaker();
 type ListenerId = string;
 
 export class Channel<T> {
-  listeners = new Map();
+  private listeners = new Map();
+
+  get numberOfListeners(): number {
+    return this.listeners.size;
+  }
 
   publish(data: T) {
     for (const listener of this.listeners.values()) {

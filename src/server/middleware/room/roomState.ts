@@ -2,7 +2,6 @@ import { Router } from "express";
 import { z } from "zod";
 import { routes } from "../../../common/routes";
 import { basicHtml } from "../../pages/pageHtml";
-import { getRoom } from "../../roomStore";
 import { sendEvent, startEventStream } from "../../utils/eventStreamUtils";
 import { validateRequestParams } from "../zodMiddleware";
 import { withRoom } from "./withRoom";
@@ -14,9 +13,8 @@ router.get(routes.room.view(":roomId"), withRoom(), (req, res) => {
   res.send(basicHtml({ scripts: ["/static/pages/roomPage.js"] }));
 });
 
-router.get(routes.room.state(":roomId"), (req, res) => {
-  const roomId = z.string().parse(req.params.roomId);
-  res.send(getRoom(roomId).getPublicState());
+router.get(routes.room.state(":roomId"), withRoom(), (req, res) => {
+  res.send(req.params.room.getPublicState());
 });
 
 router.get(routes.room.stateStream(":roomId"), withRoom(), (req, res) => {

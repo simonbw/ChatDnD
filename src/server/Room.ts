@@ -21,11 +21,19 @@ import {
   openAi,
   parseDeltaStream,
 } from "./utils/openAiUtils";
+import { z } from "zod";
 
 const ROOM_PLAYER_LIMIT = 6;
 
+const roomSaveSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export type RoomId = string;
+
 export class Room {
-  public readonly id: string;
+  public readonly id: RoomId;
   public readonly channel: Channel<RoomState> = new Channel();
   public name: string = "";
   private messages: RoomMessage[] = [];
@@ -34,8 +42,16 @@ export class Room {
 
   private mainChatQueue = new ActionQueue();
 
-  constructor(id: string) {
+  constructor(id: RoomId) {
     this.id = id;
+  }
+
+  fromJson(json: unknown): Room {
+    return this;
+  }
+
+  toJson(): object {
+    return {};
   }
 
   async init() {

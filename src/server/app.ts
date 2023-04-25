@@ -6,33 +6,32 @@ import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import homeRouter from "./middleware/homeRouter";
 import roomRouter from "./middleware/room/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
+import { RoomStore } from "./roomStore";
 
-export const app = express();
+export async function makeApp() {
+  await RoomStore.instance.initialize();
 
-// Body Parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.text());
+  const app = express();
 
-// Static files
-app.use("/static", getStaticsMiddleware());
+  // Body Parsers
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.text());
 
-// Routes
-app.use(homeRouter);
-app.use(esbuildRouter);
-app.use(voiceRouter);
-app.use(roomRouter);
-app.use(helpersRouter);
+  // Static files
+  app.use("/static", getStaticsMiddleware());
 
-// Error handling
-app.use(errorHandler);
+  // Initialize room store before serving traffic
 
-process.on("unhandledRejection", (error: Error) => {
-  console.warn("unhandledRejection!", error.message);
-  // process.exit(1);
-});
+  // Routes
+  app.use(homeRouter);
+  app.use(esbuildRouter);
+  app.use(voiceRouter);
+  app.use(roomRouter);
+  app.use(helpersRouter);
 
-process.on("uncaughtException", (error: Error) => {
-  console.warn("uncaughtException!", error.message);
-  // process.exit(1);
-});
+  // Error handling
+  app.use(errorHandler);
+
+  return app;
+}
