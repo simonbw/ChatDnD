@@ -1,21 +1,17 @@
-import {
-  EVENT_STREAM_HEADERS,
-  sendEvent,
-  startEventStream,
-} from "../../utils/eventStreamUtils";
 import { Router } from "express";
 import { z } from "zod";
 import { routes } from "../../../common/routes";
-import { roomHtml } from "../../pages/roomHtml";
+import { basicHtml } from "../../pages/pageHtml";
 import { getRoom } from "../../roomStore";
-import { withRoom } from "./withRoom";
+import { sendEvent, startEventStream } from "../../utils/eventStreamUtils";
 import { validateRequestParams } from "../zodMiddleware";
+import { withRoom } from "./withRoom";
 
 const router = Router();
 export default router;
 
 router.get(routes.room.view(":roomId"), withRoom(), (req, res) => {
-  res.send(roomHtml(req.params.room.getPublicState()));
+  res.send(basicHtml({ scripts: ["/static/pages/roomPage.js"] }));
 });
 
 router.get(routes.room.state(":roomId"), (req, res) => {

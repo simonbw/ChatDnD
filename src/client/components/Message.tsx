@@ -29,9 +29,9 @@ export function Message({ message }: { message: RoomMessage }) {
     >
       <div
         className={classNames(
-          "border-sepia/50",
+          "border-sepia/50 hyphens-auto",
           "sm:w-28 sm:flex-shrink-0 sm:text-right sm:pr-2",
-          "sm:border-r "
+          "sm:border-r"
         )}
       >
         <NameTag size="sm">{message.name}</NameTag>

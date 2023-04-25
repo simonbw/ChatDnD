@@ -15,6 +15,7 @@ const context = await esbuild
       "src/client/pages/homePage.tsx",
       "src/client/pages/roomPage.tsx",
       "src/client/pages/testPage.tsx",
+      "src/client/pages/dallePage.tsx",
       "src/client/styles/index.css",
     ],
     bundle: true,

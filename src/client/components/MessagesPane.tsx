@@ -33,8 +33,6 @@ export function MessagesPane() {
         <PlayerList players={room.players} />
       </header>
 
-      {/* <HR /> */}
-
       <div className="flex-grow flex flex-col gap-0">
         {room.messages.length == 0 && (
           <div className="italic p-2 text-sepia-500 text-center">
@@ -69,17 +67,17 @@ function PlayerList({ players }: { players: Player[] }) {
       <span className="text-md italic">An adventure featuring</span>
       {secondToLast && <br />}
       {start.map((player) => (
-        <span className="" key={player.id}>
+        <span className="mx-1" key={player.id}>
           <NameTag size="md">{player.character.name}</NameTag>,
         </span>
       ))}
       {secondToLast && (
-        <span className="">
+        <span className="mx-1">
           <NameTag size="md">{secondToLast.character.name}</NameTag>{" "}
           <span className="italic">and</span>{" "}
         </span>
       )}
-      <span className="">
+      <span className="mx-1">
         <NameTag size="md">{finalPlayer.character.name}</NameTag>,
       </span>
     </h2>

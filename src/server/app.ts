@@ -1,11 +1,11 @@
-import express, { ErrorRequestHandler } from "express";
+import express from "express";
+import { errorHandler } from "./middleware/errorHandler";
 import esbuildRouter from "./middleware/esbuildRouter";
-import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import helpersRouter from "./middleware/generationApiRouter";
+import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import homeRouter from "./middleware/homeRouter";
 import roomRouter from "./middleware/room/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
-import { errorHtml } from "./pages/errorHtml";
 
 export const app = express();
 
@@ -24,15 +24,8 @@ app.use(voiceRouter);
 app.use(roomRouter);
 app.use(helpersRouter);
 
-app.use(((error, req, res, next) => {
-  if (error.status) {
-    res.status(error.status);
-  }
-  res.send(errorHtml(error));
-}) as ErrorRequestHandler);
-
-// Error Handling
-// app.use;
+// Error handling
+app.use(errorHandler);
 
 process.on("unhandledRejection", (error: Error) => {
   console.warn("unhandledRejection!", error.message);

@@ -35,3 +35,11 @@ export function getStaticsFolder(): string {
 export function isDrawingEnabled(): boolean {
   return process.env.DRAWING_ENABLED == "true";
 }
+
+export function getImageBucketName(): string {
+  return process.env.S3_BUCKET_NAME ?? "";
+}
+
+export function getImageBucketArn(): string {
+  return process.env.S3_BUCKET_ARN ?? "";
+}

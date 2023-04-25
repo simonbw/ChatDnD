@@ -9,7 +9,7 @@ import { pronounsEnum } from "../../common/models/pronouns";
 import { routes } from "../../common/routes";
 import { choose } from "../../common/utils/randUtils";
 import { DrawingStyle } from "../image-generation/DrawingStyle";
-import { getDrawnImage } from "../image-generation/getDrawnImage";
+import { generateImage } from "../image-generation/generateImage";
 import {
   generateBackgroundMessage,
   generateDescriptionMessage,
@@ -58,7 +58,7 @@ router.post(
       url: "",
     };
 
-    character.portrait.url = await getDrawnImage(
+    character.portrait.url = await generateImage(
       character.portrait.caption,
       DrawingStyle.CharacterPortrait
     );
@@ -119,7 +119,7 @@ router.post(
     res.send({
       portrait: {
         caption,
-        url: await getDrawnImage(caption, DrawingStyle.CharacterPortrait),
+        url: await generateImage(caption, DrawingStyle.CharacterPortrait),
       },
     });
   }

@@ -31,6 +31,10 @@ export async function createRoom(id?: string) {
   return room;
 }
 
+export async function deleteRoom(id: string) {
+  rooms.delete(id);
+}
+
 export function getNextRoom(): Room {
   let id = String(makeId());
   while (rooms.has(id)) {

@@ -28,17 +28,16 @@ export function CharacterPane() {
       <div className="">
         <div
           className={classNames(
-            "sepia-[40%] float-left w-[50%] m-2 rounded border-4 border-sepia/50 border-double"
+            "sepia-[40%] float-left w-[50%] mr-2 b-2 rounded border-4 border-sepia/50 border-double"
           )}
         >
-          <DissolveInImage
+          <img
             src={
               character.portrait?.url ?? "/static/images/missing-portrait.png"
             }
             width={512}
             height={512}
             className="w-full aspect-square"
-            duration={1000}
           />
         </div>
         <section className="block leading-tight mb-2">

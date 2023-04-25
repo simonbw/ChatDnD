@@ -1,21 +1,20 @@
 import { Router } from "express";
 import { z } from "zod";
 import { routes } from "../../common/routes";
-import { getDrawnImage } from "../image-generation/getDrawnImage";
 import { DrawingStyle } from "../image-generation/DrawingStyle";
-import { homeHtml } from "../pages/homeHtml";
-import { testHtml } from "../pages/testHtml";
-import { validateRequestQuery } from "./zodMiddleware";
+import { generateImage } from "../image-generation/generateImage";
+import { basicHtml } from "../pages/pageHtml";
+import { validateRequestBody } from "./zodMiddleware";
 
 const router = Router();
 export default router;
 
 router.get(routes.home(), (req, res) => {
-  res.send(homeHtml);
+  res.send(basicHtml({ scripts: ["/static/pages/homePage.js"] }));
 });
 
 router.get(routes.test(), (req, res) => {
-  res.send(testHtml);
+  res.send(basicHtml({ scripts: ["/static/pages/testPage.js"] }));
 });
 
 router.get(routes.healthcheck(), (req, res) => {
@@ -25,11 +24,15 @@ router.get(routes.healthcheck(), (req, res) => {
   });
 });
 
-router.get(
+router.get("/dalle", async (req, res) => {
+  res.send(basicHtml({ scripts: ["/static/pages/dallePage.js"] }));
+});
+
+router.post(
   "/dalle",
-  validateRequestQuery(z.object({ prompt: z.string() })),
+  validateRequestBody(z.object({ prompt: z.string() })),
   async (req, res) => {
-    const url = await getDrawnImage(req.query.prompt, DrawingStyle.Plain);
-    res.redirect(url);
+    const url = await generateImage(req.body.prompt, DrawingStyle.Plain, false);
+    res.send({ url });
   }
 );
