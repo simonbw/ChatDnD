@@ -9,28 +9,28 @@ import { routes } from "../../common/routes";
 import { makeJsonEndpoint } from "./apiUtil";
 
 export const generateCharacterBackground = makeJsonEndpoint(
-  "get",
+  "post",
   routes.generate.character.background(),
   generateCharacterRequestBody,
   getCharacterBackgroundResponse
 );
 
 export const generateCharacterDescription = makeJsonEndpoint(
-  "get",
+  "post",
   routes.generate.character.description(),
   generateCharacterRequestBody,
   getCharacterDescriptionResponse
 );
 
 export const generateCharacterName = makeJsonEndpoint(
-  "get",
+  "post",
   routes.generate.character.name(),
   generateCharacterRequestBody,
   getCharacterNameResponse
 );
 
 export const generateCharacterPortrait = makeJsonEndpoint(
-  "get",
+  "post",
   routes.generate.character.portrait(),
   generateCharacterRequestBody,
   getCharacterPortraitResponse
