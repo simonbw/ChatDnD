@@ -1,23 +1,38 @@
 
 FRONTEND POLISH:
-- Cool page transitions 
-- Lighting effects?
+ - Cool page transitions
+ - Show character information on hover
+ - Show character image when joining game.
+ - Writing sound effect when chatgpt is writing.
 
 
 PROMPT:
- - Consider having a separate agent analyze responses to see if they contain new characters or scenes
- - Discuss more 
- - Input character sheets
-
+ - Prom
 
 PERFORMANCE/TECH DEBT
- - Queue ChatGPT responses.
  - Don't send whole state on every update. Only send deltas
  - Use a database to store prompts and rooms and such (could probably do Hasura)
  - Store images in S3 or something
 
 
-THE GAME:
+WHAT GAME ARE THEY PLAYING:
  - I don't think I want it to be exactly D&D
- - No dice
- - No 
+ - No dice roomListModel
+ - Players should have an inventory and a list of abilities
+ - Possibly keep track of XP and gain some abilities when leveling up
+
+
+
+MAIN PROMPT:
+ - You are ChatDnD...
+ - Summary of conversation so far
+ - Last few user prompts
+ - Relevant information from database?
+
+
+
+  
+WORLD/KNOWLEDGE GENERATION
+ - Have one AI generate lots of pieces of knowledge about the world
+ - Store that knowledge in a vector database
+ - Query for relevant knowledge 

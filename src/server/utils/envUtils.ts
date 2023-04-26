@@ -1,4 +1,5 @@
 import path from "path";
+import { z } from "zod";
 
 export function getNodeEnv(): string {
   return process.env.NODE_ENV ?? "";
@@ -42,4 +43,14 @@ export function getImageBucketName(): string {
 
 export function getImageBucketArn(): string {
   return process.env.S3_BUCKET_ARN ?? "";
+}
+
+export function getRethinkConfig() {
+  return {
+    host: z.string().parse(process.env.RETHINKDB_HOST),
+    port: z.coerce.number().parse(process.env.RETHINKDB_PORT),
+    name: z.string().optional().parse(process.env.RETHINKDB_NAME),
+    password: z.string().optional().parse(process.env.RETHINKDB_PASSWORD),
+    username: z.string().optional().parse(process.env.RETHINKDB_USERNAME),
+  };
 }

@@ -2,5 +2,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {
     "dist/": true
-  }
+  },
+  "eslint.enable": false
 }

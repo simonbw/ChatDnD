@@ -1,0 +1,20 @@
+2023-04-25T16:24:22.307528000 0.022173s notice: Recursively removing directory /Users/simon/projects/ChatDnD/rethinkdb_data/tmp
+2023-04-25T16:24:22.309520000 0.024165s notice: Initializing directory /Users/simon/projects/ChatDnD/rethinkdb_data
+2023-04-25T16:24:22.309699000 0.024344s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/simon/projects/ChatDnD/rethinkdb_data' did not already exist or is empty.)
+2023-04-25T16:24:22.309752000 0.024397s notice: Running rethinkdb 2.4.3 (x86_64-apple-darwin22.1.0) (CLANG 14.0.0 (clang-1400.0.29.202))...
+2023-04-25T16:24:22.318277000 0.032923s notice: Running on Darwin 22.4.0 x86_64
+2023-04-25T16:24:22.318343000 0.032988s notice: Loading data from directory /Users/simon/projects/ChatDnD/rethinkdb_data
+2023-04-25T16:24:22.517282000 0.231925s info: Automatically using cache size of 5077 MB
+2023-04-25T16:24:22.517904000 0.232548s notice: Listening for intracluster connections on port 29015
+2023-04-25T16:24:22.518915000 0.233558s notice: Listening for client driver connections on port 28015
+2023-04-25T16:24:22.518957000 0.233601s notice: Listening for administrative HTTP connections on port 8080
+2023-04-25T16:24:22.518966000 0.233609s notice: Listening on cluster addresses: 127.0.0.1, ::1
+2023-04-25T16:24:22.518970000 0.233613s notice: Listening on driver addresses: 127.0.0.1, ::1
+2023-04-25T16:24:22.518974000 0.233617s notice: Listening on http addresses: 127.0.0.1, ::1
+2023-04-25T16:24:22.518978000 0.233621s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2023-04-25T16:24:22.518985000 0.233628s notice: Server ready, "Simons_MacBook_Pro_local_x5a" 2e781540-364c-41f3-840d-62547a149f74
+2023-04-25T16:24:29.262401000 6.977011s notice: Server got SIGINT from pid 1359, uid 501; shutting down...
+2023-04-25T16:24:29.262663000 6.977273s notice: Shutting down client connections...
+2023-04-25T16:24:29.262762000 6.977372s notice: All client connections closed.
+2023-04-25T16:24:29.262767000 6.977377s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2023-04-25T16:24:29.263200000 6.977810s notice: Storage engine shut down.

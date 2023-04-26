@@ -36,14 +36,16 @@ function DallePage() {
         <div className="grid grid-cols-2 gap-4">
           {images.map((image, i) =>
             image.status === "loading" ? (
-              <div>
+              <div className="flex justify-center items-center">
                 <LoadingIndicator />
               </div>
             ) : image.status === "loaded" ? (
               <img src={image.url} key={i} />
             ) : (
               <div className="rounded border-2 border-red">
-                Error {JSON.stringify(image.error)}
+                <pre className="whitespace-pre-wrap text-xs">
+                  Error {JSON.stringify(image.error)}
+                </pre>
               </div>
             )
           )}

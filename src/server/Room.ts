@@ -1,8 +1,14 @@
 import { AxiosResponse } from "axios";
 import { ChatCompletionRequestMessage } from "openai";
+import rethink from "rethinkdb";
 import { Readable } from "stream";
-import { Player } from "../common/models/playerModel";
-import { RoomMessage, RoomState } from "../common/models/roomModel";
+import { z } from "zod";
+import { Player, playerSchema } from "../common/models/playerModel";
+import {
+  RoomMessage,
+  RoomState,
+  roomMessageSchema,
+} from "../common/models/roomModel";
 import { last } from "../common/utils/arrayUtils";
 import { RoomMessageBuilder } from "./RoomMessageBuilder";
 import { WebError } from "./WebError";
@@ -21,24 +27,30 @@ import {
   openAi,
   parseDeltaStream,
 } from "./utils/openAiUtils";
-import { z } from "zod";
+import { getDb } from "./db";
+import { roomTable } from "./roomStore";
 
 const ROOM_PLAYER_LIMIT = 6;
 
-const roomSaveSchema = z.object({
+export const roomSaveSchema = z.object({
   id: z.string(),
   name: z.string(),
+  createdAt: z.string(),
+  players: z.array(playerSchema),
+  messages: z.array(roomMessageSchema),
 });
+export type RoomData = z.infer<typeof roomSaveSchema>;
 
 export type RoomId = string;
 
 export class Room {
-  public readonly id: RoomId;
   public readonly channel: Channel<RoomState> = new Channel();
+
+  public id: RoomId;
   public name: string = "";
   private messages: RoomMessage[] = [];
   private players: Player[] = [];
-  public readonly createdAt = new Date().toISOString();
+  public createdAt = new Date().toISOString();
 
   private mainChatQueue = new ActionQueue();
 
@@ -46,12 +58,32 @@ export class Room {
     this.id = id;
   }
 
-  fromJson(json: unknown): Room {
+  fromJson(data: RoomData): Room {
+    this.id = data.id;
+    this.name = data.name;
+    this.messages = data.messages;
+    this.players = data.players;
+    this.createdAt = data.createdAt;
     return this;
   }
 
-  toJson(): object {
-    return {};
+  toJson(): z.infer<typeof roomSaveSchema> {
+    return {
+      id: this.id,
+      name: this.name,
+      createdAt: this.createdAt,
+      players: this.players,
+      messages: this.messages,
+    };
+  }
+
+  async save() {
+    const serialized = this.toJson();
+    console.log("Saving room...", serialized);
+    const result = await roomTable
+      .insert(serialized, { conflict: "replace" })
+      .run(await getDb());
+    console.log(result);
   }
 
   async init() {
@@ -134,6 +166,9 @@ export class Room {
   publish() {
     // TODO: Don't publish whole state every time?
     this.channel.publish(this.getPublicState());
+
+    // TODO: Is this the right time to save?
+    this.save();
   }
 
   getPublicState(): RoomState {

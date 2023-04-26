@@ -37,7 +37,7 @@ router.get(routes.esbuild(), async (req, res) => {
       res.end();
     });
   } catch (error) {
-    console.error("Error while forwarding events:", error);
+    console.error("Error while forwarding events");
     res.write("event: connection-error\n" + "data: " + error + "\n\n");
     res.end();
   }

@@ -1,8 +1,11 @@
 import { RoomListItem } from "../common/models/roomListModel";
-import { Room, RoomId } from "./Room";
+import { roomStateSchema } from "../common/models/roomModel";
+import { Room, RoomData, RoomId, roomSaveSchema } from "./Room";
 import { WebError } from "./WebError";
+import { getDb } from "./db";
+import rethink from "rethinkdb";
 
-const rooms = new Map<RoomId, Room>();
+export const roomTable = rethink.db("chatdnd").table("rooms");
 
 export class RoomStore {
   private rooms = new Map<RoomId, Room>();
@@ -20,20 +23,24 @@ export class RoomStore {
     if (id === undefined) {
       do {
         id = this.makeId();
-      } while (rooms.has(id));
+      } while (this.rooms.has(id));
     }
     console.log("creating new room: ", id);
     const room = new Room(id);
     await room.init();
-    if (rooms.has(id)) {
+    if (this.rooms.has(id)) {
       throw new WebError("Can't create room that already exists: " + id, 400);
     }
-    rooms.set(id, room);
+    this.rooms.set(id, room);
     return room;
   }
 
   private makeId() {
     return String(this.lastId++);
+  }
+
+  public hasRoom(roomId: RoomId): boolean {
+    return this.rooms.has(roomId);
   }
 
   public getRoom(roomId: RoomId): Room {
@@ -80,13 +87,31 @@ export class RoomStore {
 
   async loadRooms() {
     try {
-    } catch (error) {}
+      const db = await getDb();
+      const cursor = await roomTable.run(db);
+      const roomDatas = await cursor.toArray();
+      console.log("loading rooms:", roomDatas.length);
+      for (const roomData of roomDatas) {
+        const parsed = roomSaveSchema.safeParse(roomData);
+        if (parsed.success) {
+          console.log("Parsed room with id", parsed.data.id);
+          if (!this.hasRoom(parsed.data.id)) {
+            const room = new Room(roomData.id);
+            room.fromJson(roomData);
+            this.rooms.set(room.id, room);
+          }
+        } else {
+          console.log("Found invalid saved room", parsed.error);
+        }
+      }
+    } catch (error) {
+      console.error("error loading rooms", error);
+    }
   }
 
   async saveRooms() {
-    const objectToWrite: Record<RoomId, object> = {};
-    for (const [rooId, room] of this.rooms) {
-      objectToWrite[room.id] = room.toJson();
-    }
+    const db = await getDb();
+    const toWrite = [...this.rooms.values()].map((r) => r.toJson());
+    await roomTable.insert(toWrite, { conflict: "replace" }).run(db);
   }
 }

@@ -7,8 +7,10 @@ import homeRouter from "./middleware/homeRouter";
 import roomRouter from "./middleware/room/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
 import { RoomStore } from "./roomStore";
+import { getDb } from "./db";
 
 export async function makeApp() {
+  await getDb();
   await RoomStore.instance.initialize();
 
   const app = express();
