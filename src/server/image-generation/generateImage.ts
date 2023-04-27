@@ -3,12 +3,12 @@ import sharp, { Sharp } from "sharp";
 import { last } from "../../common/utils/arrayUtils";
 import { getDrawnImageFolder, isDrawingEnabled } from "../utils/envUtils";
 import { DrawingStyle, createDrawingPrompt } from "./DrawingStyle";
-import { s3Client } from "./s3";
-import { getImageFromDalle } from "./getImageFromDalle";
 import { fetchImageBuffer } from "./fetchImageBuffer";
+import { getImageFromDalle } from "./getImageFromDalle";
 import { removeBackground } from "./removeBackground";
+import { saveToS3 } from "./saveToS3";
 
-const PLACEHOLDER = "/static/images/drawing-disabled.png";
+const PLACEHOLDER_IMAGE_URL = "/static/images/drawing-disabled.png";
 
 export async function generateImage(
   description: string,
@@ -24,32 +24,19 @@ export async function generateImage(
       ? await removeBackground(rawBuffer)
       : sharp(rawBuffer);
 
-    await saveToFile(processedBuffer, imageName);
-
-    return `/static/images/drawn/${imageName}`;
-
-    // return saveToS3(processedBuffer, imageName);
+    if (process.env.DRAWING_SAVE_TARGET === "s3") {
+      return saveToS3(processedBuffer, imageName);
+    } else {
+      return await saveToFile(processedBuffer, imageName);
+    }
   } else {
-    return PLACEHOLDER;
+    return PLACEHOLDER_IMAGE_URL;
   }
 }
 
-async function saveToFile(buffer: Sharp, imageName: string): Promise<void> {
+async function saveToFile(buffer: Sharp, imageName: string): Promise<string> {
   const imagePath = path.join(getDrawnImageFolder(), imageName);
   console.log(`saving to ${imagePath}`);
   await buffer.toFile(imagePath);
-}
-
-async function saveToS3(sharp: Sharp, imageName: string): Promise<string> {
-  console.log("Saving to S3");
-  const buffer = await sharp.png({ force: true }).toBuffer();
-  const response = await s3Client
-    .upload({
-      Bucket: process.env.AWS_BUCKET_NAME ?? "",
-      Key: imageName,
-      Body: buffer,
-    })
-    .promise();
-  console.log("S3 Response:", response);
-  return response.Location;
+  return `/static/images/drawn/${imageName}`;
 }

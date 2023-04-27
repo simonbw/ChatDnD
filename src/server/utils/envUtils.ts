@@ -14,7 +14,7 @@ export function getPort(): number {
 }
 
 export function getOpenAiKey(): string {
-  return process.env.OPENAI_API_KEY ?? "";
+  return assertConfigured("OPENAI_API_KEY");
 }
 
 export function getElevenLabsKey(): string {
@@ -37,20 +37,30 @@ export function isDrawingEnabled(): boolean {
   return process.env.DRAWING_ENABLED == "true";
 }
 
-export function getImageBucketName(): string {
-  return process.env.S3_BUCKET_NAME ?? "";
-}
-
-export function getImageBucketArn(): string {
-  return process.env.S3_BUCKET_ARN ?? "";
+export function getAwsCredentials(): {
+  accessKeyId: string;
+  secretAccessKey: string;
+} {
+  return {
+    accessKeyId: assertConfigured("AWS_ACCESS_KEY_ID"),
+    secretAccessKey: assertConfigured("AWS_SECRET_ACCESS_KEY"),
+  };
 }
 
 export function getRethinkConfig() {
   return {
-    host: z.string().parse(process.env.RETHINKDB_HOST),
-    port: z.coerce.number().parse(process.env.RETHINKDB_PORT),
+    host: assertConfigured("RETHINKDB_HOST"),
+    port: z.coerce.number().parse(assertConfigured("RETHINKDB_PORT")),
     name: z.string().optional().parse(process.env.RETHINKDB_NAME),
     password: z.string().optional().parse(process.env.RETHINKDB_PASSWORD),
     username: z.string().optional().parse(process.env.RETHINKDB_USERNAME),
   };
+}
+
+function assertConfigured(varName: string): string {
+  const value = process.env[varName];
+  if (!value) {
+    throw new Error(`${varName} is not configured`);
+  }
+  return value;
 }

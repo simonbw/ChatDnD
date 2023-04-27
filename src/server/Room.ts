@@ -79,11 +79,9 @@ export class Room {
 
   async save() {
     const serialized = this.toJson();
-    console.log("Saving room...", serialized);
     const result = await roomTable
       .insert(serialized, { conflict: "replace" })
       .run(await getDb());
-    console.log(result);
   }
 
   async init() {
