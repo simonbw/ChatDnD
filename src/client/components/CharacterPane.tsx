@@ -2,8 +2,8 @@ import React from "react";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useRoom } from "../contexts/roomContext";
 import { classNames } from "../utils/classNames";
-import { JoinBox } from "./JoinBox";
 import { DissolveInImage } from "./DissolveInImage";
+import { JoinBox } from "./JoinBox";
 
 export function CharacterPane() {
   const playerId = usePlayerId();

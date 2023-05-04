@@ -1,6 +1,6 @@
+import { RequestHandler } from "express";
 import rethink, { Connection } from "rethinkdb";
 import { getRethinkConfig } from "./utils/envUtils";
-import { RequestHandler } from "express";
 
 const DB_NAME = "chatdnd";
 

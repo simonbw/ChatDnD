@@ -1,10 +1,10 @@
 import React, { PropsWithChildren, useState } from "react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { RoomMessage, RoomMessageImage } from "../../common/models/roomModel";
-import { WrittenText } from "./WrittenText";
 import { classNames } from "../utils/classNames";
 import { DissolveInImage } from "./DissolveInImage";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NameTag } from "./NameTag";
+import { WrittenText } from "./WrittenText";
 
 export function Message({ message }: { message: RoomMessage }) {
   const [isFast, setFast] = useState(false);

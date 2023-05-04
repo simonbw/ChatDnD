@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function useAnimationFrame(callback: (() => void) | false) {
   const callbackRef = useRef(callback);

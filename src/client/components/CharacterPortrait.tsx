@@ -1,7 +1,7 @@
 import React from "react";
 import { Character } from "../../common/models/characterModel";
-import { DissolveInImage } from "./DissolveInImage";
 import { classNames } from "../utils/classNames";
+import { DissolveInImage } from "./DissolveInImage";
 
 export function CharacterPortrait({
   portrait,

@@ -1,10 +1,10 @@
+import { Transition } from "@headlessui/react";
 import React from "react";
 import { Character } from "../../common/models/characterModel";
 import { classNames } from "../utils/classNames";
 import { Button } from "./Button";
 import { DissolveInImage } from "./DissolveInImage";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { Transition } from "@headlessui/react";
 
 export function PortraitPicker({
   portrait,

@@ -1,6 +1,5 @@
 import { makeNoise2D } from "open-simplex-noise";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { clamp, smoothStep } from "../../common/utils/mathUtils";
+import React, { useMemo, useRef, useState } from "react";
 import { useLoadImage } from "../hooks/useLoadImage";
 import { classNames } from "../utils/classNames";
 

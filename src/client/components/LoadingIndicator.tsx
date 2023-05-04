@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { mod, smoothStep } from "../../common/utils/mathUtils";
-import { number } from "zod";
+import { mod } from "../../common/utils/mathUtils";
 
 export function LoadingIndicator({
   duration = 2000,

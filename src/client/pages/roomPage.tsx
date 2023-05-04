@@ -1,11 +1,11 @@
 import React from "react";
+import { CharacterPane } from "../components/CharacterPane";
 import { Footer } from "../components/Footer";
-import { Paper, PaperContainer } from "../components/Paper";
 import { MessagesPane } from "../components/MessagesPane";
+import { Paper, PaperContainer } from "../components/Paper";
 import { PlayerContextProvider } from "../contexts/playerIdContext";
 import { RoomProvider } from "../contexts/roomContext";
 import { renderPage } from "../utils/renderPage";
-import { CharacterPane } from "../components/CharacterPane";
 
 renderPage(
   <PlayerContextProvider>

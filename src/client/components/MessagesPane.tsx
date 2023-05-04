@@ -2,13 +2,13 @@ import React, { PropsWithChildren } from "react";
 import { Player } from "../../common/models/playerModel";
 import { routes } from "../../common/routes";
 import { last } from "../../common/utils/arrayUtils";
+import { usePlayerId } from "../contexts/playerIdContext";
+import { useRoom } from "../contexts/roomContext";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { Message } from "./Message";
 import { NameTag } from "./NameTag";
 import { SendBox } from "./SendBox";
 import { Separator } from "./Separator";
-import { useRoom } from "../contexts/roomContext";
-import { usePlayerId } from "../contexts/playerIdContext";
 
 export function MessagesPane() {
   const { room } = useRoom();

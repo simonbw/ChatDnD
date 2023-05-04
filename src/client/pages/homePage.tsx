@@ -1,10 +1,9 @@
 import React from "react";
-import { NavBar } from "../components/NavBar";
 import { Paper, PaperContainer } from "../components/Paper";
-import { PlayerContextProvider } from "../contexts/playerIdContext";
-import { renderPage } from "../utils/renderPage";
 import { RoomList } from "../components/RoomList";
 import { Separator } from "../components/Separator";
+import { PlayerContextProvider } from "../contexts/playerIdContext";
+import { renderPage } from "../utils/renderPage";
 
 renderPage(
   <PlayerContextProvider>

@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "../components/Button";
 import { routes } from "../../common/routes";
+import { Button } from "../components/Button";
 
 export function NavBar() {
   return (
