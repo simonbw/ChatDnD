@@ -8,10 +8,18 @@ FRONTEND POLISH:
  - Paginate history when it gets long.
 
 
+IMAGE GENERATION:
+ - Consider other API options:
+   - https://platform.stability.ai/
+     - This seems cheaper and like it has better results than DALL-E 2 for art
+   - Running my own stable diffusion server
+   
+
 PROMPT:
  - Include timestamps?
    - It might be useful for ChatGPT to know how much time has passed between messages
  - Summarizing seems bad so far
+
 
 FEATURES TO ADD:
  - Inventory API
