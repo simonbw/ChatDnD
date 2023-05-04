@@ -2,7 +2,7 @@ import iassign from "immutable-assign";
 import { InventoryItem } from "../../common/models/characterModel";
 import { Player } from "../../common/models/playerModel";
 import { WebError } from "../WebError";
-import { generateInventoryImage } from "../image-generation/generateImageTypes";
+import { generateInventoryImage } from "../image-generation/generateImageWrappers";
 import { Channel } from "../utils/Channel";
 import { SerializedRoom } from "./roomSerialization";
 

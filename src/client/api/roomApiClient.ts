@@ -6,11 +6,12 @@ import {
 import { routes } from "../../common/routes";
 import { makeJsonEndpoint } from "./apiUtil";
 
-export const joinRoom = (roomId: string) =>
-  makeJsonEndpoint(
-    "post",
-    routes.room.join(roomId),
-    joinRoomRequestSchema,
-    joinRoomResponseSchema
-  );
-export const withRoomIdSchema = z.object({ roomId: z.string().nonempty() });
+export const roomApiClient = {
+  joinRoom: (roomId: string) =>
+    makeJsonEndpoint(
+      "post",
+      routes.room.join(roomId),
+      joinRoomRequestSchema,
+      joinRoomResponseSchema
+    ),
+};

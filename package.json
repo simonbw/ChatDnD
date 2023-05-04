@@ -4,6 +4,7 @@
   "description": "A dnd chatbot",
   "main": "index.js",
   "scripts": {
+    "format": "npx prettier ./src/**/*.{ts,tsx}",
     "build": "npm-run-all build:*",
     "build:client": "node esbuild-client.config.mjs",
     "build:server": "node esbuild-server.config.mjs",
@@ -61,6 +62,7 @@
     "react-markdown": "^8.0.7",
     "rethinkdb": "^2.4.2",
     "sharp": "^0.32.0",
+    "stability-client": "^1.9.0",
     "tailwindcss": "^3.3.1",
     "tailwindcss-opentype": "^1.1.0",
     "typescript": "^5.0.4",

@@ -4,7 +4,7 @@ import { RoomMessage } from "../../common/models/roomModel";
 import {
   generateStoryCharacterImage,
   generateStorySceneImage,
-} from "../image-generation/generateImageTypes";
+} from "../image-generation/generateImageWrappers";
 import { makeInitialSystemMessage } from "../prompts/initialPrompts";
 import {
   playerJoinMessage,

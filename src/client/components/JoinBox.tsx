@@ -12,12 +12,8 @@ import {
 } from "../../common/models/characterRaceEnum";
 import { pronounsEnum } from "../../common/models/pronouns";
 import { choose } from "../../common/utils/randUtils";
-import {
-  generateCharacterBackground,
-  generateCharacterDescription,
-  generateCharacterPortrait,
-} from "../api/generationApiClient";
-import { joinRoom } from "../api/roomApiClient";
+import { generationApiClient } from "../api/generationApiClient";
+import { roomApiClient } from "../api/roomApiClient";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useCachedState } from "../hooks/useCachedState";
 import { classNames } from "../utils/classNames";
@@ -98,7 +94,7 @@ export function JoinBox({
 
   const submit = async () => {
     try {
-      await joinRoom(roomId)({
+      await roomApiClient.joinRoom(roomId)({
         id: playerId,
         name: playerName,
         pronouns: playerPronouns,
@@ -223,7 +219,9 @@ export function JoinBox({
               e.preventDefault();
               startGeneratingField("background");
               try {
-                updateCharacter(await generateCharacterBackground(character));
+                updateCharacter(
+                  await generationApiClient.characterBackground(character)
+                );
               } finally {
                 stopGeneratingField("background");
               }
@@ -259,7 +257,9 @@ export function JoinBox({
               e.preventDefault();
               startGeneratingField("description");
               try {
-                updateCharacter(await generateCharacterDescription(character));
+                updateCharacter(
+                  await generationApiClient.characterDescription(character)
+                );
               } finally {
                 stopGeneratingField("description");
               }
@@ -292,13 +292,15 @@ export function JoinBox({
             try {
               if (newPrompt) {
                 updateCharacter(
-                  await generateCharacterPortrait({
+                  await generationApiClient.characterPortrait({
                     ...character,
                     portrait: undefined,
                   })
                 );
               } else {
-                updateCharacter(await generateCharacterPortrait(character));
+                updateCharacter(
+                  await generationApiClient.characterPortrait(character)
+                );
               }
             } finally {
               stopGeneratingField("portrait");

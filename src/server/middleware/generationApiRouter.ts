@@ -6,9 +6,7 @@ import { characterRaceEnum } from "../../common/models/characterRaceEnum";
 import { pronounsEnum } from "../../common/models/pronouns";
 import { routes } from "../../common/routes";
 import { choose } from "../../common/utils/randUtils";
-import { DrawingStyle } from "../image-generation/DrawingStyle";
-import { generateImage } from "../image-generation/generateImage";
-import { generatePortraitImage } from "../image-generation/generateImageTypes";
+import { generatePortraitImage } from "../image-generation/generateImageWrappers";
 import {
   generateBackgroundMessage,
   generateDescriptionMessage,
@@ -57,10 +55,9 @@ router.post(
       url: "",
     };
 
-    character.portrait.url = await generateImage(character.portrait.caption, {
-      drawingStyle: DrawingStyle.CharacterPortrait,
-      s3Folder: "character-portraits",
-    });
+    character.portrait.url = await generatePortraitImage(
+      character.portrait.caption
+    );
 
     res.send(character);
   }

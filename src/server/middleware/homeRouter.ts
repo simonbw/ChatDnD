@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
 import { routes } from "../../common/routes";
-import { DrawingStyle } from "../image-generation/DrawingStyle";
 import { generateImage } from "../image-generation/generateImage";
 import { basicHtml } from "../pages/pageHtml";
 import { validateRequestBody } from "./zodMiddleware";
@@ -30,11 +29,16 @@ router.get("/dalle", async (req, res) => {
 
 router.post(
   "/dalle",
-  validateRequestBody(z.object({ prompt: z.string() })),
+  validateRequestBody(
+    z.object({
+      prompt: z.string(),
+      shouldRemoveBackground: z.boolean().optional(),
+    })
+  ),
   async (req, res) => {
     const url = await generateImage(req.body.prompt, {
-      drawingStyle: DrawingStyle.Plain,
-      shouldRemoveBackground: false,
+      shouldRemoveBackground: req.body.shouldRemoveBackground ?? false,
+      s3Folder: "",
     });
     res.send({ url });
   }

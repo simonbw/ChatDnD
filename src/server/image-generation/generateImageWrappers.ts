@@ -1,33 +1,32 @@
-import { DrawingStyle } from "./DrawingStyle";
 import { generateImage } from "./generateImage";
 
 export function generateStoryCharacterImage(description: string) {
-  return generateImage(description, {
-    drawingStyle: DrawingStyle.StoryCharacter,
+  const prompt = `Masterpiece charcoal sketch character portrait. White background. The drawing is of "${description}"`;
+  return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "story-images",
   });
 }
 
 export function generateStorySceneImage(description: string) {
-  return generateImage(description, {
-    drawingStyle: DrawingStyle.StoryScene,
+  const prompt = `high quality medieval painting on a white background. The drawing is of "${description}"`;
+  return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "story-images",
   });
 }
 
 export function generatePortraitImage(description: string) {
-  return generateImage(description, {
-    drawingStyle: DrawingStyle.CharacterPortrait,
+  const prompt = `Fantasy character portrait. Concept Art. Realistic painting. ${description}`;
+  return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "character-portraits",
   });
 }
 
 export function generateInventoryImage(description: string) {
-  return generateImage(description, {
-    drawingStyle: DrawingStyle.InventoryItem,
+  const prompt = `Masterpiece charcoal drawing. Item on white background. "${description}"`;
+  return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "character-portraits",
   });
