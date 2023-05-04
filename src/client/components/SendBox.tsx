@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Textarea from "react-expanding-textarea";
+import { routes } from "../../common/routes";
 import { usePlayer } from "../contexts/playerIdContext";
 import { classNames } from "../utils/classNames";
-import { relativeUrl } from "../utils/relativeUrl";
 import { Button } from "./Button";
 import { NameTag } from "./NameTag";
 
@@ -20,7 +20,7 @@ export function SendBox({ roomId }: { roomId: string }) {
     if (content != "" && player) {
       setSending(true);
       try {
-        await fetch(relativeUrl("message"), {
+        await fetch(routes.room.postMessage(roomId), {
           body: JSON.stringify({ content, whispered, playerId: player.id }),
           headers: { "Content-Type": "application/json" },
           method: "POST",

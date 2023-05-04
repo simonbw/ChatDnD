@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import Textarea from "react-expanding-textarea";
+import { z } from "zod";
 import {
-  Character,
   characterClassDescrptions,
   characterClassEnum,
+} from "../../common/models/characterClassEnum";
+import { Character, characterSchema } from "../../common/models/characterModel";
+import {
   characterRaceDescrptions,
   characterRaceEnum,
-} from "../../common/models/characterModel";
-import { Pronouns, pronounsEnum } from "../../common/models/pronouns";
+} from "../../common/models/characterRaceEnum";
+import { pronounsEnum } from "../../common/models/pronouns";
+import { choose } from "../../common/utils/randUtils";
 import {
   generateCharacterBackground,
   generateCharacterDescription,
@@ -15,16 +19,28 @@ import {
 } from "../api/generationApiClient";
 import { joinRoom } from "../api/roomApiClient";
 import { usePlayerId } from "../contexts/playerIdContext";
+import { useCachedState } from "../hooks/useCachedState";
 import { classNames } from "../utils/classNames";
 import { Button } from "./Button";
 import { DescriptionSelect } from "./DescriptionSelect";
 import { PortraitPicker } from "./PortraitPicker";
 import { Select } from "./Select";
-import { choose } from "../../common/utils/randUtils";
 
 type GeneratingMap = {
   [K in keyof Character]: boolean;
 };
+
+function makeDefaultCharacter(): Character {
+  return {
+    background: "",
+    characterClass: choose(...characterClassEnum.options),
+    name: "",
+    description: "",
+    pronouns: choose(...pronounsEnum.options),
+    race: choose(...characterRaceEnum.options),
+    inventory: [],
+  };
+}
 
 export function JoinBox({
   roomId,
@@ -34,16 +50,21 @@ export function JoinBox({
   openToJoin: boolean;
 }) {
   const playerId = usePlayerId();
-  const [playerName, setPlayerName] = useState<string>("");
-  const [playerPronouns, setPlayerPronouns] = useState<Pronouns>("He/Him");
-  const [character, setCharacter] = useState<Character>(() => ({
-    background: "",
-    characterClass: choose(...characterClassEnum.options),
-    name: "",
-    description: "",
-    pronouns: choose(...pronounsEnum.options),
-    race: choose(...characterRaceEnum.options),
-  }));
+  const [playerName, setPlayerName] = useCachedState(
+    "playerName",
+    z.string(),
+    ""
+  );
+  const [playerPronouns, setPlayerPronouns] = useCachedState(
+    "playerPronouns",
+    pronounsEnum,
+    "He/Him"
+  );
+  const [character, setCharacter] = useCachedState<Character>(
+    "playerCharacter",
+    characterSchema,
+    makeDefaultCharacter()
+  );
   const updateCharacter = (p: Partial<Character>) =>
     setCharacter((c) => ({ ...c, ...p }));
 
@@ -54,6 +75,7 @@ export function JoinBox({
     name: false,
     pronouns: false,
     race: false,
+    inventory: false,
   });
 
   const startGeneratingField = (field: keyof GeneratingMap) => {

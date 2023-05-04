@@ -1,4 +1,5 @@
 import express from "express";
+import { getDb } from "./db";
 import { errorHandler } from "./middleware/errorHandler";
 import esbuildRouter from "./middleware/esbuildRouter";
 import helpersRouter from "./middleware/generationApiRouter";
@@ -6,8 +7,7 @@ import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import homeRouter from "./middleware/homeRouter";
 import roomRouter from "./middleware/room/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
-import { RoomStore } from "./roomStore";
-import { getDb } from "./db";
+import { RoomStore } from "./room/roomStore";
 
 export async function makeApp() {
   await getDb();

@@ -4,15 +4,31 @@ FRONTEND POLISH:
  - Show character information on hover
  - Show character image when joining game.
  - Writing sound effect when chatgpt is writing.
+ - Show error states?
+ - Paginate history when it gets long.
 
 
 PROMPT:
- - Prom
+ - Include timestamps?
+   - It might be useful for ChatGPT to know how much time has passed between messages
+ - Summarizing seems bad so far
 
-PERFORMANCE/TECH DEBT
- - Don't send whole state on every update. Only send deltas
- - Use a database to store prompts and rooms and such (could probably do Hasura)
- - Store images in S3 or something
+FEATURES TO ADD:
+ - Inventory API
+   - Characters have a list of items
+   - Each item has a title, a short description, a quantity, and a picture
+   - API has two methods:
+     - [give_item player_name item]
+     - [remove_item player_name item]
+ - Ability API
+   - Players have a list of abilities
+   - API has one method:
+     - [give_ability player_name item]
+
+
+CHARACTER GENERATION
+ - Random name
+ - Option to expand on existing background/description.
 
 
 WHAT GAME ARE THEY PLAYING:
@@ -36,3 +52,7 @@ WORLD/KNOWLEDGE GENERATION
  - Have one AI generate lots of pieces of knowledge about the world
  - Store that knowledge in a vector database
  - Query for relevant knowledge 
+
+
+PERFORMANCE/TECH DEBT
+ - 

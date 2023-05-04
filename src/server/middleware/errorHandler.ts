@@ -9,7 +9,7 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     res.status(400);
   }
   if (req.accepts(["html", "json"]) === "json") {
-    res.send({ success: false, error });
+    res.send({ success: false, error: { ...error, message: error.message } });
   } else {
     res.send(errorHtml(error));
   }

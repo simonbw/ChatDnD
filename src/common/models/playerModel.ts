@@ -8,4 +8,5 @@ export const playerSchema = z.object({
   pronouns: pronounsEnum,
   character: characterSchema,
 });
+
 export type Player = z.infer<typeof playerSchema>;

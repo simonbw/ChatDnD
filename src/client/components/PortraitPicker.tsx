@@ -18,24 +18,23 @@ export function PortraitPicker({
   return (
     <figure className="flex flex-col items-center text-center max-w-64 rounded-md overflow-hidden">
       <div className="w-full flex justify-center items-center relative">
-        {portrait?.url ? (
+        <img
+          src="/static/images/missing-portrait.png"
+          className={classNames(
+            "w-full h-full aspect-square mix-blend-multiply transition-opacity duration-1000",
+            generating ? "opacity-50" : "opacity-0"
+          )}
+        />
+        {portrait?.url && (
           <DissolveInImage
             src={portrait.url}
             className={classNames(
-              "w-full h-full aspect-square transition-opacity sepia-[40%]",
-              generating ? "opacity-20" : ""
+              "w-full h-full aspect-square absolute",
+              generating ? "opacity-0" : "opacity-100"
             )}
             width={512}
             height={512}
             duration={1000}
-          />
-        ) : (
-          <img
-            src="/static/images/missing-portrait.png"
-            className={classNames(
-              "w-full h-full aspect-square sepia-[40%]",
-              generating ? "opacity-20" : ""
-            )}
           />
         )}
 

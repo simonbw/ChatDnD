@@ -47,6 +47,10 @@ export function getAwsCredentials(): {
   };
 }
 
+export function getAwsBucketName(): string {
+  return assertConfigured("AWS_BUCKET_NAME");
+}
+
 export function getRethinkConfig() {
   return {
     host: assertConfigured("RETHINKDB_HOST"),

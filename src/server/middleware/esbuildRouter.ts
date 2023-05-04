@@ -27,7 +27,7 @@ router.get(routes.esbuild(), async (req, res) => {
 
     // Forward events from the response stream to the client
     axiosRes.data.on("data", (chunk: unknown) => {
-      console.log("esbuild server sent data");
+      // console.log("esbuild server sent data");
       res.write(chunk);
     });
 

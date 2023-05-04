@@ -10,22 +10,35 @@ import { saveToS3 } from "./saveToS3";
 
 const PLACEHOLDER_IMAGE_URL = "/static/images/drawing-disabled.png";
 
+interface Options {
+  drawingStyle?: DrawingStyle;
+  shouldRemoveBackground?: boolean;
+  brighten?: number;
+  s3Folder?: string;
+}
+
 export async function generateImage(
   description: string,
-  drawingStyle = DrawingStyle.Plain,
-  shouldRemoveBackground = true
+  options: Options = {}
 ): Promise<string> {
+  const {
+    drawingStyle = DrawingStyle.Plain,
+    shouldRemoveBackground = true,
+    s3Folder = "/",
+    brighten = 1.1,
+  } = options;
   if (isDrawingEnabled()) {
     const prompt = createDrawingPrompt(description, drawingStyle);
     const remoteImageUrl = await getImageFromDalle(prompt);
-    const imageName = last(new URL(remoteImageUrl).pathname.split("/"));
+    const imageName =
+      s3Folder + "/" + last(new URL(remoteImageUrl).pathname.split("/"));
     const rawBuffer = await fetchImageBuffer(remoteImageUrl);
     const processedBuffer = shouldRemoveBackground
       ? await removeBackground(rawBuffer)
-      : sharp(rawBuffer);
+      : sharp(rawBuffer).modulate({ brightness: brighten });
 
     if (process.env.DRAWING_SAVE_TARGET === "s3") {
-      return saveToS3(processedBuffer, imageName);
+      return await saveToS3(processedBuffer, imageName);
     } else {
       return await saveToFile(processedBuffer, imageName);
     }

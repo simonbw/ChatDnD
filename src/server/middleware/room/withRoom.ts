@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
 import { withRoomIdSchema } from "../../../common/models/apiSchemas";
-import { Room } from "../../Room";
 import { WebError } from "../../WebError";
-import { RoomStore } from "../../roomStore";
+import { Room } from "../../room/Room";
+import { RoomStore } from "../../room/roomStore";
 
 export const withRoom: <
   TParams,

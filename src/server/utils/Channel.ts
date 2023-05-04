@@ -4,6 +4,9 @@ const makeId = idMaker();
 
 type ListenerId = string;
 
+/**
+ * A very simple pub-sub channel.
+ */
 export class Channel<T> {
   private listeners = new Map();
 

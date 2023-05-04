@@ -1,48 +1,61 @@
 import { ChatCompletionRequestMessage } from "openai";
-import { RoomMessage } from "../../common/models/roomModel";
-import { playerJoinMessage, playerLeaveMessage } from "./roomEventPrompts";
+import { Player } from "../../common/models/playerModel";
+import { abilitiesPromptContent } from "./abilitiesPromptContent";
+import { playersPromptContent } from "./playersPromptContent";
 
-const content = `
-You are ChatDnD, an AI Game Master.
-You are friendly and patient, and a little bit funny.
-You speak in somewhat medieval fantasy English.
-You may use markdown to make your text **bold** and *italic* or even blockquoted:
-> This is a blockquote
+const identityAndPersonalityContent = () =>
+  `You are ChatDnD, an AI Game Master. ` +
+  `You are friendly and patient, and a little bit funny. ` +
+  `You speak in somewhat medieval fantasy English.`;
 
-We are playing a game of Dungeons and Dragons.
-You are the dungeon master, not a player.
-You are chatting with the players.
-We are playing with official 5e rules, though we aren't super strict about them.
-The title of the campaign you will be creating is "{campaignTitle}".
+const formattingContent = () =>
+  `You may use markdown to format your text. ` +
+  `For example: **this text is bold** and *this text is italic*.\n` +
+  `> This text is in a blockquote.`;
 
-For each message you send, you can optionally also instruct me to paint a picture of the scene.
-You can do this by including a visual description of what you would like me to paint.
-This description should be surrounded by curly braces, for example "{the description of the image}"
-This description will be fed to DALL-E to generate an image of the scene.
+const situationContent = (campaignTitle: string) =>
+  `We are playing a simple tabletop role playing game. ` +
+  `You are the game master, not a player. ` +
+  `You are chatting with the players. ` +
+  `The title of the campaign you are creating is "${campaignTitle}". ` +
+  `The game takes place in an archetypical high fantasy setting.`;
 
-When the first player joins, you should welcome them and start the game.
-`;
+const summaryContent = (summary?: string) => {
+  if (!summary) {
+    return null;
+  }
+  return `Here is a summary of the conversation so far, wrapped in triple backticks: \`\`\`${summary}\`\`\``;
+};
 
-export function makeStarterMessages(campaignTitle: string): RoomMessage[] {
+export function makeInitialSystemMessage(
+  campaignTitle: string,
+  players: Player[],
+  summary?: string
+): ChatCompletionRequestMessage[] {
+  const parts: Array<string | null> = [
+    identityAndPersonalityContent(),
+    formattingContent(),
+    situationContent(campaignTitle),
+    abilitiesPromptContent(players),
+    playersPromptContent(players),
+  ];
+
+  if (summary) {
+    parts.push(summaryContent(summary));
+  }
+
+  const content = parts
+    .filter((part) => part)
+    .join("\n\n")
+    .trim();
+
+  console.log("Initial Prompt Length:", content.length);
+
   return [
     {
       role: "system",
       name: "system",
-      content: content.replace("{campaignTitle}", campaignTitle),
-      createdAt: new Date().toISOString(),
+      content,
     },
   ];
 }
-
-export function makeChooseNameMessage(): ChatCompletionRequestMessage[] {
-  return [
-    {
-      role: "user",
-      content:
-        "Please come up with a unique title for a Dungeons & Dragons campaign. Please respond with only the title, and no punctuation.",
-    },
-  ];
-}
-
-export { playerJoinMessage };
-export { playerLeaveMessage };

@@ -1,13 +1,15 @@
+import { AxiosResponse } from "axios";
 import {
   ChatCompletionRequestMessage,
   CreateChatCompletionRequest,
   OpenAIApi,
   Configuration as OpenAiConfiguration,
 } from "openai";
+import { Readable } from "stream";
+import { z } from "zod";
 import { last } from "../../common/utils/arrayUtils";
-import { StreamMessageDelta, streamMessageSchema } from "../RoomMessageBuilder";
 import { WebError } from "../WebError";
-import { getOpenAiKey } from "./envUtils";
+import { getGPTModel, getOpenAiKey } from "./envUtils";
 import { makeSingleton } from "./makeSingleton";
 
 export const openAi = makeSingleton(
@@ -19,7 +21,7 @@ export const openAi = makeSingleton(
     )
 );
 
-export function parseDeltaStream(raw: Uint8Array): StreamMessageDelta[] {
+export function parseDeltaStream(raw: Uint8Array): OpenAiStreamMessageDelta[] {
   const lines = raw
     .toString()
     .split("\n")
@@ -42,7 +44,7 @@ export function parseDeltaStream(raw: Uint8Array): StreamMessageDelta[] {
         return null;
       }
     })
-    .filter((delta): delta is StreamMessageDelta => delta != null);
+    .filter((delta): delta is OpenAiStreamMessageDelta => delta != null);
 }
 
 export function apiSafeName(name?: string): string | undefined {
@@ -51,12 +53,12 @@ export function apiSafeName(name?: string): string | undefined {
 
 export async function simpleTextResponse(
   messages: ChatCompletionRequestMessage[],
-  options: Partial<CreateChatCompletionRequest> = {}
+  config: Partial<CreateChatCompletionRequest> = {}
 ) {
   const chatResponse = await openAi().createChatCompletion({
-    ...options,
-    model: "gpt-3.5-turbo",
+    model: getGPTModel(),
     messages,
+    ...config,
   });
 
   const content = chatResponse.data.choices[0].message?.content;
@@ -64,6 +66,30 @@ export async function simpleTextResponse(
     throw new WebError("Chat API did not return any content", 500);
   }
   return content;
+}
+
+export async function streamTextResponse(
+  messages: ChatCompletionRequestMessage[],
+  chatConfig: Partial<CreateChatCompletionRequest> = {}
+): Promise<Readable> {
+  const config = {
+    model: getGPTModel(),
+    messages,
+    ...chatConfig,
+    stream: true,
+  };
+  try {
+    const chatResponse = (await openAi().createChatCompletion(config, {
+      responseType: "stream",
+    })) as any as AxiosResponse<Readable>; // because the API is improperly typed
+    return chatResponse.data;
+  } catch (error: any) {
+    console.error("streamTextResponse failed:", config);
+    throw new WebError(
+      `streamTextResponse() openAi request failed with message: ${error.message}`,
+      500
+    );
+  }
 }
 
 export function cleanupChatResponse(
@@ -83,3 +109,32 @@ export function cleanupChatResponse(
 
   return result;
 }
+
+export const openAiStreamMessageDeltaSchema = z.object({
+  content: z.string().optional(),
+  role: z.string().optional(),
+  name: z.string().optional(),
+});
+
+export const streamMessageSchema = z.object({
+  id: z.string(),
+  object: z.string(),
+  created: z.number(),
+  model: z.string(),
+  choices: z.array(
+    z.object({
+      delta: openAiStreamMessageDeltaSchema,
+      index: z.number(),
+      finish_reason: z.union([
+        z.literal("stop"),
+        z.literal("length"),
+        z.literal("content_filter"),
+        z.null(),
+      ]),
+    })
+  ),
+});
+
+export type OpenAiStreamMessageDelta = z.infer<
+  typeof openAiStreamMessageDeltaSchema
+>;

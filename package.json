@@ -47,6 +47,8 @@
     "esbuild-style-plugin": "^1.6.1",
     "express": "^5.0.0-beta.1",
     "express-http-proxy": "^1.6.3",
+    "fast-json-patch": "^3.1.1",
+    "immutable-assign": "^2.1.5",
     "nodemon": "^2.0.22",
     "open-simplex-noise": "^2.5.0",
     "openai": "^3.2.1",

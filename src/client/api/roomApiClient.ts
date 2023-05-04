@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   joinRoomRequestSchema,
   joinRoomResponseSchema,
@@ -12,3 +13,4 @@ export const joinRoom = (roomId: string) =>
     joinRoomRequestSchema,
     joinRoomResponseSchema
   );
+export const withRoomIdSchema = z.object({ roomId: z.string().nonempty() });

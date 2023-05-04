@@ -16,6 +16,7 @@ const r = {
   },
 
   rooms: () => "/rooms",
+  clearAllRooms: () => "/clear-all-rooms",
   room: {
     new: () => "/new-room",
     base: (roomId: string) => `/room/${roomId}`,
@@ -23,7 +24,9 @@ const r = {
     state: (roomId: string) => `${r.room.base(roomId)}/state`,
     stateStream: (roomId: string) => `${r.room.base(roomId)}/state-stream`,
     join: (roomId: string) => `${r.room.base(roomId)}/join`,
-    message: (roomId: string) => `${r.room.base(roomId)}/message`,
+    postMessage: (roomId: string) => `${r.room.base(roomId)}/message`,
+    clearMessages: (roomId: string) => `${r.room.base(roomId)}/soft-reset`,
+    json: (roomId: string) => `${r.room.base(roomId)}/json`,
   },
 };
 

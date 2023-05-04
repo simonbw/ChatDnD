@@ -1,9 +1,9 @@
-import { RoomListItem } from "../common/models/roomListModel";
-import { roomStateSchema } from "../common/models/roomModel";
-import { Room, RoomData, RoomId, roomSaveSchema } from "./Room";
-import { WebError } from "./WebError";
-import { getDb } from "./db";
 import rethink from "rethinkdb";
+import { RoomListItem } from "../../common/models/roomListModel";
+import { WebError } from "../WebError";
+import { getDb } from "../db";
+import { Room } from "./Room";
+import { RoomId, roomSaveSchema } from "./roomSerialization";
 
 export const roomTable = rethink.db("chatdnd").table("rooms");
 
@@ -19,15 +19,14 @@ export class RoomStore {
     return RoomStore._instance;
   }
 
+  private constructor() {}
+
   public async createRoom(id?: RoomId): Promise<Room> {
     if (id === undefined) {
-      do {
-        id = this.makeId();
-      } while (this.rooms.has(id));
+      id = this.makeId();
     }
     console.log("creating new room: ", id);
-    const room = new Room(id);
-    await room.init();
+    const room = await Room.createEmpty(id);
     if (this.rooms.has(id)) {
       throw new WebError("Can't create room that already exists: " + id, 400);
     }
@@ -36,7 +35,12 @@ export class RoomStore {
   }
 
   private makeId() {
-    return String(this.lastId++);
+    // TODO: This is trash. Should use the database for generating unique id
+    let id: RoomId;
+    do {
+      id = String(this.lastId++);
+    } while (this.rooms.has(id));
+    return id;
   }
 
   public hasRoom(roomId: RoomId): boolean {
@@ -59,18 +63,24 @@ export class RoomStore {
       .filter(
         (room) =>
           playerId === undefined ||
-          room.getPlayers().some((player) => player.id === playerId)
+          room.players.all.some((player) => player.id === playerId)
       )
       .map(
         (room): RoomListItem => ({
           id: room.id,
           name: room.name,
-          players: room
-            .getPlayers()
-            .map((p) => ({ id: p.id, name: p.character.name })),
+          players: room.players.all.map((p) => ({
+            id: p.id,
+            name: p.character.name,
+          })),
         })
       )
       .slice(0, limit ?? Infinity);
+  }
+
+  public clear(): RoomStore {
+    this.rooms = new Map();
+    return this;
   }
 
   public deleteRoom(roomId: RoomId): RoomStore {
@@ -96,9 +106,10 @@ export class RoomStore {
         if (parsed.success) {
           console.log("Parsed room with id", parsed.data.id);
           if (!this.hasRoom(parsed.data.id)) {
-            const room = new Room(roomData.id);
-            room.fromJson(roomData);
+            const room = new Room(roomData);
             this.rooms.set(room.id, room);
+          } else {
+            console.log("Room already loaded:", parsed.data.id);
           }
         } else {
           console.log("Found invalid saved room", parsed.error);

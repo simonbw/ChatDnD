@@ -1,4 +1,4 @@
-import { RoomState } from "../../common/models/roomModel";
+import { RoomPublicState } from "../../common/models/roomModel";
 
 interface Options {
   scripts: string[];

@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ZodEffects, ZodError, ZodSchema, ZodType, ZodTypeDef, z } from "zod";
+import { WebError } from "../WebError";
 
 type NonReadOnly<T> = { -readonly [P in keyof T]: NonReadOnly<T[P]> };
 
@@ -71,7 +72,8 @@ export function processRequestBody<TBody>(
       req.body = parsed.data;
       return next();
     } else {
-      return sendErrors([{ type: "Body", errors: parsed.error }], res);
+      console.error("\n\nBody parse fail\n\n");
+      throw new WebError("Body did not match schema:" + parsed.error, 400);
     }
   };
 }
@@ -91,7 +93,8 @@ export function processRequestParams<TParams>(
       req.params = parsed.data;
       return next();
     } else {
-      return sendErrors([{ type: "Params", errors: parsed.error }], res);
+      console.error("\n\nParams parse fail\n\n");
+      throw new WebError("Params did not match schema:" + parsed.error, 400);
     }
   };
 }
@@ -111,7 +114,7 @@ export function processRequestQuery<TQuery>(
       req.query = parsed.data;
       return next();
     } else {
-      return sendErrors([{ type: "Query", errors: parsed.error }], res);
+      throw new WebError("Query did not match schema:" + parsed.error, 400);
     }
   };
 }
@@ -154,7 +157,11 @@ export function processRequest<TParams = any, TQuery = any, TBody = any>(
       }
     }
     if (errors.length > 0) {
-      return sendErrors(errors, res);
+      throw new WebError(
+        "Request processing errors: " +
+          errors.map((e) => e.errors.message).join("\n"),
+        400
+      );
     }
     return next();
   };
@@ -168,7 +175,7 @@ export const validateRequestBody: <TBody>(
     if (parsed.success) {
       return next();
     } else {
-      return sendErrors([{ type: "Body", errors: parsed.error }], res);
+      throw new WebError("Body did not match schema:" + parsed.error, 400);
     }
   };
 
@@ -179,7 +186,7 @@ export const validateRequestParams: <TParams>(
   if (parsed.success) {
     return next();
   } else {
-    return sendErrors([{ type: "Params", errors: parsed.error }], res);
+    throw new WebError("Params did not match schema:" + parsed.error, 400);
   }
 };
 
@@ -191,7 +198,7 @@ export const validateRequestQuery: <TQuery>(
     if (parsed.success) {
       return next();
     } else {
-      return sendErrors([{ type: "Query", errors: parsed.error }], res);
+      throw new WebError("Query did not match schema:" + parsed.error, 400);
     }
   };
 
@@ -220,7 +227,11 @@ export const validateRequest: <TParams = any, TQuery = any, TBody = any>(
       }
     }
     if (errors.length > 0) {
-      return sendErrors(errors, res);
+      throw new WebError(
+        "Request validation errors: " +
+          errors.map((e) => e.errors.message).join("\n"),
+        400
+      );
     }
     return next();
   };

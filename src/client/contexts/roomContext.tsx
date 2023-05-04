@@ -1,40 +1,27 @@
-import axios from "axios";
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { RoomState, roomStateSchema } from "../../common/models/roomModel";
-import { relativeUrl } from "../utils/relativeUrl";
+import React, { PropsWithChildren, createContext, useContext } from "react";
+import {
+  RoomPublicState,
+  roomPublicStateSchema,
+} from "../../common/models/roomModel";
+import { routes } from "../../common/routes";
+import { RoomId } from "../../server/room/roomSerialization";
+import { useJsonDiffStream } from "../hooks/useJsonDiffStream";
 
 export function useRoom() {
   return useContext(RoomContext);
 }
 
-const RoomContext = createContext<{ room: RoomState | undefined }>({
+const RoomContext = createContext<{ room: RoomPublicState | undefined }>({
   room: undefined,
 });
 
 export function RoomProvider({ children }: PropsWithChildren) {
-  const [state, setRoomState] = useState<RoomState | undefined>(undefined);
+  const roomId = useRoomId();
 
-  useEffect(() => {
-    (async () => {
-      const eventSource = new EventSource(relativeUrl("state-stream"));
-
-      eventSource.onmessage = (event) => {
-        const rawData = JSON.parse(event.data);
-        const maybeRoomState = roomStateSchema.safeParse(rawData);
-        if (maybeRoomState.success) {
-          setRoomState(maybeRoomState.data);
-        } else {
-          console.warn("invalid room recieved", maybeRoomState.error, rawData);
-        }
-      };
-    })();
-  }, []);
+  const state = useJsonDiffStream(
+    roomId && routes.room.stateStream(roomId),
+    roomPublicStateSchema.parse
+  );
 
   return (
     <RoomContext.Provider value={{ room: state }}>
@@ -43,13 +30,11 @@ export function RoomProvider({ children }: PropsWithChildren) {
   );
 }
 
-async function wait(delay: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
-
-export function useRoomId(): string | undefined {
-  // TODO: Just get from url
-  return useRoom().room?.id;
+export function useRoomId(): RoomId | undefined {
+  const p = window.location.pathname;
+  const parts = p.split("/");
+  if (parts[1] != "room") {
+    return undefined;
+  }
+  return parts[2];
 }

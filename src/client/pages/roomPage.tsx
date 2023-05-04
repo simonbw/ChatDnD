@@ -14,7 +14,7 @@ renderPage(
         <Paper>
           <MessagesPane />
         </Paper>
-        <Paper>
+        <Paper className="sticky top-8">
           <CharacterPane />
         </Paper>
       </PaperContainer>

@@ -95,7 +95,7 @@ function MessageImage({ image }: { image?: RoomMessageImage }) {
         title={image?.description}
         className="flex flex-col items-center text-center"
       >
-        <div className="w-80 h-w-80 sepia-[40%]">
+        <div className="w-80 h-w-80">
           <DissolveInImage
             src={image?.url}
             width={512}

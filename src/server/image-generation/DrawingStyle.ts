@@ -1,7 +1,9 @@
 export enum DrawingStyle {
   Plain,
-  StoryImage,
   CharacterPortrait,
+  StoryCharacter,
+  StoryScene,
+  InventoryItem,
 }
 
 export function createDrawingPrompt(
@@ -11,9 +13,13 @@ export function createDrawingPrompt(
   switch (drawingStyle) {
     case DrawingStyle.Plain:
       return description;
-    case DrawingStyle.StoryImage:
-      return `A medieval painting on a white backround. The drawing is of "${description}"`;
+    case DrawingStyle.StoryScene:
+      return `high quality medieval painting on a white background. The drawing is of "${description}"`;
+    case DrawingStyle.StoryCharacter:
+      return `Masterpiece charcoal sketch character portrait. White background. The drawing is of "${description}"`;
     case DrawingStyle.CharacterPortrait:
-      return `2d high quality drawing character portrait. Fantasy roleplaying game character art. Full face and shoulders in frame. The subject of the portrait: "${description}"`;
+      return `Fantasy character portrait. Concept Art. Realistic painting. ${description}`;
+    case DrawingStyle.InventoryItem:
+      return `Masterpiece charcoal drawing. Item on white background. "${description}"`;
   }
 }

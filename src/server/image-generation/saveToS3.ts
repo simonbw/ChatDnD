@@ -1,10 +1,10 @@
 import S3Client from "aws-sdk/clients/s3";
 import { Sharp } from "sharp";
-import { WebError } from "../WebError";
-import { getAwsCredentials } from "../utils/envUtils";
+import { getAwsBucketName, getAwsCredentials } from "../utils/envUtils";
 
 export const s3Client = new S3Client({
   credentials: getAwsCredentials(),
+  region: "us-east-1",
 });
 
 export async function saveToS3(
@@ -12,21 +12,16 @@ export async function saveToS3(
   imageName: string
 ): Promise<string> {
   console.log("Saving to S3...");
-  const buffer = await sharp.png({ force: true }).toBuffer();
 
   try {
-    const bucket = process.env.AWS_BUCKET_NAME;
-    if (!bucket) {
-      throw new WebError("S3 Bucket Not Configured", 500);
-    }
+    const buffer = await sharp.png({ force: true }).toBuffer();
     const response = await s3Client
       .upload({
-        Bucket: bucket,
+        Bucket: getAwsBucketName(),
         Key: imageName,
         Body: buffer,
       })
       .promise();
-    console.log("S3 Response:", response);
     return response.Location;
   } catch (error) {
     console.error(error);

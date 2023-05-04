@@ -1,15 +1,14 @@
 import { Router } from "express";
 import { generateCharacterRequestBody } from "../../common/api-schemas/generationApiSchemas";
-import {
-  Character,
-  characterClassEnum,
-  characterRaceEnum,
-} from "../../common/models/characterModel";
+import { characterClassEnum } from "../../common/models/characterClassEnum";
+import { Character } from "../../common/models/characterModel";
+import { characterRaceEnum } from "../../common/models/characterRaceEnum";
 import { pronounsEnum } from "../../common/models/pronouns";
 import { routes } from "../../common/routes";
 import { choose } from "../../common/utils/randUtils";
 import { DrawingStyle } from "../image-generation/DrawingStyle";
 import { generateImage } from "../image-generation/generateImage";
+import { generatePortraitImage } from "../image-generation/generateImageTypes";
 import {
   generateBackgroundMessage,
   generateDescriptionMessage,
@@ -58,10 +57,10 @@ router.post(
       url: "",
     };
 
-    character.portrait.url = await generateImage(
-      character.portrait.caption,
-      DrawingStyle.CharacterPortrait
-    );
+    character.portrait.url = await generateImage(character.portrait.caption, {
+      drawingStyle: DrawingStyle.CharacterPortrait,
+      s3Folder: "character-portraits",
+    });
 
     res.send(character);
   }
@@ -109,17 +108,20 @@ router.post(
     let caption = req.body.portrait?.caption;
     if (!caption) {
       console.log("Getting portrait prompt...");
-      caption = cleanupChatResponse(
+      const adjectives = cleanupChatResponse(
         await simpleTextResponse(generatePortraitMessage(req.body), {
-          temperature: 0.95,
-        })
+          temperature: 0.5,
+        }),
+        { singlePhrase: true, stripQuotes: true }
       );
+
+      caption = `A ${req.body.race} ${req.body.characterClass}. ${adjectives}`;
     }
 
     res.send({
       portrait: {
         caption,
-        url: await generateImage(caption, DrawingStyle.CharacterPortrait),
+        url: await generatePortraitImage(caption),
       },
     });
   }

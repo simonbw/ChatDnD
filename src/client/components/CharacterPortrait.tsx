@@ -20,7 +20,7 @@ export function CharacterPortrait({
         "flex flex-col items-center justify-center text-center"
       )}
     >
-      <div className={classNames("sepia-[40%]")}>
+      <div className={classNames("")}>
         {portrait?.url && (
           <DissolveInImage
             src={portrait.url}

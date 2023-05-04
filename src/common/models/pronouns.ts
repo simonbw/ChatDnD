@@ -8,42 +8,42 @@ export const pronounsEnum = z.enum([
 ]);
 export type Pronouns = z.infer<typeof pronounsEnum>;
 
-export function subjectivePronoun(pronouns: Pronouns): string {
+export function subjectivePronoun(pronouns: Pronouns, upper = false): string {
   switch (pronouns) {
     case "He/Him":
-      return "he";
+      return upper ? "He" : "he";
     case "She/Her":
-      return "she";
+      return upper ? "She" : "she";
     case "They/Them":
-      return "they";
+      return upper ? "They" : "they";
     case "It/Its":
-      return "it";
+      return upper ? "It" : "it";
   }
 }
 
-export function objectivePronoun(pronouns: Pronouns): string {
+export function objectivePronoun(pronouns: Pronouns, upper = false): string {
   switch (pronouns) {
     case "He/Him":
-      return "him";
+      return upper ? "Him" : "him";
     case "She/Her":
-      return "her";
+      return upper ? "Her" : "her";
     case "They/Them":
-      return "them";
+      return upper ? "Them" : "them";
     case "It/Its":
-      return "it";
+      return upper ? "It" : "it";
   }
 }
 
-export function possessivePronoun(pronouns: Pronouns): string {
+export function possessivePronoun(pronouns: Pronouns, upper = false): string {
   switch (pronouns) {
     case "He/Him":
-      return "his";
+      return upper ? "His" : "his";
     case "She/Her":
-      return "her";
+      return upper ? "Her" : "her";
     case "They/Them":
-      return "their";
+      return upper ? "Their" : "their";
     case "It/Its":
-      return "its";
+      return upper ? "Its" : "its";
   }
 }
 

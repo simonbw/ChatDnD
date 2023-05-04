@@ -15,10 +15,12 @@ makeApp().then((app) => {
 
 process.on("unhandledRejection", (error: Error) => {
   console.warn("unhandledRejection!", error.message);
+  console.error(error);
   // process.exit(1);
 });
 
 process.on("uncaughtException", (error: Error) => {
   console.warn("uncaughtException!", error.message);
+  console.error(error);
   // process.exit(1);
 });

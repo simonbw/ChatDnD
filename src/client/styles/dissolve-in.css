@@ -1,0 +1,31 @@
+@layer components {
+  .dissolve-in {
+    /* @apply transition-opacity mix-blend-multiply; */
+
+    /* mask-image: url('data:image/svg+xml;utf8,<svg preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 100 100" xml:space="preserve"><style type="text/css">.blur{filter:url(%23softedge);}</style><filter id="softedge"><feGaussianBlur stdDeviation="0.5"></feGaussianBlur></filter><g class="blur"><rect x="1" y="1" width="98" height="98"/></g></svg>'); */
+
+    mask-image: linear-gradient(
+        to top,
+        transparent 0%,
+        white 2%,
+        white 98%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to right,
+        transparent 0%,
+        white 2%,
+        white 98%,
+        transparent 100%
+      );
+
+    mask-composite: source-in;
+  }
+
+  /* @keyframes dissolve-from-center {
+    100% {
+      -webkit-mask-position: right;
+      mask-position: right;
+    }
+  } */
+}

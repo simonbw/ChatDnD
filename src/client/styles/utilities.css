@@ -1,5 +1,5 @@
 @layer utilities {
-  .small-caps {
+  /* .small-caps {
     font-variant-caps: small-caps;
   }
 
@@ -17,7 +17,7 @@
 
   .titling-caps {
     font-variant-caps: titling-caps;
-  }
+  } */
 
   .normal-caps {
     font-variant-caps: normal;

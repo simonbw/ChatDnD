@@ -1,10 +1,9 @@
 import React from "react";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useRoom } from "../contexts/roomContext";
-import { JoinBox } from "./JoinBox";
-import { CharacterPortrait } from "./CharacterPortrait";
-import { DissolveInImage } from "./DissolveInImage";
 import { classNames } from "../utils/classNames";
+import { JoinBox } from "./JoinBox";
+import { DissolveInImage } from "./DissolveInImage";
 
 export function CharacterPane() {
   const playerId = usePlayerId();
@@ -28,7 +27,7 @@ export function CharacterPane() {
       <div className="">
         <div
           className={classNames(
-            "sepia-[40%] float-left w-[50%] mr-2 b-2 rounded border-4 border-sepia/50 border-double"
+            "float-left w-[50%] mr-2 b-2 rounded border-4 border-sepia/50 border-double"
           )}
         >
           <img
@@ -63,6 +62,25 @@ export function CharacterPane() {
             Background
           </h3>
           <div className="indent-4">{character.background}</div>
+        </section>
+        <section className="clear-both pt-2">
+          <h3 className="font-nametag first-letter:text-lg first-letter:leading-none underline underline-offset-1">
+            Inventory
+          </h3>
+          <ul className="grid grid-cols-4 tracking-tight gap-4">
+            {character.inventory.map((item) => (
+              <li>
+                {item.imageUrl && (
+                  <DissolveInImage src={item.imageUrl} fadeEdges />
+                )}
+                <b>
+                  {item.name}
+                  {item.quantity > 1 ? ` (x${item.quantity})` : ""}
+                </b>{" "}
+                — {item.description}
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
     </div>

@@ -32,7 +32,10 @@ router.post(
   "/dalle",
   validateRequestBody(z.object({ prompt: z.string() })),
   async (req, res) => {
-    const url = await generateImage(req.body.prompt, DrawingStyle.Plain, false);
+    const url = await generateImage(req.body.prompt, {
+      drawingStyle: DrawingStyle.Plain,
+      shouldRemoveBackground: false,
+    });
     res.send({ url });
   }
 );
