@@ -89,9 +89,7 @@ export class RoomStore {
   }
 
   public async initialize(): Promise<RoomStore> {
-    console.log("[RoomStore] Initializing room store...");
     await this.loadRooms();
-    console.log("[RoomStore] Room store initialized");
     return this;
   }
 
@@ -100,7 +98,7 @@ export class RoomStore {
       const db = await getDb();
       const cursor = await roomTable.run(db);
       const roomDatas = await cursor.toArray();
-      console.log(`[RoomStore] loading ${roomDatas.length} rooms:`);
+      console.log(`[RoomStore] loading ${roomDatas.length} rooms`);
       for (const roomData of roomDatas) {
         const parsed = roomSaveSchema.safeParse(roomData);
         if (parsed.success) {

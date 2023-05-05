@@ -5,12 +5,8 @@ import { getPort } from "./utils/envUtils";
 makeApp().then((app) => {
   const port = getPort();
   app.listen(port, () => {
-    console.log(
-      `\nChatDnD Server listening on port ${port}\n`,
-      "node_env:",
-      process.env.NODE_ENV,
-      "\n"
-    );
+    console.log(`[server] ChatDnD serving at http://localhost:${port}`);
+    console.log("[server] NODE_ENV:", process.env.NODE_ENV);
   });
 });
 

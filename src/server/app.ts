@@ -2,7 +2,7 @@ import express from "express";
 import { getDb } from "./db";
 import { errorHandler } from "./middleware/errorHandler";
 import esbuildRouter from "./middleware/esbuildRouter";
-import helpersRouter from "./middleware/generationApiRouter";
+import generationApiRouter from "./middleware/generationApiRouter";
 import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import homeRouter from "./middleware/homeRouter";
 import miscDebugRouter from "./middleware/miscDebugRouter";
@@ -11,7 +11,10 @@ import voiceRouter from "./middleware/voiceRouter";
 import { RoomStore } from "./room/roomStore";
 
 export async function makeApp() {
+  // Initialize database connection
   await getDb();
+
+  // Initialize room store before serving traffic
   await RoomStore.instance.initialize();
 
   const app = express();
@@ -24,15 +27,13 @@ export async function makeApp() {
   // Static files
   app.use("/static", getStaticsMiddleware());
 
-  // Initialize room store before serving traffic
-
   // Routes
   app.use(homeRouter);
   app.use(miscDebugRouter);
   app.use(esbuildRouter);
   app.use(voiceRouter);
   app.use(roomRouter);
-  app.use(helpersRouter);
+  app.use(generationApiRouter);
 
   // Error handling
   app.use(errorHandler);
