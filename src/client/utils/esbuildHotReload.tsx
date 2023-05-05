@@ -6,10 +6,10 @@ export function registerEsbuildHotReload() {
     source.addEventListener("change", (event: unknown) => {
       const { added, removed, updated } = parseChangeEvent(event);
       if (added.length > 0) {
-        console.log("added:", added);
+        console.log("[esbuild] added:", added);
       }
       if (removed.length > 0) {
-        console.log("removed:", removed);
+        console.log("[esbuild] removed:", removed);
       }
 
       const [...links] = document.getElementsByTagName("link");
@@ -43,12 +43,12 @@ export function registerEsbuildHotReload() {
     });
 
     source.addEventListener("connection-error", (event) =>
-      console.warn("esbuild event stream error:", event.data)
+      console.warn("[esbuild] esbuild event stream error:", event.data)
     );
 
-    console.log("hot reload enabled");
+    console.log("[esbuild] hot reload enabled");
   } catch (error) {
-    console.warn("failed to start esbuild listener", error);
+    console.warn("[esbuild] failed to start esbuild listener", error);
   }
 }
 

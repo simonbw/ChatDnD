@@ -17,6 +17,10 @@ export function getOpenAiKey(): string {
   return assertConfigured("OPENAI_API_KEY");
 }
 
+export function getStabilityKey(): string {
+  return assertConfigured("STABILITY_KEY");
+}
+
 export function getElevenLabsKey(): string {
   return process.env.ELEVEN_LABS_KEY ?? "";
 }

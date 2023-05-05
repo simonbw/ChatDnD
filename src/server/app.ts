@@ -5,6 +5,7 @@ import esbuildRouter from "./middleware/esbuildRouter";
 import helpersRouter from "./middleware/generationApiRouter";
 import { getStaticsMiddleware } from "./middleware/getStaticsMiddleware";
 import homeRouter from "./middleware/homeRouter";
+import miscDebugRouter from "./middleware/miscDebugRouter";
 import roomRouter from "./middleware/room/roomRouter";
 import voiceRouter from "./middleware/voiceRouter";
 import { RoomStore } from "./room/roomStore";
@@ -27,6 +28,7 @@ export async function makeApp() {
 
   // Routes
   app.use(homeRouter);
+  app.use(miscDebugRouter);
   app.use(esbuildRouter);
   app.use(voiceRouter);
   app.use(roomRouter);

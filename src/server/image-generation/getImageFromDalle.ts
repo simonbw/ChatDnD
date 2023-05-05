@@ -2,7 +2,7 @@ import { WebError } from "../WebError";
 import { openAi } from "../utils/openAiUtils";
 
 export async function getImageFromDalle(prompt: string): Promise<string> {
-  console.log(`drawing image with prompt: ${prompt}`);
+  console.log(`[generateImage] DALL-E drawing image with prompt: ${prompt}`);
   let apiResponse;
   try {
     apiResponse = await openAi().createImage({

@@ -49,8 +49,6 @@ export function makeInitialSystemMessage(
     .join("\n\n")
     .trim();
 
-  console.log("Initial Prompt Length:", content.length);
-
   return [
     {
       role: "system",

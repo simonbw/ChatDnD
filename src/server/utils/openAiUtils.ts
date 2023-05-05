@@ -40,7 +40,7 @@ export function parseDeltaStream(raw: Uint8Array): OpenAiStreamMessageDelta[] {
         const data = streamMessageSchema.parse(JSON.parse(line));
         return data.choices[0].delta;
       } catch (e) {
-        console.log("failed to parse:\n", line, "\n\n");
+        console.log("[OpenAi] failed to parse:\n", line, "\n\n");
         return null;
       }
     })

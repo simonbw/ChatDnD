@@ -1,10 +1,10 @@
 import { ChatCompletionRequestMessage } from "openai";
 import { z } from "zod";
 import { WebError } from "../WebError";
+import { Channel } from "../utils/Channel";
 import { simpleTextResponse } from "../utils/openAiUtils";
 import { Room } from "./Room";
 import { SerializedRoom } from "./roomSerialization";
-import { Channel } from "../utils/Channel";
 
 export class SummaryHistory {
   public onUpdate = new Channel<void>();
@@ -18,7 +18,6 @@ export class SummaryHistory {
 
     for (const [k, summary] of Object.entries(data)) {
       const chatIndex = z.coerce.number().parse(k);
-      console.log(`loaded summary ${chatIndex}: ${summary}`);
       this.summaries.set(chatIndex, Promise.resolve(summary));
     }
 
@@ -44,14 +43,12 @@ export class SummaryHistory {
     if (this.summaries.has(chatIndex)) {
       return this.summaries.get(chatIndex)!;
     } else {
-      console.log(`Summarizing ${chatIndex}`);
       const old =
         chatIndex === 0 ? Promise.resolve("") : this.getSummary(chatIndex - 1);
       const incoming = this.room.messages.getApiMessage(chatIndex);
       const summaryPromise = summarize(old, incoming);
       this.summaries.set(chatIndex, summaryPromise);
       summaryPromise.then((summary) => {
-        console.log(`saving completed summary: ${chatIndex}`);
         this.completedSummaries.set(chatIndex, summary);
         this.onUpdate.publish();
       });

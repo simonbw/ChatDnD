@@ -6,9 +6,10 @@ makeApp().then((app) => {
   const port = getPort();
   app.listen(port, () => {
     console.log(
-      `ChatDnD Server listening on port ${port}`,
+      `\nChatDnD Server listening on port ${port}\n`,
       "node_env:",
-      process.env.NODE_ENV
+      process.env.NODE_ENV,
+      "\n"
     );
   });
 });

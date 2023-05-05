@@ -14,12 +14,12 @@ const httpsAgent = new https.Agent({
 });
 
 router.get(routes.esbuild(), async (req, res) => {
-  console.log("Forwarding http://0.0.0.0:8000/esbuild to /esbuild");
+  const esbuildUrl = "http://0.0.0.0:8000/esbuild";
   try {
     startEventStream(res);
 
     // Request the event stream from the provided URL
-    const axiosRes = await axios.get<Readable>("http://0.0.0.0:8000/esbuild", {
+    const axiosRes = await axios.get<Readable>(esbuildUrl, {
       headers: { Accept: "text/event-stream" },
       responseType: "stream",
       httpsAgent,
@@ -27,7 +27,6 @@ router.get(routes.esbuild(), async (req, res) => {
 
     // Forward events from the response stream to the client
     axiosRes.data.on("data", (chunk: unknown) => {
-      // console.log("esbuild server sent data");
       res.write(chunk);
     });
 

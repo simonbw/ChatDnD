@@ -89,9 +89,9 @@ export class RoomStore {
   }
 
   public async initialize(): Promise<RoomStore> {
-    console.log("Initializing room store");
+    console.log("[RoomStore] Initializing room store...");
     await this.loadRooms();
-    console.log("Room store initialized");
+    console.log("[RoomStore] Room store initialized");
     return this;
   }
 
@@ -100,23 +100,23 @@ export class RoomStore {
       const db = await getDb();
       const cursor = await roomTable.run(db);
       const roomDatas = await cursor.toArray();
-      console.log("loading rooms:", roomDatas.length);
+      console.log(`[RoomStore] loading ${roomDatas.length} rooms:`);
       for (const roomData of roomDatas) {
         const parsed = roomSaveSchema.safeParse(roomData);
         if (parsed.success) {
-          console.log("Parsed room with id", parsed.data.id);
+          console.log("[RoomStore] Parsed room with id", parsed.data.id);
           if (!this.hasRoom(parsed.data.id)) {
             const room = new Room(roomData);
             this.rooms.set(room.id, room);
           } else {
-            console.log("Room already loaded:", parsed.data.id);
+            console.log("[RoomStore] Room already loaded:", parsed.data.id);
           }
         } else {
-          console.log("Found invalid saved room", parsed.error);
+          console.log("[RoomStore] Found invalid saved room:", parsed.error);
         }
       }
     } catch (error) {
-      console.error("error loading rooms", error);
+      console.error("[RoomStore] Error loading rooms:", error);
     }
   }
 

@@ -17,7 +17,6 @@ router.post(
   validateRequestBody(joinRoomRequestSchema),
   withRoom(),
   (req, res) => {
-    console.log("\n----- room join handler called -----\n");
     const room = req.params.room;
     if (!room.isOpenToJoin()) {
       return res.status(403).send({ message: "This room is not open to join" });

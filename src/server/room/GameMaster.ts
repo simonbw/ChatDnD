@@ -98,8 +98,6 @@ export class GameMaster {
     action: GameMasterAction,
     updateMessage: UpdateMessage
   ) {
-    console.log("processing action:", action);
-
     switch (action.name) {
       case "DrawCharacter": {
         const description = action.args[0];
@@ -135,7 +133,7 @@ export class GameMaster {
           });
         } else {
           console.warn(
-            "Trying to give item to non-existant character:",
+            "[GameMaster] Trying to give item to non-existant character:",
             characterName
           );
         }
@@ -153,7 +151,7 @@ export class GameMaster {
           });
         } else {
           console.warn(
-            "Trying to remove item from non-existant character:",
+            "[GameMaster] Trying to remove item from non-existant character:",
             characterName
           );
         }
@@ -170,7 +168,6 @@ export class GameMaster {
   }
 
   async playerAdded(player: Player) {
-    console.log(`GameMaster adding player: ${player.name}`);
     const otherPlayers = this.room.players.all.filter((p) => p.id != player.id);
     this.room.messages.addMessage(playerJoinMessage(player, otherPlayers));
   }

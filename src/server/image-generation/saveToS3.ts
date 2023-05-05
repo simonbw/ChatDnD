@@ -1,5 +1,6 @@
-import S3Client from "aws-sdk/clients/s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { Sharp } from "sharp";
+import { timed } from "../../client/utils/timeLogger";
 import { getAwsBucketName, getAwsCredentials } from "../utils/envUtils";
 
 export const s3Client = new S3Client({
@@ -7,24 +8,24 @@ export const s3Client = new S3Client({
   region: "us-east-1",
 });
 
-export async function saveToS3(
-  sharp: Sharp,
-  imageName: string
-): Promise<string> {
-  console.log("Saving to S3...");
+const baseUrl = `https://${getAwsBucketName()}.s3.amazonaws.com`;
 
-  try {
-    const buffer = await sharp.png({ force: true }).toBuffer();
-    const response = await s3Client
-      .upload({
-        Bucket: getAwsBucketName(),
-        Key: imageName,
-        Body: buffer,
-      })
-      .promise();
-    return response.Location;
-  } catch (error) {
-    console.error(error);
-    throw error;
+export const saveToS3 = timed(
+  "saveToS3",
+  async (sharp: Sharp, imageName: string): Promise<string> => {
+    try {
+      const buffer = await sharp.png({ force: true }).toBuffer();
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: getAwsBucketName(),
+          Key: imageName,
+          Body: buffer,
+        })
+      );
+      return `${baseUrl}/${encodeURIComponent(imageName)}`;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
-}
+);
