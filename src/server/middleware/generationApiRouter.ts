@@ -13,6 +13,7 @@ import {
   generateNameMessage,
   generatePortraitMessage,
 } from "../prompts/characterGenerationPrompts";
+import { makeCharacterPortraitCaption } from "../prompts/makeCharacterPortraitCaption";
 import { cleanupChatResponse, simpleTextResponse } from "../utils/openAiUtils";
 import { validateRequestBody } from "./zodMiddleware";
 
@@ -102,18 +103,9 @@ router.post(
   routes.generate.character.portrait(),
   validateRequestBody(generateCharacterRequestBody),
   async (req, res) => {
-    let caption = req.body.portrait?.caption;
-    if (!caption) {
-      console.log("Getting portrait prompt...");
-      const adjectives = cleanupChatResponse(
-        await simpleTextResponse(generatePortraitMessage(req.body), {
-          temperature: 0.5,
-        }),
-        { singlePhrase: true, stripQuotes: true }
-      );
-
-      caption = `A ${req.body.race} ${req.body.characterClass}. ${adjectives}`;
-    }
+    const caption =
+      req.body.portrait?.caption ||
+      (await makeCharacterPortraitCaption(req.body));
 
     res.send({
       portrait: {

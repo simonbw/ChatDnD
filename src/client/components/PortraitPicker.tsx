@@ -17,6 +17,7 @@ export function PortraitPicker({
 }) {
   return (
     <figure className="flex flex-col items-center text-center max-w-64 rounded-md overflow-hidden">
+      <span className="whitespace-pre-wrap text-xs">{portrait?.url}</span>
       <div className="w-full flex justify-center items-center relative">
         <img
           src="/static/images/missing-portrait.png"
@@ -30,7 +31,7 @@ export function PortraitPicker({
             src={portrait.url}
             className={classNames(
               "w-full h-full aspect-square absolute",
-              generating ? "opacity-0" : "opacity-100"
+              generating && "opacity-0"
             )}
             width={512}
             height={512}

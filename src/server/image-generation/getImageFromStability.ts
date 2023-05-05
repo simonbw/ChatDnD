@@ -27,6 +27,11 @@ export const getImageFromStability = timed(
         text_prompts: [
           {
             text: prompt,
+            weight: 1,
+          },
+          {
+            text: "nsfw",
+            weight: -0.5,
           },
         ],
         cfg_scale: 7,
@@ -34,7 +39,8 @@ export const getImageFromStability = timed(
         height: 512,
         width: 512,
         samples: 1,
-        steps: 15,
+        steps: 30,
+        style_prompt: "fantasy-art",
       },
       {
         headers: {
@@ -48,7 +54,8 @@ export const getImageFromStability = timed(
 
     if (response.status !== 200) {
       console.error(
-        "Error getting image from Stability:" + response.statusText
+        "[generateImage] Error getting image from Stability:" +
+          response.statusText
       );
       throw new WebError(
         "Error getting image from Stability:" + response.statusText,
@@ -63,6 +70,10 @@ export const getImageFromStability = timed(
         `[generateImage] statbility returned malformed response: ${parseResult.error.message}`
       );
       throw new WebError("Stability returned malformed response", 500);
+    }
+
+    if (parseResult.data.artifacts[0].finishReason === "CONTENT_FILTER") {
+      console.warn("Stability filtered content");
     }
 
     return Buffer.from(parseResult.data.artifacts[0].base64, "base64");

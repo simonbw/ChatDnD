@@ -1,7 +1,7 @@
 import { generateImage } from "./generateImage";
 
 export function generateStoryCharacterImage(description: string) {
-  const prompt = `Masterpiece charcoal sketch character portrait. White background. The drawing is of "${description}"`;
+  const prompt = `Masterpiece charcoal sketch character portrait. White background. ${description}`;
   return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "story-images",
@@ -9,7 +9,7 @@ export function generateStoryCharacterImage(description: string) {
 }
 
 export function generateStorySceneImage(description: string) {
-  const prompt = `high quality medieval painting on a white background. The drawing is of "${description}"`;
+  const prompt = `High quality medieval painting on a white background. ${description}`;
   return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "story-images",
@@ -17,7 +17,7 @@ export function generateStorySceneImage(description: string) {
 }
 
 export function generatePortraitImage(description: string) {
-  const prompt = `Fantasy character portrait. Concept Art. Realistic painting. ${description}`;
+  const prompt = `Fantasy character art. Character portrait. Dungeons and Dragons. White background. Dramatic lighting. Looking left. ${description}`;
   return generateImage(prompt, {
     shouldRemoveBackground: false,
     s3Folder: "character-portraits",
@@ -31,3 +31,5 @@ export function generateInventoryImage(description: string) {
     s3Folder: "character-portraits",
   });
 }
+
+`Fantasy character portrait. Detailed, realistic oil painting. Dramatic lighting. `;

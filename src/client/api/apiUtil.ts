@@ -19,12 +19,15 @@ export function makeJsonEndpoint<TReq extends ZodType, TRes extends ZodType>(
       body = JSON.stringify(params);
       headers["Content-Type"] = "application/json";
     }
-    return await fetch(url, {
+    console.time(pathname);
+    const result = await fetch(url, {
       method,
       body,
       headers,
     })
       .then((d) => d.json())
       .then((d) => responseSchema.parse(d));
+    console.timeEnd(pathname);
+    return result;
   };
 }

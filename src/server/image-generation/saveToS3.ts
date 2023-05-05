@@ -22,7 +22,7 @@ export const saveToS3 = timed(
           Body: buffer,
         })
       );
-      return `${baseUrl}/${encodeURIComponent(imageName)}`;
+      return `${baseUrl}/${imageName}`;
     } catch (error) {
       console.error(error);
       throw error;

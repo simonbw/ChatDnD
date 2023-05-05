@@ -17,9 +17,8 @@ interface Options {
   brighten?: number;
   s3Folder?: string;
 }
-
-export const generateImage2 = timed(
-  "generateImage2",
+export const generateImage = timed(
+  "generateImage",
   async (prompt: string, options: Options = {}): Promise<string> => {
     const {
       shouldRemoveBackground = true,
@@ -27,10 +26,8 @@ export const generateImage2 = timed(
       brighten = 1.1,
     } = options;
     if (isDrawingEnabled()) {
-      const remoteImageUrl = await getImageFromDalle(prompt);
-      const imageName =
-        s3Folder + "/" + last(new URL(remoteImageUrl).pathname.split("/"));
-      const rawBuffer = await fetchImageBuffer(remoteImageUrl);
+      const imageName = s3Folder + "/" + randomUUID() + ".png";
+      const rawBuffer = await getImageFromStability(prompt);
       const processedBuffer = shouldRemoveBackground
         ? await removeBackground(rawBuffer)
         : sharp(rawBuffer).modulate({ brightness: brighten });
@@ -56,8 +53,8 @@ const saveToFile = timed(
   }
 );
 
-export const generateImage = timed(
-  "generateImage",
+export const generateImage2 = timed(
+  "generateImage2",
   async (prompt: string, options: Options = {}): Promise<string> => {
     const {
       shouldRemoveBackground = true,
@@ -65,8 +62,10 @@ export const generateImage = timed(
       brighten = 1.1,
     } = options;
     if (isDrawingEnabled()) {
-      const imageName = s3Folder + "/" + randomUUID() + ".png";
-      const rawBuffer = await getImageFromStability(prompt);
+      const remoteImageUrl = await getImageFromDalle(prompt);
+      const imageName =
+        s3Folder + "/" + last(new URL(remoteImageUrl).pathname.split("/"));
+      const rawBuffer = await fetchImageBuffer(remoteImageUrl);
       const processedBuffer = shouldRemoveBackground
         ? await removeBackground(rawBuffer)
         : sharp(rawBuffer).modulate({ brightness: brighten });
