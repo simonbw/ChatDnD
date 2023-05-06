@@ -11,12 +11,14 @@ import {
   playerLeaveMessage,
 } from "../prompts/roomEventPrompts";
 import { ActionQueue } from "../utils/ActionQueue";
+import { getStorytellingGPTModel } from "../utils/envUtils";
 import { streamTextResponse } from "../utils/openAiUtils";
 import { GameMasterAction } from "./GameMasterActions";
 import { Room } from "./Room";
 import { RoomMessageBuilder, UpdateMessage } from "./RoomMessageBuilder";
 import { SerializedRoom } from "./roomSerialization";
 
+const LAST_CHATS_MAX_CHARACTERS = 800;
 /** The class in charge of generating responses to players */
 export class GameMaster {
   private mainChatQueue = new ActionQueue(); // TODO: Use this
@@ -72,7 +74,7 @@ export class GameMaster {
     let count = 0;
     let index = allMessages.length - 1;
 
-    while (index > 0 && count < 800) {
+    while (index > 0 && count < LAST_CHATS_MAX_CHARACTERS) {
       index -= 1;
       count += allMessages[index].content.length;
     }
@@ -83,10 +85,12 @@ export class GameMaster {
   private async respond(
     additionalMessages: ChatCompletionRequestMessage[] = []
   ) {
-    const streamPromise = streamTextResponse([
-      ...(await this.getHistory()),
-      ...additionalMessages,
-    ]);
+    const streamPromise = streamTextResponse(
+      [...(await this.getHistory()), ...additionalMessages],
+      {
+        model: getStorytellingGPTModel(),
+      }
+    );
     const messageBuilder = new RoomMessageBuilder(
       streamPromise,
       (action, updateMessage) => this.processAction(action, updateMessage)
@@ -109,7 +113,7 @@ export class GameMaster {
         }));
         break;
       }
-      case "DrawScene": {
+      case "DrawLocation": {
         const description = action.args[0];
         const imageUrl = await generateStorySceneImage(description);
         const newImage = { description: description, url: imageUrl };

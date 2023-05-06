@@ -29,12 +29,14 @@ export function Message({ message }: { message: RoomMessage }) {
     >
       <div
         className={classNames(
-          "border-sepia/50 hyphens-auto",
+          "border-sepia/50",
           "sm:w-28 sm:flex-shrink-0 sm:text-right sm:pr-2",
           "sm:border-r"
         )}
       >
-        <NameTag size="sm">{message.name}</NameTag>
+        <NameTag size="sm" className="block w-full max-w-full">
+          {message.name}
+        </NameTag>
       </div>
       <div className="flex-grow">
         {contentItems.map((item, i) => {

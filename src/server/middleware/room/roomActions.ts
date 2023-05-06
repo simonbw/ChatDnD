@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { joinRoomRequestSchema } from "../../../common/api-schemas/roomApiSchemas";
 import {
+  joinRoomRequestSchema,
   messageRequestSchema,
-  withRoomIdSchema,
-} from "../../../common/models/apiSchemas";
+  redrawInventoryRequestSchema,
+} from "../../../common/api-schemas/roomApiSchemas";
+import { withRoomIdSchema } from "../../../common/models/apiSchemas";
 import { routes } from "../../../common/routes";
 import { validateRequest, validateRequestBody } from "../zodMiddleware";
 import { withRoom } from "./withRoom";
@@ -64,3 +65,15 @@ router.get(routes.room.clearMessages(":roomId"), withRoom(), (req, res) => {
   room.softReset();
   res.send({ success: true });
 });
+
+// Redraw inventory
+router.post(
+  routes.room.redrawInventory(":roomId"),
+  validateRequestBody(redrawInventoryRequestSchema),
+  withRoom(),
+  async (req, res) => {
+    const room = req.params.room;
+    await room.players.redrawInventory(req.body.playerId);
+    res.send({ success: true });
+  }
+);

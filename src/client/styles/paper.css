@@ -21,4 +21,20 @@
       border-width: 48px;
     }
   }
+
+  .paper-small {
+    @apply max-w-80 py-2;
+    @apply text-sepia-700;
+
+    filter: drop-shadow(0 5px 13px rgb(0 0 0 / 0.45))
+      drop-shadow(0 8px 5px rgb(0 0 0 / 0.25));
+
+    /* 9-slice background hack with border */
+    border-image: url("/static/images/parchment.png");
+    border-image-slice: 96 fill;
+    border-image-repeat: round round;
+    border-color: transparent;
+    border-image-width: 36px;
+    border-width: 18px;
+  }
 }

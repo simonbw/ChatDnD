@@ -9,7 +9,7 @@ import { Readable } from "stream";
 import { z } from "zod";
 import { last } from "../../common/utils/arrayUtils";
 import { WebError } from "../WebError";
-import { getGPTModel, getOpenAiKey } from "./envUtils";
+import { getDefaultGPTModel, getOpenAiKey } from "./envUtils";
 import { makeSingleton } from "./makeSingleton";
 
 export const openAi = makeSingleton(
@@ -56,7 +56,7 @@ export async function simpleTextResponse(
   config: Partial<CreateChatCompletionRequest> = {}
 ) {
   const chatResponse = await openAi().createChatCompletion({
-    model: getGPTModel(),
+    model: getDefaultGPTModel(),
     messages,
     ...config,
   });
@@ -73,7 +73,7 @@ export async function streamTextResponse(
   chatConfig: Partial<CreateChatCompletionRequest> = {}
 ): Promise<Readable> {
   const config = {
-    model: getGPTModel(),
+    model: getDefaultGPTModel(),
     messages,
     ...chatConfig,
     stream: true,

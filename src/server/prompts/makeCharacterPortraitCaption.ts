@@ -1,5 +1,6 @@
 import { Character } from "../../common/models/characterModel";
 import { Pronouns } from "../../common/models/pronouns";
+import { getGenerationGPTModel } from "../utils/envUtils";
 import { cleanupChatResponse, simpleTextResponse } from "../utils/openAiUtils";
 import { generatePortraitMessage } from "./characterGenerationPrompts";
 
@@ -8,6 +9,7 @@ export async function makeCharacterPortraitCaption(character: Character) {
   const adjectives = cleanupChatResponse(
     await simpleTextResponse(generatePortraitMessage(character), {
       temperature: 0.5,
+      model: getGenerationGPTModel(),
     }),
     { singlePhrase: true, stripQuotes: true }
   );

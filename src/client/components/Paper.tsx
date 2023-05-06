@@ -4,10 +4,14 @@ import { classNames } from "../utils/classNames";
 export function Paper({
   children,
   className,
+  small,
   ...rest
-}: PropsWithChildren<HTMLProps<HTMLDivElement>>) {
+}: PropsWithChildren<HTMLProps<HTMLDivElement>> & { small?: boolean }) {
   return (
-    <div className={classNames("paper", className)} {...rest}>
+    <div
+      className={classNames(small ? "paper-small" : "paper", className)}
+      {...rest}
+    >
       {children}
     </div>
   );

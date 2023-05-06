@@ -1,7 +1,7 @@
 import { makeNoise2D } from "open-simplex-noise";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { clamp, smoothStep } from "../../common/utils/mathUtils";
-import { useLoadImage } from "../hooks/useLoadImage";
+import { useImageLoaded } from "../hooks/useLoadImage";
 import { classNames } from "../utils/classNames";
 
 export function DissolveInImageFancy({
@@ -25,9 +25,17 @@ export function DissolveInImageFancy({
   const noise = useMemo(() => makeNoise2D(Date.now()), []);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const image = useLoadImage(src, () => {
+  const loaded = useImageLoaded(src, () => {
     setT(() => 0);
   });
+
+  const image = useMemo(() => {
+    const img = new Image();
+    if (src) {
+      img.src = src;
+    }
+    return img;
+  }, [src]);
 
   useEffect(() => {
     if (t >= 0 && t <= 1) {
@@ -45,7 +53,7 @@ export function DissolveInImageFancy({
             willReadFrequently: true,
             alpha: true,
           });
-          if (ctx && image) {
+          if (ctx && loaded) {
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             ctx.drawImage(image, 0, 0);
 

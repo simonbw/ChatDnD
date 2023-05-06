@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoadImage } from "../hooks/useLoadImage";
+import { useImageLoaded } from "../hooks/useLoadImage";
 import { classNames } from "../utils/classNames";
 
 export function DissolveInImage({
@@ -15,16 +15,16 @@ export function DissolveInImage({
   duration?: number;
   fadeEdges?: boolean;
 }) {
-  const image = useLoadImage(src, () => {});
+  const loaded = useImageLoaded(src);
 
   return (
     <img
       key={src}
       src={src}
       className={classNames(
-        className,
-        "dissolve-in mix-blend-multiply",
-        image?.complete ? "" : "opacity-0"
+        "fade-edges mix-blend-multiply",
+        !loaded && "opacity-0",
+        className
       )}
       style={{ transitionDuration: `${duration}ms` }}
       {...rest}

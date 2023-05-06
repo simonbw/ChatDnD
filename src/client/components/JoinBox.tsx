@@ -152,6 +152,25 @@ export function JoinBox({
         <fieldset className="block w-full flex-grow">
           <label className="block small-caps" htmlFor="character-name">
             Character Name
+            <Button
+              onClick={async (e) => {
+                e.preventDefault();
+                startGeneratingField("name");
+                try {
+                  updateCharacter(
+                    await generationApiClient.characterName(character)
+                  );
+                } finally {
+                  stopGeneratingField("name");
+                }
+              }}
+              type="button"
+              className="rounded-full w-8 h-8 mb-[-1em]"
+              kind="text"
+              loading={generating.name}
+            >
+              🎲
+            </Button>
           </label>
           <input
             type="text"

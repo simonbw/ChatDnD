@@ -87,6 +87,10 @@ export class RoomMessages {
       .filter((message): message is RoomMessage => message != null);
   }
 
+  getAllMessages(): readonly RoomMessage[] {
+    return this.messages;
+  }
+
   getApiMessages(): ChatCompletionRequestMessage[] {
     return [
       ...this.messages

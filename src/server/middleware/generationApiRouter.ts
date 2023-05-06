@@ -14,6 +14,7 @@ import {
   generatePortraitMessage,
 } from "../prompts/characterGenerationPrompts";
 import { makeCharacterPortraitCaption } from "../prompts/makeCharacterPortraitCaption";
+import { getGenerationGPTModel } from "../utils/envUtils";
 import { cleanupChatResponse, simpleTextResponse } from "../utils/openAiUtils";
 import { validateRequestBody } from "./zodMiddleware";
 
@@ -31,12 +32,14 @@ router.post(
 
     character.name = await simpleTextResponse(generateNameMessage(character), {
       temperature: 1,
+      model: getGenerationGPTModel(),
     });
 
     character.background = await simpleTextResponse(
       generateBackgroundMessage(character),
       {
         temperature: 1,
+        model: getGenerationGPTModel(),
       }
     );
 
@@ -44,6 +47,7 @@ router.post(
       generateDescriptionMessage(character),
       {
         temperature: 1,
+        model: getGenerationGPTModel(),
       }
     );
 
@@ -51,6 +55,7 @@ router.post(
       caption: cleanupChatResponse(
         await simpleTextResponse(generatePortraitMessage(req.body), {
           temperature: 1,
+          model: getGenerationGPTModel(),
         })
       ),
       url: "",
@@ -68,9 +73,13 @@ router.post(
   routes.generate.character.name(),
   validateRequestBody(generateCharacterRequestBody),
   async (req, res) => {
-    const name = await simpleTextResponse(generateNameMessage(req.body), {
-      temperature: 1,
-    });
+    const name = cleanupChatResponse(
+      await simpleTextResponse(generateNameMessage(req.body), {
+        temperature: 1.2,
+        model: getGenerationGPTModel(),
+      }),
+      { singlePhrase: true }
+    );
     res.send({ name });
   }
 );
@@ -81,7 +90,7 @@ router.post(
   async (req, res) => {
     const background = await simpleTextResponse(
       generateBackgroundMessage(req.body),
-      { temperature: 1 }
+      { temperature: 1, model: getGenerationGPTModel() }
     );
     res.send({ background });
   }
@@ -93,7 +102,7 @@ router.post(
   async (req, res) => {
     const description = await simpleTextResponse(
       generateDescriptionMessage(req.body),
-      { temperature: 1 }
+      { temperature: 1, model: getGenerationGPTModel() }
     );
     res.send({ description });
   }

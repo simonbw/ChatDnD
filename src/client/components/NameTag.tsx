@@ -14,12 +14,12 @@ export function NameTag({
   const words = s.split(/\s/) ?? [];
 
   return (
-    <span className={classNames(className, "text-sepia-500 space-x-1")}>
+    <span className={classNames(className, "text-sepia-500")}>
       {words.map((word, i) => {
         const parts = word.split(/(?=[A-Z])/) ?? [];
 
         return (
-          <span key={i} className={classNames("")}>
+          <Fragment key={i}>
             {parts.map((part, j) => {
               const firstLetter = part[0];
               const rest = part.substring(1);
@@ -55,8 +55,8 @@ export function NameTag({
                   )}
                 </Fragment>
               );
-            })}
-          </span>
+            })}{" "}
+          </Fragment>
         );
       })}
     </span>

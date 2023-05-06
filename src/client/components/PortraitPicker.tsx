@@ -1,6 +1,7 @@
 import { Transition } from "@headlessui/react";
 import React from "react";
 import { Character } from "../../common/models/characterModel";
+import { useImageLoaded } from "../hooks/useLoadImage";
 import { classNames } from "../utils/classNames";
 import { Button } from "./Button";
 import { DissolveInImage } from "./DissolveInImage";
@@ -15,15 +16,16 @@ export function PortraitPicker({
   generating: boolean;
   generate: (newPrompt: boolean) => void;
 }) {
+  const loaded = useImageLoaded(portrait?.url);
+  const busy = generating || !loaded;
   return (
     <figure className="flex flex-col items-center text-center max-w-64 rounded-md overflow-hidden">
-      <span className="whitespace-pre-wrap text-xs">{portrait?.url}</span>
       <div className="w-full flex justify-center items-center relative">
         <img
           src="/static/images/missing-portrait.png"
           className={classNames(
             "w-full h-full aspect-square mix-blend-multiply transition-opacity duration-1000",
-            generating ? "opacity-50" : "opacity-0"
+            busy ? "opacity-50" : "opacity-0"
           )}
         />
         {portrait?.url && (
@@ -31,7 +33,7 @@ export function PortraitPicker({
             src={portrait.url}
             className={classNames(
               "w-full h-full aspect-square absolute",
-              generating && "opacity-0"
+              busy && "opacity-0"
             )}
             width={512}
             height={512}
@@ -41,7 +43,7 @@ export function PortraitPicker({
 
         <Transition
           as={React.Fragment}
-          show={generating}
+          show={busy}
           enter="transition-opacity duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -60,7 +62,7 @@ export function PortraitPicker({
           </div>
         </Transition>
 
-        {!generating && (
+        {!busy && (
           <div
             className={classNames(
               "absolute w-full h-full aspect-square",

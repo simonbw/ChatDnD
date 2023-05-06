@@ -25,8 +25,20 @@ export function getElevenLabsKey(): string {
   return process.env.ELEVEN_LABS_KEY ?? "";
 }
 
-export function getGPTModel(): string {
+export function getDefaultGPTModel(): string {
   return process.env.GPT_MODEL ?? "gpt-3.5-turbo";
+}
+
+export function getStorytellingGPTModel(): string {
+  return process.env.STORYTELLING_GPT_MODEL ?? "gpt-3.5-turbo";
+}
+
+export function getSummarizingGPTModel(): string {
+  return process.env.SUMMARIZING_GPT_MODEL ?? "gpt-3.5-turbo";
+}
+
+export function getGenerationGPTModel(): string {
+  return process.env.GENERATION_GPT_MODEL ?? "gpt-3.5-turbo";
 }
 
 export function getDrawnImageFolder(): string {

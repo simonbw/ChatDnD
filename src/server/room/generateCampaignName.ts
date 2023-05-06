@@ -1,12 +1,12 @@
 import { WebError } from "../WebError";
-import { getGPTModel } from "../utils/envUtils";
+import { getGenerationGPTModel } from "../utils/envUtils";
 import { cleanupChatResponse, openAi } from "../utils/openAiUtils";
 
 export async function generateCampaignName(): Promise<string> {
   let content: string | undefined = undefined;
   try {
     const response = await openAi().createChatCompletion({
-      model: getGPTModel(),
+      model: getGenerationGPTModel(),
       messages: [
         {
           role: "user",

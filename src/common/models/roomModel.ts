@@ -1,4 +1,4 @@
-import { number, z } from "zod";
+import { z } from "zod";
 import { playerSchema } from "./playerModel";
 
 export const roomMessageRoleSchema = z.union([

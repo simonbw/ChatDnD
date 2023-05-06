@@ -98,12 +98,14 @@ export class RoomMessageBuilder {
 
   endAction() {
     const action = parseGMAction(this.currentActionText!);
-    this.message.actions ??= [];
-    this.message.actions.push(action);
-    this.currentActionText = undefined;
-    this.actionPromises.push(
-      this.processAction(action, (updater) => this.updateMessage(updater))
-    );
+    if (action) {
+      this.message.actions ??= [];
+      this.message.actions.push(action);
+      this.currentActionText = undefined;
+      this.actionPromises.push(
+        this.processAction(action, (updater) => this.updateMessage(updater))
+      );
+    }
   }
 
   getMessage(): RoomMessage {

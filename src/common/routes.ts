@@ -25,8 +25,11 @@ const r = {
     stateStream: (roomId: string) => `${r.room.base(roomId)}/state-stream`,
     join: (roomId: string) => `${r.room.base(roomId)}/join`,
     postMessage: (roomId: string) => `${r.room.base(roomId)}/message`,
+    // Debug stuff
     clearMessages: (roomId: string) => `${r.room.base(roomId)}/soft-reset`,
     json: (roomId: string) => `${r.room.base(roomId)}/json`,
+    redrawInventory: (roomId: string) =>
+      `${r.room.base(roomId)}/redraw-inventory`,
   },
 };
 

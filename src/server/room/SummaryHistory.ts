@@ -2,6 +2,7 @@ import { ChatCompletionRequestMessage } from "openai";
 import { z } from "zod";
 import { WebError } from "../WebError";
 import { Channel } from "../utils/Channel";
+import { getSummarizingGPTModel } from "../utils/envUtils";
 import { simpleTextResponse } from "../utils/openAiUtils";
 import { Room } from "./Room";
 import { SerializedRoom } from "./roomSerialization";
@@ -23,7 +24,6 @@ export class SummaryHistory {
 
     room.messages.onAddComplete.subscribe((finalMessage) => {
       // Eagerly start creating summaries
-      // TODO: Make sure we're actually summarizing the completed message
       this.getSummary(finalMessage.id);
     });
   }
@@ -43,10 +43,11 @@ export class SummaryHistory {
     if (this.summaries.has(chatIndex)) {
       return this.summaries.get(chatIndex)!;
     } else {
-      const old =
+      const previousSummary =
         chatIndex === 0 ? Promise.resolve("") : this.getSummary(chatIndex - 1);
-      const incoming = this.room.messages.getApiMessage(chatIndex);
-      const summaryPromise = summarize(old, incoming);
+      console.log(`[summaryHistory] Summarizing chat #${chatIndex}`);
+      const messageToAdd = this.room.messages.getApiMessage(chatIndex);
+      const summaryPromise = summarize(previousSummary, messageToAdd);
       this.summaries.set(chatIndex, summaryPromise);
       summaryPromise.then((summary) => {
         this.completedSummaries.set(chatIndex, summary);
@@ -57,6 +58,7 @@ export class SummaryHistory {
   }
 }
 
+// TODO: Include more than one message for summary?
 async function summarize(
   oldSummary: Promise<string>,
   incomingMessage: ChatCompletionRequestMessage
@@ -81,8 +83,10 @@ async function summarize(
         content: lines.join("\n"),
       },
     ],
-    { temperature: 0.0 } // Consistent
+    { temperature: 0.0, model: getSummarizingGPTModel() } // Consistent
   );
+
+  // TODO: Guarantee length.
 
   return newSummary;
 }

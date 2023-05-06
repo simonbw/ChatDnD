@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { routes } from "../../common/routes";
-import { generateImage } from "../image-generation/generateImage";
+import { generateImageStability } from "../image-generation/generateImage";
 import { basicHtml } from "../pages/pageHtml";
 import { validateRequestBody } from "./zodMiddleware";
 
@@ -32,7 +32,7 @@ router.post(
     })
   ),
   async (req, res) => {
-    const url = await generateImage(req.body.prompt, {
+    const url = await generateImageStability(req.body.prompt, {
       shouldRemoveBackground: req.body.shouldRemoveBackground ?? false,
       s3Folder: "",
     });

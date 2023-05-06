@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export function useLoadImage(
+export function useImageLoaded(
   src: string | undefined,
-  onLoad: () => void
-): HTMLImageElement | undefined {
+  onLoad?: () => void
+): boolean {
+  const [loaded, setLoaded] = useState(false);
+
   const imageRef = useRef<HTMLImageElement>();
   const callbackRef = useRef(onLoad);
   callbackRef.current = onLoad;
@@ -11,8 +13,10 @@ export function useLoadImage(
   useEffect(() => {
     const image = new Image();
     imageRef.current = image;
+    setLoaded(false);
 
     const wrappedOnLoad = () => {
+      setLoaded(true);
       callbackRef.current?.();
     };
     image.addEventListener("load", wrappedOnLoad);
@@ -24,5 +28,5 @@ export function useLoadImage(
     return () => image.removeEventListener("load", wrappedOnLoad);
   }, [src]);
 
-  return imageRef.current;
+  return loaded;
 }

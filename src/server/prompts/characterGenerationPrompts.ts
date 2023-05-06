@@ -1,6 +1,5 @@
 import { ChatCompletionRequestMessage } from "openai";
 import { Character } from "../../common/models/characterModel";
-import { omit } from "../../common/utils/arrayUtils";
 
 function baseInfo(character: Partial<Character>): string {
   let lines = [`We are generating a fantasy RPG player character.`];
@@ -58,7 +57,7 @@ export function generateNameMessage(
   return [
     {
       role: "user",
-      content: `${base}. Please suggest a name for this character. Response with only the name, no extra punctuation.`,
+      content: `${base}. Please suggest a full name for this character. Response with only the name, no extra punctuation.`,
     },
   ];
 }

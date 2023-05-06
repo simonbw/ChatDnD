@@ -23,4 +23,17 @@
     margin-top: 0.25em;
     margin-bottom: 0.25em;
   }
+
+  .message em {
+    font-style: italic;
+    letter-spacing: -0.1px;
+  }
+
+  .message strong {
+    font-weight: bold;
+  }
+
+  .message blockquote {
+    @apply border-l-4 border-sepia/20 pl-4;
+  }
 }

@@ -37,44 +37,69 @@ export class RoomPlayers {
 
   async giveItem(playerId: string, itemToAdd: InventoryItem) {
     const player = this.byId(playerId);
-    if (player) {
-      const itemIndex = player.character.inventory.findIndex(
-        (item) => item.name === itemToAdd.name
+    if (!player) {
+      console.warn("Giving item to non-existant player", playerId);
+      return;
+    }
+
+    const itemIndex = player.character.inventory.findIndex(
+      (item) => item.name === itemToAdd.name
+    );
+    if (itemIndex >= 0) {
+      // Existing item, update quatnity
+      this.update(
+        player.id,
+        iassign(
+          player,
+          (p) => p.character.inventory[itemIndex].quantity,
+          (quantity) => quantity + itemToAdd.quantity
+        )
       );
-      if (itemIndex >= 0) {
-        // Existing item, update quatnity
-        this.update(
-          player.id,
-          iassign(
-            player,
-            (p) => p.character.inventory[itemIndex].quantity,
-            (quantity) => quantity + itemToAdd.quantity
-          )
-        );
-      } else {
-        const index = player.character.inventory.length;
-        this.update(
-          player.id,
-          iassign(
-            player,
-            (p) => p.character.inventory,
-            (inventory) => [...inventory, itemToAdd]
-          )
-        );
-        // Make sure we add an image if it doesn't already have one.
-        if (!itemToAdd.imageUrl) {
-          generateInventoryImage(itemToAdd.description).then((imageUrl) =>
-            this.update(player.id, (p) =>
-              iassign(
-                p,
-                (p) => p.character.inventory[index].imageUrl,
-                () => imageUrl
-              )
+    } else {
+      const index = player.character.inventory.length;
+      this.update(
+        player.id,
+        iassign(
+          player,
+          (p) => p.character.inventory,
+          (inventory) => [...inventory, itemToAdd]
+        )
+      );
+      // Make sure we add an image if it doesn't already have one.
+      if (!itemToAdd.imageUrl) {
+        generateInventoryImage(itemToAdd).then((imageUrl) =>
+          this.update(player.id, (p) =>
+            iassign(
+              p,
+              (p) => p.character.inventory[index].imageUrl,
+              () => imageUrl
             )
-          );
-        }
+          )
+        );
       }
     }
+  }
+
+  async redrawInventory(playerId: string) {
+    const player = this.byId(playerId);
+
+    if (!player) {
+      console.warn("Player doesn't exist:", playerId);
+      return;
+    }
+
+    const promises = player.character.inventory.map(async (item, index) => {
+      const imageUrl = await generateInventoryImage(item);
+      this.update(player.id, (p) =>
+        iassign(
+          p,
+          (p) => p.character.inventory[index].imageUrl,
+          () => imageUrl
+        )
+      );
+    });
+
+    await Promise.all(promises);
   }
 
   async removeItem(

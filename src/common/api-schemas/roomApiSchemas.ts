@@ -11,3 +11,5 @@ export const messageRequestSchema = z.object({
 });
 
 export const withRoomIdSchema = z.object({ roomId: z.string().nonempty() });
+
+export const redrawInventoryRequestSchema = z.object({ playerId: z.string() });

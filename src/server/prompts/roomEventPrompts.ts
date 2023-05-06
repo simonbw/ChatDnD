@@ -4,6 +4,7 @@ import {
   possessivePronoun,
 } from "../../common/models/pronouns";
 import { RoomMessage } from "../../common/models/roomModel";
+import { actionNameEnum } from "./abilitiesPromptContent";
 
 export function playerJoinMessage(
   player: Player,
@@ -19,7 +20,7 @@ export function playerJoinMessage(
     `Here is a description of ${character.name}:\n"${character.description}"\n`,
     `Please give ${character.name} ${possessivePronoun(
       character.pronouns
-    )} starting items.`,
+    )} starting items using the {${actionNameEnum.Enum.GiveItem}} action.`,
   ];
 
   if (otherPlayers.length == 0) {

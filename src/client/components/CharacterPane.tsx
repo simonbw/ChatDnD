@@ -2,7 +2,7 @@ import React from "react";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useRoom } from "../contexts/roomContext";
 import { classNames } from "../utils/classNames";
-import { DissolveInImage } from "./DissolveInImage";
+import { InventoryPanel } from "./InventoryPanel";
 import { JoinBox } from "./JoinBox";
 
 export function CharacterPane() {
@@ -63,25 +63,7 @@ export function CharacterPane() {
           </h3>
           <div className="indent-4">{character.background}</div>
         </section>
-        <section className="clear-both pt-2">
-          <h3 className="font-nametag first-letter:text-lg first-letter:leading-none underline underline-offset-1">
-            Inventory
-          </h3>
-          <ul className="grid grid-cols-4 tracking-tight gap-4">
-            {character.inventory.map((item) => (
-              <li>
-                {item.imageUrl && (
-                  <DissolveInImage src={item.imageUrl} fadeEdges />
-                )}
-                <b>
-                  {item.name}
-                  {item.quantity > 1 ? ` (x${item.quantity})` : ""}
-                </b>{" "}
-                — {item.description}
-              </li>
-            ))}
-          </ul>
-        </section>
+        <InventoryPanel inventory={character.inventory} />
       </div>
     </div>
   );

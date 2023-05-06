@@ -3,7 +3,7 @@ import { Player } from "../../common/models/playerModel";
 
 export const actionNameEnum = z.enum([
   "DrawCharacter",
-  "DrawScene",
+  "DrawLocation",
   "GiveItem",
   "RemoveItem",
 ]);
@@ -53,18 +53,30 @@ export const abilitiesPromptContent = (players: Player[]) => {
 
     abilityDescriptor({
       name: actionNameEnum.Values.DrawCharacter,
-      description: "Generates an image of a character for the players to see.",
+      description:
+        "Generates an image of a character for the players to see. " +
+        "You should use this when players first see or meet new characters. " +
+        "You should not use this to draw the player's characters themselves.",
       parameters: [{ name: "Visual Description", description: "" }],
     }),
     abilityDescriptor({
-      name: actionNameEnum.Values.DrawScene,
-      description: "Generates an image of a scene for the players to see.",
-      parameters: [{ name: "Visual Description", description: "" }],
+      name: actionNameEnum.Values.DrawLocation,
+      description:
+        "Generates an image of a scene for the players to see. " +
+        "You should use this when a new location is revealed to players.",
+      parameters: [
+        {
+          name: "Visual Description",
+          description:
+            "A one sentence visual description of the environment. " +
+            "This should be written in a way that someone without any context could draw the scene.",
+        },
+      ],
     }),
     abilityDescriptor({
       name: actionNameEnum.Values.GiveItem,
       description:
-        "Adds an item to a player's inventory. You should call this whenever a player receives an item.",
+        "Adds an item to a player's inventory. You should use this whenever a player receives an item.",
       parameters: [
         {
           name: "CharacterName",
@@ -91,7 +103,7 @@ export const abilitiesPromptContent = (players: Player[]) => {
     abilityDescriptor({
       name: actionNameEnum.Values.RemoveItem,
       description:
-        "Removes an item to a player's inventory. You should call this whenever a player loses or uses up an item.",
+        "Removes an item to a player's inventory. You should use this whenever a player loses or uses up an item.",
       parameters: [
         {
           name: "CharacterName",
