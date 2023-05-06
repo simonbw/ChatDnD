@@ -16,6 +16,7 @@ import { streamTextResponse } from "../utils/openAiUtils";
 import { GameMasterAction } from "./GameMasterActions";
 import { Room } from "./Room";
 import { RoomMessageBuilder, UpdateMessage } from "./RoomMessageBuilder";
+import { toApiMessage } from "./RoomMessages";
 import { SerializedRoom } from "./roomSerialization";
 
 const LAST_CHATS_MAX_CHARACTERS = 800;
@@ -48,14 +49,18 @@ export class GameMaster {
   }
 
   private async getHistory(): Promise<ChatCompletionRequestMessage[]> {
-    const allMessages = this.room.messages.getApiMessages();
     const splitIndex = this.getHistorySplitIndex();
 
     const summary =
       splitIndex == 0
         ? ""
         : await this.room.summaryHistory.getSummary(splitIndex - 1);
-    const lastChats = allMessages.slice(splitIndex);
+
+    const allMessages = this.room.messages.getAll();
+    const lastChats = allMessages
+      .slice(splitIndex)
+      .map(toApiMessage)
+      .filter((m) => m != undefined);
 
     // We can include all messages, no summary needed
     return [
@@ -69,17 +74,19 @@ export class GameMaster {
   }
 
   private getHistorySplitIndex() {
-    // TODO: Choose number of conversations
-    const allMessages = this.room.messages.getApiMessages();
     let count = 0;
-    let index = allMessages.length - 1;
+    let splitIndex = this.room.messages.length;
 
-    while (index > 0 && count < LAST_CHATS_MAX_CHARACTERS) {
-      index -= 1;
-      count += allMessages[index].content.length;
+    // Start at the end and keep adding messages until we fill up our content.
+    while (splitIndex > 0 && count < LAST_CHATS_MAX_CHARACTERS) {
+      splitIndex -= 1;
+      const message = this.room.messages.getApiMessageById(splitIndex);
+      if (message) {
+        count += message.content.length;
+      }
     }
 
-    return index;
+    return splitIndex;
   }
 
   private async respond(
@@ -165,7 +172,6 @@ export class GameMaster {
   }
 
   async messageAdded(message: RoomMessage) {
-    // TODO: Action queue?
     if (message.role !== "assistant" && !message.whispered) {
       await this.respond();
     }

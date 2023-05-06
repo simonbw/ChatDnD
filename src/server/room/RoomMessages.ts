@@ -1,6 +1,9 @@
 import { ChatCompletionRequestMessage } from "openai";
-import { RoomMessage, WithId } from "../../common/models/roomModel";
-import { last } from "../../common/utils/arrayUtils";
+import {
+  RoomMessage,
+  RoomMessageId,
+  WithId,
+} from "../../common/models/roomModel";
 import { WebError } from "../WebError";
 import { Channel } from "../utils/Channel";
 import { apiSafeName } from "../utils/openAiUtils";
@@ -60,7 +63,7 @@ export class RoomMessages {
 
   /** Change an existing message. */
   updateMessage(
-    messageId: number,
+    messageId: RoomMessageId,
     message: RoomMessage | ((old: RoomMessage) => RoomMessage)
   ) {
     if (!this.messages[messageId]) {
@@ -81,35 +84,72 @@ export class RoomMessages {
     return messageToSave;
   }
 
-  getPublicMessages(): RoomMessage[] {
+  get length(): number {
+    return this.messages.length;
+  }
+
+  getAll(): readonly RoomMessage[] {
+    return this.messages;
+  }
+
+  getMessageById(messageId: RoomMessageId): RoomMessage | undefined {
+    return this.messages[messageId];
+  }
+
+  hasMessage(messageId: RoomMessageId): boolean {
+    return this.messages[messageId] != undefined;
+  }
+
+  getApiMessageById(
+    messageId: RoomMessageId
+  ): ChatCompletionRequestMessage | undefined {
+    const message = this.getMessageById(messageId);
+    if (!message) {
+      return undefined;
+    }
+    return toApiMessage(message);
+  }
+
+  getPublicMessageById(messageId: RoomMessageId): RoomMessage | undefined {
+    const message = this.messages[messageId];
+    if (!message) {
+      return undefined;
+    }
+    return toPublicMessage(message);
+  }
+
+  getAllPublicMessages(): RoomMessage[] {
     return this.messages
       .map(toPublicMessage)
       .filter((message): message is RoomMessage => message != null);
   }
 
-  getAllMessages(): readonly RoomMessage[] {
-    return this.messages;
+  /**
+   * Returns all API messages that occur before the message with the given id.
+   */
+  getApiMessagesBefore(
+    messageId: RoomMessageId
+  ): ChatCompletionRequestMessage[] {
+    return this.messages
+      .slice(messageId)
+      .map(toApiMessage)
+      .filter((m) => m != undefined);
   }
 
-  getApiMessages(): ChatCompletionRequestMessage[] {
-    return [
-      ...this.messages
-        .filter((message) => !message.whispered)
-        .map(toApiMessage),
-    ];
-  }
-
+  /**
+   * Returns the most recent API message, or undefined if there are no API messages.
+   */
   getLastApiMessage(): ChatCompletionRequestMessage | undefined {
-    return last(this.getApiMessages());
-  }
-
-  getApiMessage(index: number): ChatCompletionRequestMessage {
-    // TODO: More efficient?
-    return this.getApiMessages()[index];
+    return this.messages.findLast((m) => toApiMessage(m) !== undefined);
   }
 }
 
-function toApiMessage(message: RoomMessage): ChatCompletionRequestMessage {
+/**
+ * Converts a message to one for the API to see, or undefined if it's not for the API to see.
+ */
+export function toApiMessage(
+  message: RoomMessage
+): ChatCompletionRequestMessage {
   return {
     role: message.role,
     name: apiSafeName(message.name),
@@ -117,7 +157,10 @@ function toApiMessage(message: RoomMessage): ChatCompletionRequestMessage {
   };
 }
 
-function toPublicMessage(message: RoomMessage): RoomMessage | null {
+/**
+ * Converts a message to one for users to see, or undefined if it's not meant to be seen.
+ */
+export function toPublicMessage(message: RoomMessage): RoomMessage | undefined {
   if (message.role === "system") {
     if (message.publicContent) {
       return {
@@ -127,7 +170,7 @@ function toPublicMessage(message: RoomMessage): RoomMessage | null {
       };
     } else {
       // Don't show system messages without public content
-      return null;
+      return undefined;
     }
   } else {
     return message;

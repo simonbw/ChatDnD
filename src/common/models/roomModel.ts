@@ -14,10 +14,12 @@ export const roomMessageImageSchema = z.object({
 
 export type RoomMessageImage = z.infer<typeof roomMessageImageSchema>;
 
-export const actionSchema = z.object({
+export const roomActionSchema = z.object({
   name: z.string(),
   args: z.string().array(),
 });
+
+export type RoomMessageId = number;
 
 export const roomMessageSchema = z.object({
   /** Unique identifier of this message. */
@@ -37,7 +39,7 @@ export const roomMessageSchema = z.object({
   /** References to images included in this message */
   images: z.array(roomMessageImageSchema).optional(),
   /** Actions the GM decided to take */
-  actions: z.array(actionSchema).optional(),
+  actions: z.array(roomActionSchema).optional(),
   /** Whether or not this message has been fully written */
   complete: z.boolean().optional(),
 });

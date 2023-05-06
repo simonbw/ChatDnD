@@ -1,6 +1,5 @@
 import { Player } from "../../common/models/playerModel";
 import { RoomPublicState } from "../../common/models/roomModel";
-import { WebError } from "../WebError";
 import { getDb } from "../db";
 import { ActionQueue } from "../utils/ActionQueue";
 import { Channel } from "../utils/Channel";
@@ -94,7 +93,7 @@ export class Room {
 
   getPublicState(): RoomPublicState {
     return {
-      messages: this.messages.getPublicMessages(),
+      messages: this.messages.getAllPublicMessages(),
       id: this.id,
       name: this.name,
       players: this.players.toJson(),

@@ -30,6 +30,10 @@
       "dist/server"
     ]
   },
+  "engines": {
+    "npm": ">=9.0.0",
+    "node": ">=18.0.0"
+  },
   "prettier": {},
   "dependencies": {
     "@aws-sdk/client-s3": "^3.327.0",
@@ -50,6 +54,7 @@
     "express": "^5.0.0-beta.1",
     "express-http-proxy": "^1.6.3",
     "fast-json-patch": "^3.1.1",
+    "gpt-tokens": "^1.0.6",
     "immutable-assign": "^2.1.5",
     "nodemon": "^2.0.22",
     "open-simplex-noise": "^2.5.0",
