@@ -6,6 +6,7 @@ FRONTEND POLISH:
  - Writing sound effect when chatgpt is writing.
  - Show error states?
  - Paginate history when it gets long.
+ - Mobile friendly styles
 
 
 IMAGE GENERATION:

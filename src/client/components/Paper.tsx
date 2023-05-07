@@ -23,13 +23,7 @@ export function PaperContainer({
   ...rest
 }: PropsWithChildren<HTMLProps<HTMLDivElement>>) {
   return (
-    <div
-      className={classNames(
-        "flex flex-row justify-center items-start gap-8 py-2 md:p-4 lg:p-8",
-        className
-      )}
-      {...rest}
-    >
+    <div className={classNames("paper-container", className)} {...rest}>
       {children}
     </div>
   );

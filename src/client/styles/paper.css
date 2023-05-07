@@ -1,6 +1,6 @@
 @layer components {
   .paper {
-    @apply max-w-2xl my-2 md:my-4 xl:my-8 py-2 xl:py-4;
+    @apply md:my-4 xl:my-8 py-2 xl:py-4;
     @apply text-sepia-700;
 
     filter: drop-shadow(0 5px 13px rgb(0 0 0 / 0.45))
@@ -36,5 +36,16 @@
     border-color: transparent;
     border-image-width: 36px;
     border-width: 18px;
+  }
+
+  .paper-container {
+    @apply flex flex-row px-2 items-start gap-8 py-2 md:p-4 lg:p-8 overflow-x-auto;
+    @apply snap-x snap-mandatory scroll-p-4;
+    @apply xl:justify-center xl:snap-none;
+  }
+
+  .paper-container > .paper {
+    @apply snap-center w-[calc(100vw-2rem)] flex-shrink-0;
+    @apply xl:max-w-[calc(50vw-4rem)] xl:flex-shrink xl:snap-none;
   }
 }
