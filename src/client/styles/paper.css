@@ -39,13 +39,23 @@
   }
 
   .paper-container {
-    @apply flex flex-row px-2 items-start gap-8 py-2 md:p-4 lg:p-8 overflow-x-auto;
-    @apply snap-x snap-mandatory scroll-p-4;
-    @apply xl:justify-center xl:snap-none;
+    @apply flex flex-row items-start overflow-x-auto;
+    @apply snap-x snap-mandatory;
+    @apply p-2 gap-4 scroll-p-2;
+    @apply sm:p-4 sm:gap-8 sm:scroll-p-4;
+    @apply md:p-6 md:gap-12 md:scroll-p-6;
+    @apply lg:p-6 lg:gap-6 lg:scroll-p-4;
+    @apply xl:p-8 xl:gap-8;
+    @apply lg:justify-center lg:snap-none;
   }
 
   .paper-container > .paper {
-    @apply snap-center w-[calc(100vw-2rem)] flex-shrink-0;
-    @apply xl:max-w-[calc(50vw-4rem)] xl:flex-shrink xl:snap-none;
+    @apply snap-center flex-shrink-0;
+    @apply w-[calc(100vw-1rem)];
+    @apply sm:w-[calc(100vw-2rem)];
+    @apply md:w-[calc(100vw-3rem)];
+    @apply lg:max-w-[calc(50vw-4rem)] lg:flex-shrink lg:snap-none;
+    @apply scroll-mt-8;
+    @apply scroll-pt-8;
   }
 }

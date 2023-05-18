@@ -1,21 +1,23 @@
-import React, { HTMLProps, PropsWithChildren } from "react";
+import React, { HTMLProps, PropsWithChildren, forwardRef } from "react";
 import { classNames } from "../utils/classNames";
 
-export function Paper({
-  children,
-  className,
-  small,
-  ...rest
-}: PropsWithChildren<HTMLProps<HTMLDivElement>> & { small?: boolean }) {
-  return (
-    <div
-      className={classNames(small ? "paper-small" : "paper", className)}
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-}
+type Props = PropsWithChildren<HTMLProps<HTMLDivElement>> & {
+  small?: boolean;
+};
+
+export const Paper = forwardRef<HTMLDivElement, Props>(
+  ({ children, className, small, ...rest }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={classNames(small ? "paper-small" : "paper", className)}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  }
+);
 
 export function PaperContainer({
   children,

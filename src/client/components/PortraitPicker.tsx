@@ -16,8 +16,8 @@ export function PortraitPicker({
   generating: boolean;
   generate: (newPrompt: boolean) => void;
 }) {
-  const loaded = useImageLoaded(portrait?.url);
-  const busy = generating || !loaded;
+  const loading = Boolean(portrait?.url) && !useImageLoaded(portrait?.url);
+  const busy = generating || loading;
   return (
     <figure className="flex flex-col items-center text-center max-w-64 rounded-md overflow-hidden">
       <div className="w-full flex justify-center items-center relative">

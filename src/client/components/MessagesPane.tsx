@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from "react";
 import { Player } from "../../common/models/playerModel";
-import { routes } from "../../common/routes";
 import { last } from "../../common/utils/arrayUtils";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useRoom } from "../contexts/roomContext";
@@ -85,14 +84,5 @@ function PlayerList({ players }: { players: Player[] }) {
 }
 
 function Wrapper({ children }: PropsWithChildren) {
-  return (
-    <>
-      <div className="mb-2">
-        <a className="link" href={routes.home()}>
-          ◄ Home
-        </a>
-      </div>
-      <div className="flex flex-col font-serif gap-8">{children}</div>
-    </>
-  );
+  return <div className="flex flex-col font-serif gap-8">{children}</div>;
 }
