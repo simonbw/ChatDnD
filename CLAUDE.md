@@ -17,7 +17,7 @@ Hosted on **Vercel** (static frontend) + **Convex** (database, realtime, server 
 
 There is no test runner. Verification is `npm run tsc` plus trying it in the browser.
 
-Local dev without a Convex login: `CONVEX_AGENT_MODE=anonymous npx convex dev --start vite` runs a local Convex backend (state in `.env.local`). Server env vars live on the Convex deployment, not in `.env`: set them with `npx convex env set NAME value` (see `convex/lib/env.ts` for the list — `OPENAI_API_KEY`, `STABILITY_KEY`, `DRAWING_ENABLED`, optional `*_GPT_MODEL` overrides and `OPENAI_BASE_URL`).
+Local dev without a Convex login: `CONVEX_AGENT_MODE=anonymous npx convex dev --start vite` runs a local Convex backend (state in `.env.local`). Server env vars live on the Convex deployment, not in `.env`: set them with `npx convex env set NAME value` (`convex/lib/env.ts` lists them all: provider switches, API keys, model overrides, `DRAWING_ENABLED`).
 
 ## Architecture
 
@@ -37,14 +37,16 @@ Clients read with Convex reactive queries (`useQuery`), which push updates autom
 
 Adding a non-whispered user message (or a player joining) calls `requestGmResponse` (`convex/lib/roomHelpers.ts`). Only one response runs per room: if one is running, `rooms.gm.pending` is set and the next response starts when it finishes. A response inserts an empty, incomplete assistant message and schedules `gm.respond`.
 
-`gm.respond` (an action) builds the prompt: system prompt (`lib/prompts/initialPrompts.ts`, campaign name + players + summary), then the most recent messages (about `LAST_CHATS_MAX_CHARACTERS`). Older messages are replaced by a progressive summary from `summaries.ts`, built eagerly as messages complete. It streams the OpenAI completion, writing the text to the message every ~200ms.
+`gm.respond` (an action) builds the prompt: system prompt (`lib/prompts/initialPrompts.ts`, campaign name + players + summary), then the most recent messages (about `LAST_CHATS_MAX_CHARACTERS`). Older messages are replaced by a progressive summary from `summaries.ts`, built eagerly as messages complete. It streams the completion from the configured text provider, writing the text to the message every ~200ms.
 
 The AI emits inline **actions** like `{ActionName|arg|arg}`. `lib/actionParser.ts` picks them out of the stream, and `gm.processAction` carries them out: `DrawCharacter`/`DrawLocation` add an image slot and schedule a drawing; `GiveItem`/`RemoveItem` edit the inventory (`lib/inventory.ts`). Valid action names are the Zod enum in `lib/prompts/abilitiesPromptContent.ts`. The client hides the braces and shows image slots only for `Draw*` actions (`Message.tsx`).
 
 ### AI services
 
-- Text: the current `openai` SDK (Chat Completions), wrapped in `lib/openAiUtils.ts`. The model defaults to `gpt-4.1-mini`, and each use can be overridden by env var.
-- Images: Stability AI's Stable Image Core endpoint (`lib/images.ts`). Results go into Convex file storage, and the stored URL is saved on the message or inventory item. If drawing is disabled or fails, `/static/images/drawing-disabled.png` is used instead.
+Providers are switchable at runtime with Convex env vars, so they can be compared side by side:
+
+- Text (`TEXT_PROVIDER` = `openai` | `anthropic`): all calls go through `lib/llm/index.ts` (`textResponse`, `streamText`), which takes provider-neutral `LlmMessage`s. `lib/llm/openai.ts` uses Chat Completions (default `gpt-4.1-mini`). `lib/llm/anthropic.ts` uses the Anthropic SDK (default `claude-opus-5-5`, server-side refusal fallback on), and adapts the prompt: leading system messages become `system`, later ones become `[Game event]` user turns, and speaker names are inlined. Claude ignores `temperature`. A refusal throws `LlmRefusalError`, and the GM discards the partial text.
+- Images (`IMAGE_PROVIDER` = `stability` | `openai`): `lib/images.ts` uses Stability's Stable Image Core or OpenAI's GPT Image (default `gpt-image-2`). Results go into Convex file storage, and the stored URL is saved on the message or inventory item. If drawing is disabled or fails, `/static/images/drawing-disabled.png` is used instead.
 
 ### Other notes
 

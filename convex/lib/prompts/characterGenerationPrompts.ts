@@ -1,5 +1,5 @@
 import { Character } from "../../../src/common/models/characterModel";
-import type { ChatMessage } from "../openAiUtils";
+import type { LlmMessage } from "../llm";
 
 function baseInfo(character: Partial<Character>): string {
   let lines = [`We are generating a fantasy RPG player character.`];
@@ -28,7 +28,7 @@ function baseInfo(character: Partial<Character>): string {
 
 export function generateBackgroundMessage(
   character: Partial<Character>
-): ChatMessage[] {
+): LlmMessage[] {
   const base = baseInfo({ ...character });
   return [
     {
@@ -40,7 +40,7 @@ export function generateBackgroundMessage(
 
 export function generateDescriptionMessage(
   character: Partial<Character>
-): ChatMessage[] {
+): LlmMessage[] {
   const base = baseInfo({ ...character });
   return [
     {
@@ -52,7 +52,7 @@ export function generateDescriptionMessage(
 
 export function generateNameMessage(
   character: Partial<Character>
-): ChatMessage[] {
+): LlmMessage[] {
   const base = baseInfo({ ...character, name: "" });
   return [
     {
@@ -64,7 +64,7 @@ export function generateNameMessage(
 
 export function generatePortraitMessage(
   character: Partial<Character>
-): ChatMessage[] {
+): LlmMessage[] {
   const base = baseInfo({ ...character });
   return [
     {

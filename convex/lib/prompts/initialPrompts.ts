@@ -1,5 +1,5 @@
 import { Player } from "../../../src/common/models/playerModel";
-import type { ChatMessage } from "../openAiUtils";
+import type { LlmMessage } from "../llm";
 import { abilitiesPromptContent } from "./abilitiesPromptContent";
 import { playersPromptContent } from "./playersPromptContent";
 
@@ -36,7 +36,7 @@ export function makeInitialSystemMessage(
   campaignTitle: string,
   players: Player[],
   summary?: string
-): ChatMessage[] {
+): LlmMessage[] {
   const parts: Array<string | null> = [
     identityAndPersonalityContent(),
     formattingContent(),

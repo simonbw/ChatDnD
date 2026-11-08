@@ -26,6 +26,7 @@
   },
   "prettier": {},
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "@headlessui/react": "^1.7.14",
     "convex": "^1.49.0",
     "open-simplex-noise": "^2.5.0",

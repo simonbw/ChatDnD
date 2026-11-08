@@ -1,7 +1,6 @@
 import { action } from "./_generated/server";
-import { getGenerationGPTModel } from "./lib/env";
 import { drawPortrait } from "./lib/images";
-import { cleanupChatResponse, simpleTextResponse } from "./lib/openAiUtils";
+import { cleanupChatResponse, textResponse } from "./lib/llm";
 import {
   generateBackgroundMessage,
   generateDescriptionMessage,
@@ -19,9 +18,8 @@ export const characterName = action({
   args: { character: characterValidator },
   handler: async (_ctx, { character }) => {
     const name = cleanupChatResponse(
-      await simpleTextResponse(generateNameMessage(character), {
+      await textResponse(generateNameMessage(character), {
         temperature: 1.2,
-        model: getGenerationGPTModel(),
       }),
       { singlePhrase: true }
     );
@@ -32,9 +30,9 @@ export const characterName = action({
 export const characterBackground = action({
   args: { character: characterValidator },
   handler: async (_ctx, { character }) => {
-    const background = await simpleTextResponse(
+    const background = await textResponse(
       generateBackgroundMessage(character),
-      { temperature: 1, model: getGenerationGPTModel() }
+      { temperature: 1 }
     );
     return { background };
   },
@@ -43,9 +41,9 @@ export const characterBackground = action({
 export const characterDescription = action({
   args: { character: characterValidator },
   handler: async (_ctx, { character }) => {
-    const description = await simpleTextResponse(
+    const description = await textResponse(
       generateDescriptionMessage(character),
-      { temperature: 1, model: getGenerationGPTModel() }
+      { temperature: 1 }
     );
     return { description };
   },

@@ -8,8 +8,7 @@ import {
   query,
   type QueryCtx,
 } from "./_generated/server";
-import { getGenerationGPTModel } from "./lib/env";
-import { cleanupChatResponse, simpleTextResponse } from "./lib/openAiUtils";
+import { cleanupChatResponse, textResponse } from "./lib/llm";
 import { PLAYER_LIMIT, getRoomPlayers, toPlayer } from "./lib/roomHelpers";
 
 /** Room metadata and players. Messages come from `messages.listComplete` / `listInProgress`. */
@@ -119,16 +118,13 @@ async function toListItem(
 
 async function generateCampaignName(): Promise<string> {
   try {
-    const content = await simpleTextResponse(
-      [
-        {
-          role: "user",
-          content:
-            "Please come up with a unique title for a Dungeons & Dragons campaign. Please respond with only the title, and no punctuation.",
-        },
-      ],
-      { model: getGenerationGPTModel() }
-    );
+    const content = await textResponse([
+      {
+        role: "user",
+        content:
+          "Please come up with a unique title for a Dungeons & Dragons campaign. Please respond with only the title, and no punctuation.",
+      },
+    ]);
     return cleanupChatResponse(content, { singlePhrase: true });
   } catch (error) {
     console.error("[rooms] Failed to generate campaign name:", error);

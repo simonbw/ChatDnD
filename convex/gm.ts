@@ -7,14 +7,9 @@ import {
   internalQuery,
 } from "./_generated/server";
 import { ActionParser, type GameMasterAction } from "./lib/actionParser";
-import { getStorytellingGPTModel } from "./lib/env";
 import { drawStoryCharacter, drawStoryScene } from "./lib/images";
 import { giveItem, removeItem } from "./lib/inventory";
-import {
-  apiSafeName,
-  streamTextResponse,
-  type ChatMessage,
-} from "./lib/openAiUtils";
+import { LlmRefusalError, streamText, type LlmMessage } from "./lib/llm";
 import { makeInitialSystemMessage } from "./lib/prompts/initialPrompts";
 import {
   getRoomOrThrow,
@@ -100,16 +95,14 @@ export const respond = internalAction({
           ? await getSummaryThrough(ctx, roomId, history[splitIndex - 1].index)
           : "";
 
-      const prompt: ChatMessage[] = [
+      const prompt: LlmMessage[] = [
         ...makeInitialSystemMessage(roomName, players, summary),
         ...history.slice(splitIndex).map(toApiMessage),
       ];
 
       const parser = new ActionParser();
       let lastFlush = Date.now();
-      for await (const delta of streamTextResponse(prompt, {
-        model: getStorytellingGPTModel(),
-      })) {
+      for await (const delta of streamText(prompt)) {
         content += delta;
         const actions = parser.push(delta);
         if (actions.length > 0 || Date.now() - lastFlush > FLUSH_INTERVAL_MS) {
@@ -127,6 +120,10 @@ export const respond = internalAction({
     } catch (error) {
       console.error("[gm] Response failed:", error);
       failed = true;
+      if (error instanceof LlmRefusalError) {
+        // A declined response's partial text shouldn't be kept.
+        content = "";
+      }
     }
 
     await ctx.runMutation(internal.gm.finish, {
@@ -292,14 +289,6 @@ function getHistorySplitIndex(history: HistoryMessage[]): number {
   return splitIndex;
 }
 
-export function toApiMessage(message: HistoryMessage): ChatMessage {
-  const name = apiSafeName(message.name);
-  switch (message.role) {
-    case "system":
-      return { role: "system", name, content: message.content };
-    case "user":
-      return { role: "user", name, content: message.content };
-    case "assistant":
-      return { role: "assistant", name, content: message.content };
-  }
+export function toApiMessage(message: HistoryMessage): LlmMessage {
+  return { role: message.role, name: message.name, content: message.content };
 }

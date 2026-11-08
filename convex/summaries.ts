@@ -7,8 +7,7 @@ import {
   internalQuery,
   type ActionCtx,
 } from "./_generated/server";
-import { getSummarizingGPTModel } from "./lib/env";
-import { apiSafeName, simpleTextResponse } from "./lib/openAiUtils";
+import { apiSafeName, textResponse } from "./lib/llm";
 
 /*
  * Each summary covers a room's history through one message, and is built from
@@ -137,11 +136,7 @@ async function summarize(
     `Latest message \`\`\`${incomingText}\`\`\``,
   ];
 
-  return await simpleTextResponse(
-    [{ role: "system", content: lines.join("\n") }],
-    {
-      model: getSummarizingGPTModel(),
-      temperature: 0.0, // So we get consistent results. Summaries don't need to be creative.
-    }
-  );
+  return await textResponse([{ role: "system", content: lines.join("\n") }], {
+    temperature: 0.0, // So we get consistent results. Summaries don't need to be creative.
+  });
 }

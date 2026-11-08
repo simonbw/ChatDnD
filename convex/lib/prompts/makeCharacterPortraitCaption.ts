@@ -1,15 +1,13 @@
 import { Character } from "../../../src/common/models/characterModel";
 import { Pronouns } from "../../../src/common/models/pronouns";
-import { getGenerationGPTModel } from "../env";
-import { cleanupChatResponse, simpleTextResponse } from "../openAiUtils";
+import { cleanupChatResponse, textResponse } from "../llm";
 import { generatePortraitMessage } from "./characterGenerationPrompts";
 
 export async function makeCharacterPortraitCaption(character: Character) {
   console.log("Getting portrait prompt...");
   const adjectives = cleanupChatResponse(
-    await simpleTextResponse(generatePortraitMessage(character), {
+    await textResponse(generatePortraitMessage(character), {
       temperature: 0.5,
-      model: getGenerationGPTModel(),
     }),
     { singlePhrase: true, stripQuotes: true }
   );
