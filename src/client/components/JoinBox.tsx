@@ -1,6 +1,9 @@
+import { useAction, useMutation } from "convex/react";
 import React, { useState } from "react";
 import Textarea from "react-expanding-textarea";
 import { z } from "zod";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import {
   characterClassDescrptions,
   characterClassEnum,
@@ -12,8 +15,6 @@ import {
 } from "../../common/models/characterRaceEnum";
 import { pronounsEnum } from "../../common/models/pronouns";
 import { choose } from "../../common/utils/randUtils";
-import { generationApiClient } from "../api/generationApiClient";
-import { roomApiClient } from "../api/roomApiClient";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useCachedState } from "../hooks/useCachedState";
 import { classNames } from "../utils/classNames";
@@ -46,6 +47,11 @@ export function JoinBox({
   openToJoin: boolean;
 }) {
   const playerId = usePlayerId();
+  const joinRoom = useMutation(api.players.join);
+  const generateName = useAction(api.generate.characterName);
+  const generateBackground = useAction(api.generate.characterBackground);
+  const generateDescription = useAction(api.generate.characterDescription);
+  const generatePortrait = useAction(api.generate.characterPortrait);
   const [playerName, setPlayerName] = useCachedState(
     "playerName",
     z.string(),
@@ -94,14 +100,17 @@ export function JoinBox({
 
   const submit = async () => {
     try {
-      await roomApiClient.joinRoom(roomId)({
-        id: playerId,
-        name: playerName,
-        pronouns: playerPronouns,
-        character,
+      await joinRoom({
+        roomId: roomId as Id<"rooms">,
+        player: {
+          id: playerId,
+          name: playerName,
+          pronouns: playerPronouns,
+          character,
+        },
       });
     } catch (error) {
-      console.warn("Failed to join room");
+      console.warn("Failed to join room", error);
     }
   };
 
@@ -157,9 +166,7 @@ export function JoinBox({
                 e.preventDefault();
                 startGeneratingField("name");
                 try {
-                  updateCharacter(
-                    await generationApiClient.characterName(character)
-                  );
+                  updateCharacter(await generateName({ character }));
                 } finally {
                   stopGeneratingField("name");
                 }
@@ -238,9 +245,7 @@ export function JoinBox({
               e.preventDefault();
               startGeneratingField("background");
               try {
-                updateCharacter(
-                  await generationApiClient.characterBackground(character)
-                );
+                updateCharacter(await generateBackground({ character }));
               } finally {
                 stopGeneratingField("background");
               }
@@ -276,9 +281,7 @@ export function JoinBox({
               e.preventDefault();
               startGeneratingField("description");
               try {
-                updateCharacter(
-                  await generationApiClient.characterDescription(character)
-                );
+                updateCharacter(await generateDescription({ character }));
               } finally {
                 stopGeneratingField("description");
               }
@@ -311,15 +314,12 @@ export function JoinBox({
             try {
               if (newPrompt) {
                 updateCharacter(
-                  await generationApiClient.characterPortrait({
-                    ...character,
-                    portrait: undefined,
+                  await generatePortrait({
+                    character: { ...character, portrait: undefined },
                   })
                 );
               } else {
-                updateCharacter(
-                  await generationApiClient.characterPortrait(character)
-                );
+                updateCharacter(await generatePortrait({ character }));
               }
             } finally {
               stopGeneratingField("portrait");

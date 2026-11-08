@@ -139,33 +139,36 @@ type ContentItem =
 function parseContent(message: RoomMessage): ContentItem[] {
   const result: ContentItem[] = [];
 
+  // Actions are written inline as {ActionName|args}. Only drawing actions
+  // become images; the rest (like GiveItem) are just hidden.
   let imageIndex = 0;
-  let inImage = false;
+  let actionText: string | undefined = undefined;
   let text = "";
 
   for (const char of message.content) {
-    if (inImage) {
-      // end image
+    if (actionText !== undefined) {
       if (char == "}") {
-        inImage = false;
-        result.push({ type: "image", index: imageIndex });
-        imageIndex++;
-      }
-    } else {
-      // start image and end content
-      if (char == "{") {
-        inImage = true;
-        if (text != "") {
-          result.push({ type: "text", text });
+        if (isDrawAction(actionText)) {
+          result.push({ type: "image", index: imageIndex });
+          imageIndex++;
         }
-        text = "";
+        actionText = undefined;
       } else {
-        text += char;
+        actionText += char;
       }
+    } else if (char == "{") {
+      actionText = "";
+      if (text != "") {
+        result.push({ type: "text", text });
+      }
+      text = "";
+    } else {
+      text += char;
     }
   }
 
-  if (inImage) {
+  // An action still being written: show its image slot early if it's a drawing.
+  if (actionText !== undefined && isDrawAction(actionText)) {
     result.push({ type: "image", index: imageIndex });
   }
   if (text != "") {
@@ -173,4 +176,8 @@ function parseContent(message: RoomMessage): ContentItem[] {
   }
 
   return result;
+}
+
+function isDrawAction(actionText: string): boolean {
+  return actionText.trim().startsWith("Draw");
 }

@@ -1,6 +1,8 @@
+import { useMutation } from "convex/react";
 import React, { useState } from "react";
 import Textarea from "react-expanding-textarea";
-import { routes } from "../../common/routes";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { usePlayer } from "../contexts/playerIdContext";
 import { classNames } from "../utils/classNames";
 import { Button } from "./Button";
@@ -11,6 +13,7 @@ export function SendBox({ roomId }: { roomId: string }) {
   const [sending, setSending] = useState(false);
   const [whispered, setWhisper] = useState(false);
   const player = usePlayer();
+  const sendMessage = useMutation(api.messages.send);
 
   if (!player) {
     return null;
@@ -20,17 +23,18 @@ export function SendBox({ roomId }: { roomId: string }) {
     if (content != "" && player) {
       setSending(true);
       try {
-        await fetch(routes.room.postMessage(roomId), {
-          body: JSON.stringify({ content, whispered, playerId: player.id }),
-          headers: { "Content-Type": "application/json" },
-          method: "POST",
+        await sendMessage({
+          roomId: roomId as Id<"rooms">,
+          playerId: player.id,
+          content,
+          whispered,
         });
+        setContent("");
       } catch (error) {
-        console.warn("Failed to send message.");
+        console.warn("Failed to send message.", error);
       } finally {
         setSending(false);
       }
-      setContent("");
     }
   };
 

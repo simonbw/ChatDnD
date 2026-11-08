@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { z } from "zod";
-import {
-  RoomListItem,
-  roomListSchema,
-} from "../../common/models/roomListModel";
+import { useAction, useQuery } from "convex/react";
+import React, { useState } from "react";
+import { api } from "../../../convex/_generated/api";
 import { routes } from "../../common/routes";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { Button } from "./Button";
 import { NameTag } from "./NameTag";
 
 export function RoomList() {
-  const playerRooms = usePlayerRooms();
-  const recentRooms = useRecentRooms();
+  const playerId = usePlayerId();
+  const playerRooms = useQuery(api.rooms.listForPlayer, { playerId }) ?? [];
+  const recentRooms = useQuery(api.rooms.listRecent, { limit: 10 }) ?? [];
+  const createRoom = useAction(api.rooms.create);
+  const [creating, setCreating] = useState(false);
+
+  const newCampaign = async () => {
+    setCreating(true);
+    try {
+      const roomId = await createRoom();
+      window.location.href = routes.room.view(roomId);
+    } catch (error) {
+      console.warn("Failed to create campaign", error);
+      setCreating(false);
+    }
+  };
 
   return (
     <div className="text-md font-body p-4 flex flex-col justify-center gap-12">
@@ -36,11 +47,17 @@ export function RoomList() {
         </div>
       ) : null}
 
-      <form action="/new-room" method="post" className="text-center">
-        <Button type="submit" kind="flat" color="primary" size="lg">
+      <div className="text-center">
+        <Button
+          kind="flat"
+          color="primary"
+          size="lg"
+          onClick={newCampaign}
+          loading={creating}
+        >
           New Campaign
         </Button>
-      </form>
+      </div>
 
       {recentRooms.length > 0 ? (
         <div>
@@ -64,35 +81,4 @@ export function RoomList() {
       ) : null}
     </div>
   );
-}
-
-function usePlayerRooms(): RoomListItem[] {
-  const [rooms, setRooms] = useState<RoomListItem[]>([]);
-  const playerId = usePlayerId();
-
-  useEffect(() => {
-    const url = new URL(routes.rooms(), window.location.origin);
-    url.searchParams.set("playerId", playerId);
-    fetch(url, {})
-      .then((response) => response.json())
-      .then((data) => z.object({ rooms: roomListSchema }).parse(data))
-      .then((roomList) => setRooms(roomList.rooms));
-  }, [playerId]);
-
-  return rooms;
-}
-
-function useRecentRooms(): RoomListItem[] {
-  const [rooms, setRooms] = useState<RoomListItem[]>([]);
-
-  useEffect(() => {
-    const url = new URL(routes.rooms(), window.location.origin);
-    url.searchParams.set("limit", "10");
-    fetch(url, {})
-      .then((response) => response.json())
-      .then((data) => z.object({ rooms: roomListSchema }).parse(data))
-      .then((roomList) => setRooms(roomList.rooms));
-  }, []);
-
-  return rooms;
 }

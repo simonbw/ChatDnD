@@ -4,7 +4,7 @@ import headlessPlugin from "@headlessui/tailwindcss";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  content: ["./src/**/*.{html,js,ts,tsx}"],
+  content: ["./*.html", "./src/**/*.{html,js,ts,tsx}"],
 
   plugins: [opentypePlugin, headlessPlugin],
 

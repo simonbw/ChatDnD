@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
     "strict": true,
-    "module": "es6",
+    "module": "ESNext",
     "target": "ESNext",
-    "moduleResolution": "node",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Bundler",
     "jsx": "react",
     "esModuleInterop": true,
-    "skipLibCheck": true
-  }
-  // "include": ["src/types", "src/server/index.ts", "src/client/pages"]
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "types": ["vite/client", "node"]
+  },
+  "include": ["src", "vite.config.ts"]
 }

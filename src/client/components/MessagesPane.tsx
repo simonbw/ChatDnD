@@ -13,6 +13,16 @@ export function MessagesPane() {
   const { room } = useRoom();
   const playerId = usePlayerId();
 
+  if (room === null) {
+    return (
+      <Wrapper>
+        <div className="italic p-4 text-sepia-500 text-center">
+          This campaign could not be found.
+        </div>
+      </Wrapper>
+    );
+  }
+
   if (!room) {
     return (
       <Wrapper>

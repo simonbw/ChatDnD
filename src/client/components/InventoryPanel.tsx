@@ -1,7 +1,9 @@
 import { Popover, Transition } from "@headlessui/react";
+import { useMutation } from "convex/react";
 import React from "react";
+import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { InventoryItem } from "../../common/models/characterModel";
-import { roomApiClient } from "../api/roomApiClient";
 import { usePlayerId } from "../contexts/playerIdContext";
 import { useRoomId } from "../contexts/roomContext";
 import { Button } from "./Button";
@@ -13,6 +15,7 @@ import { Paper } from "./Paper";
 export function InventoryPanel({ inventory }: { inventory: InventoryItem[] }) {
   const roomId = useRoomId();
   const playerId = usePlayerId();
+  const redrawInventory = useMutation(api.players.redrawInventory);
   return (
     <section className="clear-both pt-2">
       <h3 className="font-nametag first-letter:text-lg first-letter:leading-none underline underline-offset-1">
@@ -24,7 +27,11 @@ export function InventoryPanel({ inventory }: { inventory: InventoryItem[] }) {
           size="xs"
           onClick={
             roomId
-              ? () => roomApiClient.redrawInventory(roomId)({ playerId })
+              ? () =>
+                  redrawInventory({
+                    roomId: roomId as Id<"rooms">,
+                    playerId,
+                  })
               : undefined
           }
         >
