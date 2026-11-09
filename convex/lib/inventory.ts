@@ -4,16 +4,22 @@ import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { getRoomPlayers } from "./roomHelpers";
 
-/** Finds a player in a room by their character's name (case-insensitive). */
+/**
+ * Finds a player in a room by their character's name (case-insensitive).
+ * The GM sometimes names the player instead of the character in actions, so
+ * the player's own name is accepted as a fallback.
+ */
 export async function findByCharacterName(
   ctx: MutationCtx,
   roomId: Id<"rooms">,
   characterName: string
 ): Promise<Doc<"players"> | undefined> {
   const players = await getRoomPlayers(ctx, roomId);
-  const wanted = characterName.trim().toLocaleLowerCase();
-  return players.find(
-    (p) => p.character.name.trim().toLocaleLowerCase() === wanted
+  const normalize = (name: string) => name.trim().toLocaleLowerCase();
+  const wanted = normalize(characterName);
+  return (
+    players.find((p) => normalize(p.character.name) === wanted) ??
+    players.find((p) => normalize(p.name) === wanted)
   );
 }
 
